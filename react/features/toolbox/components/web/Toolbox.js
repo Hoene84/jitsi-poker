@@ -33,6 +33,7 @@ import { OverflowMenuItem } from '../../../base/toolbox';
 import { getLocalVideoTrack, toggleScreensharing } from '../../../base/tracks';
 import { VideoBlurButton } from '../../../blur';
 import { ChatCounter, toggleChat } from '../../../chat';
+import { getParticipantDisplayName } from '../../../base/participants';
 import { E2EEButton } from '../../../e2ee';
 import { SharedDocumentButton } from '../../../etherpad';
 import { openFeedbackDialog } from '../../../feedback';
@@ -85,6 +86,7 @@ import VideoSettingsButton from './VideoSettingsButton';
 import {
     ClosedCaptionButton
 } from '../../../subtitles';
+import { toolboxAction } from '../../../poker/functions';
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -234,6 +236,7 @@ class Toolbox extends Component<Props, State> {
         this._onSetOverflowVisible = this._onSetOverflowVisible.bind(this);
 
         this._onShortcutToggleChat = this._onShortcutToggleChat.bind(this);
+        this._onShortcutPoker = this._onShortcutPoker.bind(this);
         this._onShortcutToggleFullScreen = this._onShortcutToggleFullScreen.bind(this);
         this._onShortcutToggleRaiseHand = this._onShortcutToggleRaiseHand.bind(this);
         this._onShortcutToggleScreenshare = this._onShortcutToggleScreenshare.bind(this);
@@ -244,6 +247,7 @@ class Toolbox extends Component<Props, State> {
         this._onToolbarOpenSpeakerStats = this._onToolbarOpenSpeakerStats.bind(this);
         this._onToolbarOpenVideoQuality = this._onToolbarOpenVideoQuality.bind(this);
         this._onToolbarToggleChat = this._onToolbarToggleChat.bind(this);
+        this._onToolbarPoker = this._onToolbarPoker.bind(this);
         this._onToolbarToggleFullScreen = this._onToolbarToggleFullScreen.bind(this);
         this._onToolbarToggleProfile = this._onToolbarToggleProfile.bind(this);
         this._onToolbarToggleRaiseHand = this._onToolbarToggleRaiseHand.bind(this);
@@ -274,6 +278,11 @@ class Toolbox extends Component<Props, State> {
                 character: 'C',
                 exec: this._onShortcutToggleChat,
                 helpDescription: 'keyboardShortcuts.toggleChat'
+            },
+            {
+                character: 'P',
+                exec: this._onShortcutPoker,
+                helpDescription: 'keyboardShortcuts.poker'
             },
             this._shouldShowButton('desktop') && {
                 character: 'D',
@@ -417,6 +426,10 @@ class Toolbox extends Component<Props, State> {
      */
     _doToggleChat() {
         this.props.dispatch(toggleChat());
+    }
+
+    _doPoker() {
+        this.props.dispatch(this.props._pokerAction);
     }
 
     /**
@@ -578,6 +591,20 @@ class Toolbox extends Component<Props, State> {
             }));
 
         this._doToggleChat();
+    }
+
+    _onShortcutPoker: () => void;
+
+    /**
+     * Creates an analytics keyboard shortcut event and dispatches an action for
+     * starting poker.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onShortcutPoker() {
+        sendAnalytics(createShortcutEvent('poker'));
+        this._doPoker();
     }
 
     _onShortcutToggleVideoQuality: () => void;
@@ -760,6 +787,20 @@ class Toolbox extends Component<Props, State> {
             }));
 
         this._doToggleChat();
+    }
+
+    _onToolbarPoker: () => void;
+
+    /**
+     * Creates an analytics toolbar event and dispatches an action for
+     * starting poker
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToolbarPoker() {
+        sendAnalytics(createToolbarEvent('toggle.poker'));
+        this._doPoker();
     }
 
     _onToolbarToggleFullScreen: () => void;
@@ -1093,6 +1134,14 @@ class Toolbox extends Component<Props, State> {
                 );
             case 'closedcaptions':
                 return <ClosedCaptionButton showLabel = { true } />;
+            case 'poker':
+                return <OverflowMenuItem
+                    accessibilityLabel =
+                        { t('toolbar.accessibilityLabel.poker') }
+                    icon = { IconChat }
+                    key = 'poker'
+                    onClick = { this._onToolbarPoker }
+                    text = 'Poker' />
             case 'info':
                 return <InfoDialogButton showLabel = { true } />;
             case 'invite':
@@ -1189,6 +1238,7 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('closedcaptions')) {
             buttonsLeft.push('closedcaptions');
         }
+        buttonsLeft.push('poker');
         if (overflowHasItems) {
             buttonsRight.push('overflowmenu');
         }
@@ -1263,6 +1313,15 @@ class Toolbox extends Component<Props, State> {
                         buttonsLeft.indexOf('closedcaptions') !== -1
                             && <ClosedCaptionButton />
                     }
+                    {
+                        buttonsLeft.indexOf('poker') !== -1
+                        && <ToolbarButton
+                                accessibilityLabel = { t('toolbar.accessibilityLabel.poker') }
+                                icon = { IconChat }
+                                onClick = { this._onToolbarPoker }
+                                tooltip = { t('toolbar.poker') } />
+                    }
+
                 </div>
                 <div className = 'button-group-center'>
                     { this._renderAudioButton() }
@@ -1390,7 +1449,9 @@ function _mapStateToProps(state) {
             || sharedVideoStatus === 'start'
             || sharedVideoStatus === 'pause',
         _visible: isToolboxVisible(state),
-        _visibleButtons: equals(visibleButtons, buttons) ? visibleButtons : buttons
+        _visibleButtons: equals(visibleButtons, buttons) ? visibleButtons : buttons,
+        _nameToDisplay : getParticipantDisplayName(state, localParticipant.id),
+        _pokerAction : toolboxAction(state, localParticipant.id)
     };
 }
 
