@@ -76,6 +76,7 @@ export default class LocalVideo extends SmallVideo {
         containerSpan.id = this.videoSpanId;
 
         containerSpan.innerHTML = `
+            <div class = 'poker-container'></div>
             <div class = 'videocontainer__background'></div>
             <span id = 'localVideoWrapper'></span>
             <div class = 'videocontainer__toolbar'></div>
