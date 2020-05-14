@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { Avatar } from '../../../react/features/base/avatar';
 import { i18next } from '../../../react/features/base/i18n';
 import { PresenceLabel } from '../../../react/features/presence-status';
+import { Poker } from '../../../react/features/poker';
 /* eslint-enable no-unused-vars */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
@@ -97,6 +98,9 @@ export default class LargeVideoManager {
 
         this._dominantSpeakerAvatarContainer
             = document.getElementById('dominantSpeakerAvatarContainer');
+
+        this._dominantSpeakerPokerContainer
+            = this.$container.find('.poker-container').get(0);
     }
 
     /**
@@ -112,6 +116,7 @@ export default class LargeVideoManager {
         this.removePresenceLabel();
 
         ReactDOM.unmountComponentAtNode(this._dominantSpeakerAvatarContainer);
+        ReactDOM.unmountComponentAtNode(this._dominantSpeakerPokerContainer);
 
         this.$container.css({ display: 'none' });
     }
@@ -193,6 +198,7 @@ export default class LargeVideoManager {
 
             // change the avatar url on large
             this.updateAvatar();
+            this.updatePoker();
 
             // If the user's connection is disrupted then the avatar will be
             // displayed in case we have no video image cached. That is if
@@ -360,6 +366,20 @@ export default class LargeVideoManager {
                     size = { 200 } />
             </Provider>,
             this._dominantSpeakerAvatarContainer
+        );
+    }
+
+    /**
+     * Updates the src of the dominant speaker avatar
+     */
+    updatePoker() {
+        ReactDOM.render(
+            <Provider store = { APP.store }>
+                <I18nextProvider i18n = { i18next }>
+                    <Poker/>
+                </I18nextProvider>
+            </Provider>,
+            this._dominantSpeakerPokerContainer
         );
     }
 
