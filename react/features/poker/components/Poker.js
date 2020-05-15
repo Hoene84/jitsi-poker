@@ -66,7 +66,7 @@ class Poker extends Component<Props, State> {
 }
 
 export function _mapStateToProps(state: Object, ownProps: Props) {
-    const { game, players } = state['features/poker'];
+    const { game, players } = state['features/poker'].common;
     const { participantID } = ownProps;
 
     const nick = getParticipantDisplayName(state, participantID)

@@ -33,9 +33,9 @@ export function turnFlop() {
     };
 }
 
-export function new_state_received(state : Object) {
+export function new_state_received(common : Object) {
     return {
         type: NEW_STATE_RECEIVED,
-        state
+        common
     };
 }

@@ -13,13 +13,13 @@ export function getDeck() {
 }
 
 export function updatePossibleActions(state : Object) {
-    switch (state.game.state) {
+    switch (state.common.game.state) {
     case 'none': {
         // return mapPlayers(state, (_) => ({actions: [JOIN_GAME]}));
-        return mapPlayers(state, (nick) => ({actions: state.players[nick] ? [START_GAME] : [JOIN_GAME]}));
+        return mapPlayers(state, (nick) => ({actions: state.common.players[nick] ? [START_GAME] : [JOIN_GAME]}));
     }
     case 'running': {
-        return mapPlayers(state, (nick) => ({actions: state.game.dealer === nick ? [GIVE_CARDS] : []}));
+        return mapPlayers(state, (nick) => ({actions: state.common.game.dealer === nick ? [GIVE_CARDS] : []}));
     }
     default: {
         return state;
@@ -29,20 +29,26 @@ export function updatePossibleActions(state : Object) {
 
 export function mapPlayers(state, mappingFunction){
     return assign(state, {
-        players: Object.fromEntries(Object.entries(state.players).map(([nick, player]) => {
-            const x = mappingFunction(nick)
-            return [ nick, {...player, ...x } ];
-        })),
+        common: {
+            ...state.common,
+            players: Object.fromEntries(Object.entries(state.common.players).map(([nick, player]) => {
+                const x = mappingFunction(nick)
+                return [ nick, {...player, ...x } ];
+            })),
+        }
     });
 }
 
 export function getCardsFromDeck(state, n) {
     return {
-        cards: state.game.deck.splice(0, n),
+        cards: state.common.game.deck.splice(0, n),
         newState: assign(state, {
-            game: {
-                ...state.game,
-                deck: state.game.deck
+            common: {
+                ...state.common,
+                game: {
+                    ...state.common.game,
+                    deck: state.common.game.deck
+                }
             }
         })
     };
