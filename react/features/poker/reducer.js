@@ -1,7 +1,7 @@
 // @flow
 
 import { assign, ReducerRegistry } from '../base/redux';
-import { getDeck, updatePossibleActions, mapPlayers, getCardsFromDeck, chooseDealer } from './helpers'
+import { getDeck, update, mapPlayers, getCardsFromDeck, chooseDealer } from './helpers'
 
 import { JOIN_GAME, START_GAME, GIVE_CARDS, TURN_FLOP, NEW_STATE_RECEIVED } from './actionTypes';
 import uuid from "uuid";
@@ -27,7 +27,7 @@ const DEFAULT_STATE = {
 ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case JOIN_GAME: {
-        return updatePossibleActions(assign(state, {
+        return update(assign(state, {
             common: {
                 ...state.common,
                 game: {
@@ -42,11 +42,12 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
                         actions: []
                     }
                 },
-            }
+            },
+            nick: action.nick
         }));
     }
     case START_GAME: {
-        return updatePossibleActions(assign(state, {
+        return update(assign(state, {
             common: {
                 ...state.common,
                 game: {
@@ -61,7 +62,7 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
     case GIVE_CARDS: {
         const result = getCardsFromDeck(state, Object.keys(state.common.players).length * 2);
         const {newState, cards} = result;
-        return updatePossibleActions(mapPlayers(newState, () => ({cards : cards.splice(0, 2)})));
+        return update(mapPlayers(newState, () => ({cards : cards.splice(0, 2)})));
     }
     case TURN_FLOP: {
         return {

@@ -47,7 +47,9 @@ StateListenerRegistry.register(
     state => state['features/poker'],
     (currentState, { getState, dispatch }, previousState = {}) => {
         const conference = getCurrentConference(getState())
-        if(conference && !equals(currentState.common, previousState.common)) {
+        if(conference &&
+            currentState.common.lastModifiedBy === currentState.nick &&
+            !equals(currentState.common, previousState.common)) {
             conference.sendMessage({
                 state: currentState.common,
                 type: GAME_STATE_CHANGED_EVENT

@@ -12,7 +12,16 @@ export function getDeck() {
     return set;
 }
 
-export function updatePossibleActions(state : Object) {
+export function update(state : Object) {
+    return updateAction(assign(state, {
+        common: {
+            ...state.common,
+            lastModifiedBy: state.nick,
+        }
+    }));
+}
+
+export function updateAction(state : Object) {
     switch (state.common.game.state) {
     case 'none': {
         // return mapPlayers(state, (_) => ({actions: [JOIN_GAME]}));
