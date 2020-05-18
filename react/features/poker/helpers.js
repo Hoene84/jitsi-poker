@@ -2,7 +2,7 @@
 
 import type { Card, Player, PokerState, Suit, Symbol } from './types';
 
-import { GIVE_CARDS, JOIN_GAME, START_GAME } from './actionTypes';
+import { GIVE_CARDS, JOIN_GAME, STOP_GAME, START_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
 import { assign as reduxAssign} from '../base/redux';
 
@@ -39,7 +39,11 @@ export function updateAction(state : PokerState) {
         return mapPlayers(state, (nick) => ({actions: state.common.players[nick] ? [START_GAME] : [JOIN_GAME]}));
     }
     case 'running': {
-        return mapPlayers(state, (nick) => ({actions: state.common.game.dealer === nick ? [GIVE_CARDS] : []}));
+        return mapPlayers(state, (nick) => {
+            let actions = [STOP_GAME];
+            actions = actions.concat(state.common.game.dealer === nick ? [GIVE_CARDS] : []);
+            return { actions: actions };
+        });
     }
     default: {
         return state;

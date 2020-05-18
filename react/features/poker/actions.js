@@ -3,6 +3,7 @@
 import {
     JOIN_GAME,
     START_GAME,
+    STOP_GAME,
     GIVE_CARDS,
     TURN_FLOP,
     NEW_STATE_RECEIVED,
@@ -18,6 +19,13 @@ export function joinGame(nick : String) {
 export function startGame() {
     return {
         type: START_GAME
+    };
+}
+
+
+export function stopGame() {
+    return {
+        type: STOP_GAME
     };
 }
 

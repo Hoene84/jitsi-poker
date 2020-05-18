@@ -284,7 +284,7 @@ class Toolbox extends Component<Props, State> {
             {
                 character: 'P',
                 exec: this._onShortcutPoker,
-                helpDescription: 'keyboardShortcuts.poker'
+                helpDescription: `keyboardShortcuts.poker.${this.props._pokerAction.type}`
             },
             this._shouldShowButton('desktop') && {
                 character: 'D',
@@ -1139,11 +1139,11 @@ class Toolbox extends Component<Props, State> {
             case 'poker':
                 return <OverflowMenuItem
                     accessibilityLabel =
-                        { t('toolbar.accessibilityLabel.poker') }
+                        { t(`toolbar.accessibilityLabel.poker.${this.props._pokerAction.type}`) }
                     icon = { IconChat }
                     key = 'poker'
                     onClick = { this._onToolbarPoker }
-                    text = 'Poker' />
+                    text = { t(`toolbar.poker.${this.props._pokerAction.type}`) }  />
             case 'info':
                 return <InfoDialogButton showLabel = { true } />;
             case 'invite':
@@ -1321,7 +1321,7 @@ class Toolbox extends Component<Props, State> {
                                 accessibilityLabel = { t('toolbar.accessibilityLabel.poker') }
                                 icon = { IconChat }
                                 onClick = { this._onToolbarPoker }
-                                tooltip = { t('toolbar.poker') } />
+                                tooltip = { t(`toolbar.poker.${this.props._pokerAction.type}`) } />
                     }
 
                 </div>

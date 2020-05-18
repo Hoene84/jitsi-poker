@@ -5,7 +5,14 @@ import type { PokerState } from './types';
 import { ReducerRegistry } from '../base/redux';
 import { getDeck, update, mapPlayers, assign, getCardsFromDeck, chooseDealer } from './helpers'
 
-import { JOIN_GAME, START_GAME, GIVE_CARDS, TURN_FLOP, NEW_STATE_RECEIVED } from './actionTypes';
+import {
+    JOIN_GAME,
+    START_GAME,
+    STOP_GAME,
+    GIVE_CARDS,
+    TURN_FLOP,
+    NEW_STATE_RECEIVED
+} from './actionTypes';
 import uuid from "uuid";
 
 const DEFAULT_STATE : PokerState = {
@@ -43,6 +50,9 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
             },
             nick: action.nick
         }));
+    }
+    case STOP_GAME: {
+        return DEFAULT_STATE
     }
     case START_GAME: {
         return update(assign(state, {
