@@ -1,7 +1,8 @@
 // @flow
 
-import React, { Component } from 'react';
+import type { Action } from '../types'
 
+import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
@@ -12,11 +13,14 @@ import { Icon, IconAdd } from '../../base/icons';
 export type Props = {
     participantID: String,
     _amount: number,
-    t: Function
+    dispatch: Function,
+    t: Function,
+    _actions: Array<Action>,
+    _state: string
 }
 
 type State = {
-    // value: boolean
+
 }
 
 export const DEFAULT_SIZE = 65;
@@ -49,7 +53,7 @@ class Poker extends Component<Props, State> {
                         onClick={this._onGiveCards}>
                         <Tooltip content={t('poker.accessibilityLabel.poker')}>
                             <div
-                                className={`poker-icon ${this.props.toggled ? 'toggled' : ''}`}>
+                                className={`poker-icon`}>
                                 <Icon src={IconAdd}/>
                             </div>
                         </Tooltip>
@@ -60,6 +64,7 @@ class Poker extends Component<Props, State> {
         );
     }
 
+    _onGiveCards: () => void;
     _onGiveCards() {
         this.props.dispatch(giveCards())
     }

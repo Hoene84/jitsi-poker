@@ -185,6 +185,8 @@ type Props = {
      */
     _visibleButtons: Set<string>,
 
+    _pokerAction: Object,
+
     /**
      * Invoked to active other features of the app.
      */
