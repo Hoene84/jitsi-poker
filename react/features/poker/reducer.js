@@ -37,17 +37,15 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case JOIN_GAME: {
         return update(assign<PokerState>(state, {
-            common: {
-                ...state.common,
-                players: {
-                    ...state.common.players,
+            common: assign(state.common, {
+                players: assign(state.common.players, {
                     [action.nick]: {
                         amount: state.common.game.start_amount,
                         cards: null,
                         actions: []
                     }
-                },
-            },
+                })
+            }),
             nick: action.nick
         }));
     }
@@ -56,29 +54,18 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
     }
     case START_GAME: {
         return update(assign(state, {
-            common: {
-                ...state.common,
-                game: {
-                    ...state.common.game,
+            common: assign(state.common, {
+                game: assign(state.common.game, {
                     state: 'running',
                     dealer: chooseDealer(state.common.players),
                     deck: getDeck()
-                },
-            }
+                })
+            })
         }));
     }
     case GIVE_CARDS: {
         const nicks : Array<string> = Object.keys(state.common.players)
         return nicks.reduce((state : PokerState, nick: string) => giveCards(state, nick, 2), state);
-    }
-    case TURN_FLOP: {
-        return {
-            ...state,
-            common: {
-                ...state.common,
-                table: ['AK', 'AH']
-            },
-        };
     }
     case NEW_STATE_RECEIVED: {
         return assign(state, {

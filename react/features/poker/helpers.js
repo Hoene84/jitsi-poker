@@ -29,11 +29,10 @@ export function getDeck(): Deck {
 }
 
 export function update(state : PokerState) {
-    return updateAction(assign<PokerState>(state, {
-        common: {
-            ...state.common,
-            lastModifiedBy: state.nick,
-        }
+    return updateAction(assign(state, {
+        common: assign(state.common, {
+            lastModifiedBy: state.nick
+        })
     }));
 }
 
