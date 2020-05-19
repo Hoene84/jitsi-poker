@@ -1,12 +1,5 @@
 // @flow
 
-// import {
-//     JOIN_GAME,
-//     START_GAME,
-//     GIVE_CARDS,
-//     TURN_FLOP,
-//     NEW_STATE_RECEIVED,
-// } from './actionTypes';
 import * as actions from './actionTypes';
 
 import { SUITS, SYMBOLS } from './constants'
@@ -23,7 +16,7 @@ export type Game = {|
     start_amount: number,
     current_player: ?string,
     dealer: ?string,
-    deck: ?Array<Card>
+    deck: ?Deck
 |}
 
 export type CommonState = {|
@@ -33,6 +26,16 @@ export type CommonState = {|
     lastModifiedBy: ?string
 |}
 
+export type Deck = {|
+    nextIndex: number,
+    cards: Array<CardSlot>
+|}
+
+export type CardSlot = {|
+    card: Card,
+    owner: ?string
+|}
+
 export type Card = {|
     suit: Suit,
     symbol: Symbol
@@ -40,8 +43,6 @@ export type Card = {|
 
 export type Player = {|
     amount: number,
-    card1: ?Card,
-    card2: ?Card,
     actions: Array<Action>,
 |}
 

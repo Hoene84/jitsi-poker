@@ -1,6 +1,6 @@
 // @flow
 
-import type { Card, Player, PokerState, Suit, Symbol } from './types';
+import type { Deck, Player, PokerState, Suit, Symbol } from './types';
 
 import { GIVE_CARDS, JOIN_GAME, STOP_GAME, START_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
@@ -11,16 +11,21 @@ export function assign<T: Object>(target: T, source: $Shape<T>) : T {
     return reduxAssign(target, source)
 }
 
-export function getDeck() : Array<Card> {
-    return Object.keys(SUITS)
-        .flatMap((suit) => Object.keys(SYMBOLS)
-            .map((symbol) => {
-                const x: Card = {
-                    suit: (suit: Suit),
-                    symbol: (symbol: Symbol)
-                };
-                return x;
-            }));
+export function getDeck(): Deck {
+    return {
+        nextIndex: 0,
+        cards: Object.keys(SUITS)
+            .flatMap((suit) => Object.keys(SYMBOLS)
+                .map((symbol) => {
+                    return {
+                        card: {
+                            suit: (suit: Suit),
+                            symbol: (symbol: Symbol)
+                        },
+                        owner: null
+                    };
+                }))
+    };
 }
 
 export function update(state : PokerState) {
@@ -63,19 +68,14 @@ export function mapPlayers(state : PokerState, mappingFunction : (string) => $Sh
     });
 }
 
-export function getCardsFromDeck(state : PokerState, n : number) : {| cards: ?Array<Card>, newState : PokerState|} {
-    return {
-        cards: (state.common.game.deck && state.common.game.deck.splice(0, n)),
-        newState: assign(state, {
-            common: {
-                ...state.common,
-                game: {
-                    ...state.common.game,
-                    deck: state.common.game.deck
-                }
-            }
-        })
-    };
+export function giveCards(state : PokerState, owner: string, n : number) : PokerState {
+    const deck : ?Deck = state.common.game.deck;
+    for (let i = 0; i < n && deck; i++) {
+        deck.cards[deck.nextIndex].owner = owner;
+        deck.nextIndex = deck.nextIndex + 1
+    }
+    state.common.game.deck = deck;
+    return state
 }
 
 export function chooseDealer(players : { [string]: Player }) {
