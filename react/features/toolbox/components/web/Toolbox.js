@@ -21,7 +21,8 @@ import {
     IconRaisedHand,
     IconRec,
     IconShareDesktop,
-    IconShareVideo
+    IconShareVideo,
+    IconPoker
 } from '../../../base/icons';
 import {
     getLocalParticipant,
@@ -1140,7 +1141,7 @@ class Toolbox extends Component<Props, State> {
                 return <OverflowMenuItem
                     accessibilityLabel =
                         { t(`toolbar.accessibilityLabel.poker.${this.props._pokerAction.type}`) }
-                    icon = { IconChat }
+                    icon = { IconPoker }
                     key = 'poker'
                     onClick = { this._onToolbarPoker }
                     text = { t(`toolbar.poker.${this.props._pokerAction.type}`) }  />
@@ -1318,12 +1319,14 @@ class Toolbox extends Component<Props, State> {
                     {
                         buttonsLeft.indexOf('poker') !== -1
                         && <ToolbarButton
+                            className={ `toolbox-button ${this.props._pokerAction.type}` }
                                 accessibilityLabel = { t('toolbar.accessibilityLabel.poker') }
-                                icon = { IconChat }
+                                icon = { IconPoker }
                                 onClick = { this._onToolbarPoker }
-                                tooltip = { t(`toolbar.poker.${this.props._pokerAction.type}`) } />
+                            tooltip = { t(`toolbar.poker.${this.props._pokerAction.type}`) } />
                     }
 
+                    <div className={ `toolbox-button ${this.props._pokerAction.type}` }>{ t(`toolbar.poker.${this.props._pokerAction.type}`) }</div>
                 </div>
                 <div className = 'button-group-center'>
                     { this._renderAudioButton() }
