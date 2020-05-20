@@ -29,14 +29,14 @@ export function getDeck(): Deck {
 }
 
 export function update(state : PokerState) {
-    return updateAction(assign(state, {
+    return updateActions(assign(state, {
         common: assign(state.common, {
             lastModifiedBy: state.nick
         })
     }));
 }
 
-export function updateAction(state : PokerState) {
+export function updateActions(state : PokerState) {
     switch (state.common.game.state) {
     case 'none': {
         // return mapPlayers(state, (_) => ({actions: [JOIN_GAME]}));
