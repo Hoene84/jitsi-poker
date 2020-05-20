@@ -9,7 +9,7 @@ import {
     NEW_STATE_RECEIVED,
 } from './actionTypes';
 
-export function joinGame(nick : String) {
+export function joinGame(nick : string) {
     return {
         type: JOIN_GAME,
         nick: nick
