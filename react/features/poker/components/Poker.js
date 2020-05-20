@@ -48,7 +48,7 @@ class Poker extends Component<Props, State> {
             <div>
                 <div>{this.props._amount}</div>
                 {this.props._actions.map(action => {
-                    return (<div
+                    return (<button
                         key={action}
                         aria-label={t(`poker.action.${action}`)}
                         className='poker-button'
@@ -58,7 +58,7 @@ class Poker extends Component<Props, State> {
                                 { t(`poker.action.${action}`) }
                             </div>
                         </Tooltip>
-                    </div>)
+                    </button>)
                 })}
                 <div> {this.props._state}</div>
             </div>
