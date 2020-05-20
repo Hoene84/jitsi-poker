@@ -7,11 +7,12 @@ import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
 import Tooltip from '@atlaskit/tooltip';
-import { GIVE_CARDS, giveCards } from '../../poker';
+import { GIVE_CARDS, giveCards, JOIN_GAME } from '../../poker';
 import { Icon, IconAdd } from '../../base/icons';
+import { pokerActionTypes } from '../functions';
 
 export type Props = {
-    participantID: String,
+    participantID: string,
     _amount: number,
     dispatch: Function,
     t: Function,
@@ -38,7 +39,7 @@ class Poker extends Component<Props, State> {
         };
 
         // Bind event handlers so they are only bound once for every instance.
-        this._onGiveCards = this._onGiveCards.bind(this);
+        this._onAction = this._onAction.bind(this);
     }
 
     render() {
@@ -46,27 +47,38 @@ class Poker extends Component<Props, State> {
         return (
             <div>
                 <div>{this.props._amount}</div>
-                {this.props._actions.includes(GIVE_CARDS)
-                    && <div
-                        aria-label={t('poker.accessibilityLabel.poker')}
-                        className='poker-button play-cards'
-                        onClick={this._onGiveCards}>
-                        <Tooltip content={t('poker.accessibilityLabel.poker')}>
-                            <div
-                                className={`poker-icon`}>
-                                <Icon src={IconAdd}/>
+                {this.props._actions.map(action => {
+                    return (<div
+                        key={action}
+                        aria-label={t(`poker.action.${action}`)}
+                        className='poker-button'
+                        onMouseDown={e => this._onAction(e, action)}>
+                        <Tooltip content={t(`poker.action.${action}`)}>
+                            <div className={`poker-action`}>
+                                { t(`poker.action.${action}`) }
                             </div>
                         </Tooltip>
-                    </div>
-                }
+                    </div>)
+                })}
                 <div> {this.props._state}</div>
             </div>
         );
     }
 
-    _onGiveCards: () => void;
-    _onGiveCards() {
-        this.props.dispatch(giveCards())
+    _onAction: (Object, string) => void;
+    _onAction(event, action) {
+
+        switch (action.type) {
+        case GIVE_CARDS:
+            this.props.dispatch(giveCards())
+            break;
+        default:
+            console.log('unknown action')
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
     }
 }
 
@@ -79,7 +91,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
 
     return {
         _amount: player ? player.amount : null,
-        _actions: player ? player.actions : [],
+        _actions: pokerActionTypes(state, (participantID)),
         _state: JSON.stringify(state['features/poker'])
     };
 }
