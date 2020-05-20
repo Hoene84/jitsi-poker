@@ -60,6 +60,11 @@ export function countCards(state : PokerState, nick : string) {
     return state.common.game.deck && state.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).length;
 }
 
+export function nextPlayerAfter(state : PokerState, nick : string) {
+    const nicks = Object.keys(state.common.players);
+    return nicks[(nicks.indexOf(nick) + 1) % nicks.length];
+}
+
 export function mapPlayers(state : PokerState, mappingFunction : (string) => $Shape<Player>){
     return assign(state, {
         common: {

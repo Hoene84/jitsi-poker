@@ -9,7 +9,7 @@ import { translate } from '../../base/i18n';
 import Tooltip from '@atlaskit/tooltip';
 import { GIVE_CARDS } from '../../poker/actionTypes';
 import { giveCards } from '../../poker/actions';
-import { cards, pokerActionTypes } from '../functions';
+import { cards, currentPlayer, pokerActionTypes } from '../functions';
 import Card from './Card';
 
 export type Props = {
@@ -19,7 +19,8 @@ export type Props = {
     _actions: Array<Action>,
     _amount: number,
     _cards: Array<CardType>,
-    _state: string
+    _state: string,
+    _isCurrentPlayer: boolean
 }
 
 type State = {
@@ -47,7 +48,7 @@ class Poker extends Component<Props, State> {
     render() {
         const {t} = this.props;
         return (
-            <div>
+            <div className={`player ${this.props._isCurrentPlayer ? 'current' : ''}`}>
                 <div>{this.props._amount}</div>
                 {this.props._actions.map(action => {
                     return (<button
@@ -94,7 +95,8 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _amount: player ? player.amount : null,
         _actions: pokerActionTypes(state, nick),
         _cards: cards(state, nick),
-        _state: JSON.stringify(state['features/poker'])
+        _state: JSON.stringify(state['features/poker']),
+        _isCurrentPlayer: currentPlayer(state, nick)
     };
 }
 

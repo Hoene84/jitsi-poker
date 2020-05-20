@@ -543,6 +543,16 @@
     width: 100%;
     height: 100%;
     z-index: 10;
+
+    .player {
+        height: 100%;
+
+        &.current {
+            border: 10px dashed green;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+    }
 }
 
 #videoNotAvailableScreen {

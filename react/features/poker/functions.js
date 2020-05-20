@@ -25,3 +25,8 @@ export function cards(state: Object, nick : string) : ?Array<Card> {
     }
     return pokerState.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).map(cardSlot => cardSlot.card)
 }
+
+export function currentPlayer(state: Object, nick : string) : boolean {
+    const pokerState = (state['features/poker'] : PokerState);
+    return pokerState.common.game.current_player === nick;
+}
