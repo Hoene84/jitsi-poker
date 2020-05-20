@@ -52,7 +52,7 @@ class Poker extends Component<Props, State> {
                         key={action}
                         aria-label={t(`poker.action.${action}`)}
                         className='poker-button'
-                        onMouseDown={e => this._onAction(e, action)}>
+                        onClick={e => this._onAction(e, action)}>
                         <Tooltip content={t(`poker.action.${action}`)}>
                             <div className={`poker-action`}>
                                 { t(`poker.action.${action}`) }
@@ -75,10 +75,6 @@ class Poker extends Component<Props, State> {
         default:
             console.log('unknown action')
         }
-
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
     }
 }
 

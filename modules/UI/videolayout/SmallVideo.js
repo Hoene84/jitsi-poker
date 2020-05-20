@@ -767,6 +767,9 @@ export default class SmallVideo {
      * @returns {void}
      */
     _onContainerClick(event) {
+        if(APP.store.getState()['features/Poker']?.common.game.state !== 'none') {
+            return true
+        }
         const triggerPin = this._shouldTriggerPin(event);
 
         if (triggerPin) {
