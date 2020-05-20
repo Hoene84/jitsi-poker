@@ -68,7 +68,7 @@ class Poker extends Component<Props, State> {
     _onAction: (Object, string) => void;
     _onAction(event, action) {
 
-        switch (action.type) {
+        switch (action) {
         case GIVE_CARDS:
             this.props.dispatch(giveCards())
             break;
