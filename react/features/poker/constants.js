@@ -18,7 +18,7 @@ export const SUITS = Object.freeze({
 });
 
 export const SYMBOLS = Object.freeze({
-    _2 : '2',
+    _2: '2',
     _3: '3',
     _4: '4',
     _5: '5',

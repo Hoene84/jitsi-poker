@@ -9,13 +9,11 @@ import {
     JitsiConferenceEvents
 } from '../base/lib-jitsi-meet';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
-import { playSound, registerSound, unregisterSound } from '../base/sounds';
-import { new_state_received } from './actions';
+import { registerSound, unregisterSound } from '../base/sounds';
+import { newStateReceived } from './actions';
 
 import { CARD_TURN_SOUND_FILE } from './sounds';
 import { CARD_TURN_SOUND_ID, GAME_STATE_CHANGED_EVENT } from './constants';
-
-import { equals } from '../base/redux';
 
 /**
  * Implements the middleware of the poker feature.
@@ -24,7 +22,7 @@ import { equals } from '../base/redux';
  * @returns {Function}
  */
 MiddlewareRegistry.register(store => next => action => {
-    const { dispatch, getState } = store;
+    const { dispatch } = store;
 
     switch (action.type) {
     case APP_WILL_MOUNT:
@@ -46,9 +44,10 @@ MiddlewareRegistry.register(store => next => action => {
 StateListenerRegistry.register(
     state => state['features/poker'],
     (currentState, { getState } = {}) => {
-        const conference = getCurrentConference(getState())
-        if(conference &&
-            currentState.common.lastModifiedBy === currentState.nick) {
+        const conference = getCurrentConference(getState());
+
+        if (conference
+            && currentState.common.lastModifiedBy === currentState.nick) {
             conference.sendMessage({
                 state: currentState.common,
                 type: GAME_STATE_CHANGED_EVENT
@@ -59,11 +58,10 @@ StateListenerRegistry.register(
 function _registerGameUpdateListener(conference, store) {
     conference.on(
         JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
-        (id, message, timestamp, nick) => {
-            if(message.type === GAME_STATE_CHANGED_EVENT)
-            {
-                console.log(message)
-                store.dispatch(new_state_received(message.state))
+        (id, message) => {
+            if (message.type === GAME_STATE_CHANGED_EVENT) {
+                console.log(message);
+                store.dispatch(newStateReceived(message.state));
             }
         }
     );

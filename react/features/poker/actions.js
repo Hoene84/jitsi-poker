@@ -6,13 +6,13 @@ import {
     STOP_GAME,
     GIVE_CARDS,
     TURN_FLOP,
-    NEW_STATE_RECEIVED,
+    NEW_STATE_RECEIVED
 } from './actionTypes';
 
-export function joinGame(nick : string) {
+export function joinGame(nick: string) {
     return {
         type: JOIN_GAME,
-        nick: nick
+        nick
     };
 }
 
@@ -41,7 +41,7 @@ export function turnFlop() {
     };
 }
 
-export function new_state_received(common : Object) {
+export function newStateReceived(common: Object) {
     return {
         type: NEW_STATE_RECEIVED,
         common

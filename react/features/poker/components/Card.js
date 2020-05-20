@@ -1,6 +1,6 @@
 // @flow
 
-import type { Card as CardType} from '../types';
+import type { Card as CardType } from '../types';
 
 import React, { Component } from 'react';
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type { Action, Card as CardType } from '../types'
+import type { Action, Card as CardType } from '../types';
 
 import React, { Component } from 'react';
 import { connect } from '../../base/redux';
@@ -46,50 +46,50 @@ class Poker extends Component<Props, State> {
     }
 
     render() {
-        const {t} = this.props;
+        const { t } = this.props;
+
+
         return (
-            <div className={`player ${this.props._isCurrentPlayer ? 'current' : ''}`}>
+            <div className = { `player ${this.props._isCurrentPlayer ? 'current' : ''}` }>
                 <div>{this.props._amount}</div>
-                {this.props._actions.map(action => {
-                    return (<button
-                        key={action}
-                        aria-label={t(`poker.action.${action}`)}
-                        className='poker-button'
-                        onClick={e => this._onAction(e, action)}>
-                        <Tooltip content={t(`poker.action.${action}`)}>
-                            <div className={`poker-action`}>
-                                { t(`poker.action.${action}`) }
-                            </div>
-                        </Tooltip>
-                    </button>)
-                })}
-                {this.props._cards.map(card => {
-                    return (<Card card={card}/>)
-                })}
-                {/*<div> {this.props._state}</div>*/}
+                {this.props._actions.map(action => (<button
+                    aria-label = { t(`poker.action.${action}`) }
+                    className = 'poker-button'
+                    key = { action }
+                    /* eslint-disable-next-line react/jsx-no-bind */
+                    onClick = { e => this._onAction(e, action) }>
+                    <Tooltip content = { t(`poker.action.${action}`) }>
+                        <div className = { 'poker-action' }>
+                            { t(`poker.action.${action}`) }
+                        </div>
+                    </Tooltip>
+                </button>))}
+                {this.props._cards.map((card, i) => (<Card
+                    card = { card }
+                    key = { i } />))}
+                {/* <div> {this.props._state}</div>*/}
             </div>
         );
     }
 
     _onAction: (Object, string) => void;
     _onAction(event, action) {
-
         switch (action) {
         case GIVE_CARDS:
-            this.props.dispatch(giveCards())
+            this.props.dispatch(giveCards());
             break;
         default:
-            console.log('unknown action')
+            console.log('unknown action');
         }
     }
 }
 
 export function _mapStateToProps(state: Object, ownProps: Props) {
-    const { game, players } = state['features/poker'].common;
+    const { players } = state['features/poker'].common;
     const { participantID } = ownProps;
 
-    const nick = getParticipantDisplayName(state, participantID)
-    const player = players[nick]
+    const nick = getParticipantDisplayName(state, participantID);
+    const player = players[nick];
 
     return {
         _amount: player ? player.amount : null,

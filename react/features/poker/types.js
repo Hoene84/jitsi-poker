@@ -2,21 +2,41 @@
 
 import * as actions from './actionTypes';
 
-import { SUITS, SYMBOLS } from './constants'
+import { SUITS, SYMBOLS } from './constants';
 
 type GameState = "none" | "running";
 export type Suit = $Keys<typeof SUITS>;
 export type Symbol = $Keys<typeof SYMBOLS>;
 export type Action = $Values<typeof actions>
 
+export type Card = {|
+    suit: Suit,
+    symbol: Symbol
+|}
+
+export type CardSlot = {|
+    card: Card,
+    owner: ?string
+|}
+
+export type Deck = {|
+    nextIndex: number,
+    cards: Array<CardSlot>
+|}
+
 export type Game = {|
     id: string,
     ticks: ?number,
     state: GameState,
-    start_amount: number,
-    current_player: ?string,
+    startAmount: number,
+    currentPlayer: ?string,
     dealer: ?string,
     deck: ?Deck
+|}
+
+export type Player = {|
+    amount: number,
+    actions: Array<Action>,
 |}
 
 export type CommonState = {|
@@ -25,27 +45,6 @@ export type CommonState = {|
     players: { [string]: Player },
     lastModifiedBy: ?string
 |}
-
-export type Deck = {|
-    nextIndex: number,
-    cards: Array<CardSlot>
-|}
-
-export type CardSlot = {|
-    card: Card,
-    owner: ?string
-|}
-
-export type Card = {|
-    suit: Suit,
-    symbol: Symbol
-|}
-
-export type Player = {|
-    amount: number,
-    actions: Array<Action>,
-|}
-
 export type PokerState = {
     common: CommonState,
     nick: ?string

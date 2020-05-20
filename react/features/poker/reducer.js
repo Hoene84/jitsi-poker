@@ -3,7 +3,7 @@
 import type { PokerState } from './types';
 
 import { ReducerRegistry } from '../base/redux';
-import { getDeck, update, giveCards, chooseDealer } from './gameModifiers'
+import { getDeck, update, giveCards, chooseDealer } from './gameModifiers';
 import { assign, countCards, nextPlayerAfter } from './helpers';
 
 import {
@@ -11,19 +11,18 @@ import {
     START_GAME,
     STOP_GAME,
     GIVE_CARDS,
-    TURN_FLOP,
     NEW_STATE_RECEIVED
 } from './actionTypes';
-import uuid from "uuid";
+import uuid from 'uuid';
 
-const DEFAULT_STATE : PokerState = {
+const DEFAULT_STATE: PokerState = {
     common: {
         game: {
             id: uuid.v4().toUpperCase(),
             ticks: 0,
             state: 'none',
-            start_amount: 20000,
-            current_player: null,
+            startAmount: 20000,
+            currentPlayer: null,
             dealer: null,
             deck: null
         },
@@ -41,7 +40,7 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
             common: assign(state.common, {
                 players: assign(state.common.players, {
                     [action.nick]: {
-                        amount: state.common.game.start_amount,
+                        amount: state.common.game.startAmount,
                         cards: null,
                         actions: []
                     }
@@ -51,24 +50,31 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
         }));
     }
     case STOP_GAME: {
-        return DEFAULT_STATE
+        return DEFAULT_STATE;
     }
     case START_GAME: {
         const dealer = chooseDealer(state.common.players);
+
+
         return update(assign(state, {
             common: assign(state.common, {
                 game: assign(state.common.game, {
                     state: 'running',
-                    dealer: dealer,
+                    dealer,
                     deck: getDeck(),
-                    current_player: nextPlayerAfter(state, dealer)
+                    currentPlayer: nextPlayerAfter(state, dealer)
                 })
             })
         }));
     }
     case GIVE_CARDS: {
-        const nicks : Array<string> = Object.keys(state.common.players)
-        return update(nicks.reduce((state : PokerState, nick: string) => giveCards(state, nick, 2 - countCards(state, nick)), state));
+        const nicks: Array<string> = Object.keys(state.common.players);
+
+        return update(nicks.reduce((modifiedState: PokerState, nick: string) => {
+            const missingCards = 2 - countCards(modifiedState, nick);
+
+            return giveCards(modifiedState, nick, missingCards);
+        }, state));
     }
     case NEW_STATE_RECEIVED: {
         return assign(state, {

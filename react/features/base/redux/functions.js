@@ -16,7 +16,7 @@ import { connect as reduxConnect } from 'react-redux';
  * from the specified target by setting the specified properties to the
  * specified values.
  */
-export function assign<T: Object>(target: T, source: $Shape<T>) : T {
+export function assign<T: Object>(target: T, source: $Shape<T>): T {
     let t = target;
 
     for (const property in source) { // eslint-disable-line guard-for-in

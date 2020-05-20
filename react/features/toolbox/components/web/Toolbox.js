@@ -27,14 +27,14 @@ import {
 import {
     getLocalParticipant,
     getParticipants,
-    participantUpdated
+    participantUpdated,
+    getParticipantDisplayName
 } from '../../../base/participants';
 import { connect, equals } from '../../../base/redux';
 import { OverflowMenuItem } from '../../../base/toolbox';
 import { getLocalVideoTrack, toggleScreensharing } from '../../../base/tracks';
 import { VideoBlurButton } from '../../../blur';
 import { ChatCounter, toggleChat } from '../../../chat';
-import { getParticipantDisplayName } from '../../../base/participants';
 import { E2EEButton } from '../../../e2ee';
 import { SharedDocumentButton } from '../../../etherpad';
 import { openFeedbackDialog } from '../../../feedback';
@@ -796,7 +796,7 @@ class Toolbox extends Component<Props, State> {
 
     /**
      * Creates an analytics toolbar event and dispatches an action for
-     * starting poker
+     * starting poker.
      *
      * @private
      * @returns {void}
@@ -1138,13 +1138,13 @@ class Toolbox extends Component<Props, State> {
             case 'closedcaptions':
                 return <ClosedCaptionButton showLabel = { true } />;
             case 'poker':
-                return <OverflowMenuItem
+                return (<OverflowMenuItem
                     accessibilityLabel =
                         { t(`toolbar.accessibilityLabel.poker.${this.props._pokerAction.type}`) }
                     icon = { IconPoker }
                     key = 'poker'
                     onClick = { this._onToolbarPoker }
-                    text = { t(`toolbar.poker.${this.props._pokerAction.type}`) }  />
+                    text = { t(`toolbar.poker.${this.props._pokerAction.type}`) } />);
             case 'info':
                 return <InfoDialogButton showLabel = { true } />;
             case 'invite':
@@ -1319,14 +1319,16 @@ class Toolbox extends Component<Props, State> {
                     {
                         buttonsLeft.indexOf('poker') !== -1
                         && <ToolbarButton
-                            className={ `toolbox-button ${this.props._pokerAction.type}` }
-                                accessibilityLabel = { t('toolbar.accessibilityLabel.poker') }
-                                icon = { IconPoker }
-                                onClick = { this._onToolbarPoker }
+                            accessibilityLabel = { t('toolbar.accessibilityLabel.poker') }
+                            className = { `toolbox-button ${this.props._pokerAction.type}` }
+                            icon = { IconPoker }
+                            onClick = { this._onToolbarPoker }
                             tooltip = { t(`toolbar.poker.${this.props._pokerAction.type}`) } />
                     }
 
-                    <div className={ `toolbox-button ${this.props._pokerAction.type}` }>{ t(`toolbar.poker.${this.props._pokerAction.type}`) }</div>
+                    <div className = { `toolbox-button ${this.props._pokerAction.type}` }>
+                        { t(`toolbar.poker.${this.props._pokerAction.type}`) }
+                    </div>
                 </div>
                 <div className = 'button-group-center'>
                     { this._renderAudioButton() }
@@ -1405,7 +1407,7 @@ function _mapStateToProps(state) {
         overflowMenuVisible
     } = state['features/toolbox'];
     const localParticipant = getLocalParticipant(state);
-    const displayName = getParticipantDisplayName(state, localParticipant.id)
+    const displayName = getParticipantDisplayName(state, localParticipant.id);
     const localRecordingStates = state['features/local-recording'];
     const localVideo = getLocalVideoTrack(state['features/base/tracks']);
     const addPeopleEnabled = isAddPeopleEnabled(state);
@@ -1456,8 +1458,8 @@ function _mapStateToProps(state) {
             || sharedVideoStatus === 'pause',
         _visible: isToolboxVisible(state),
         _visibleButtons: equals(visibleButtons, buttons) ? visibleButtons : buttons,
-        _nameToDisplay : displayName,
-        _pokerAction : toolboxAction(state, displayName)
+        _nameToDisplay: displayName,
+        _pokerAction: toolboxAction(state, displayName)
     };
 }
 

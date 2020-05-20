@@ -739,7 +739,7 @@ export default class SmallVideo {
                                     iconSize = { iconSize }
                                     tooltipPosition = { tooltipPosition } />
                                 : null }
-                            {/*<Poker participantId = { this.id }></Poker>*/}
+                            {/* <Poker participantId = { this.id }></Poker>*/}
                         </AtlasKitThemeProvider>
                     </div>
                 </I18nextProvider>
@@ -748,6 +748,7 @@ export default class SmallVideo {
         );
 
         const poker = this.$poker().get(0);
+
         ReactDOM.render(
             <Provider store = { APP.store }>
                 <I18nextProvider i18n = { i18next }>
@@ -767,8 +768,8 @@ export default class SmallVideo {
      * @returns {void}
      */
     _onContainerClick(event) {
-        if(APP.store.getState()['features/Poker']?.common.game.state !== 'none') {
-            return true
+        if (APP.store.getState()['features/Poker']?.common.game.state !== 'none') {
+            return true;
         }
         const triggerPin = this._shouldTriggerPin(event);
 
