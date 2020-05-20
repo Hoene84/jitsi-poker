@@ -45,11 +45,10 @@ MiddlewareRegistry.register(store => next => action => {
 
 StateListenerRegistry.register(
     state => state['features/poker'],
-    (currentState, { getState, dispatch }, previousState = {}) => {
+    (currentState, { getState } = {}) => {
         const conference = getCurrentConference(getState())
         if(conference &&
-            currentState.common.lastModifiedBy === currentState.nick &&
-            !equals(currentState.common, previousState.common)) {
+            currentState.common.lastModifiedBy === currentState.nick) {
             conference.sendMessage({
                 state: currentState.common,
                 type: GAME_STATE_CHANGED_EVENT
