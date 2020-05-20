@@ -3,7 +3,8 @@
 import type { PokerState } from './types';
 
 import { ReducerRegistry } from '../base/redux';
-import { getDeck, update, countCards, assign, giveCards, chooseDealer, nextPlayerAfter } from './gameModifiers'
+import { getDeck, update, giveCards, chooseDealer } from './gameModifiers'
+import { assign, countCards, nextPlayerAfter } from './helpers';
 
 import {
     JOIN_GAME,
