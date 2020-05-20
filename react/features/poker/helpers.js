@@ -45,7 +45,7 @@ export function updateActions(state : PokerState) {
     case 'running': {
         return mapPlayers(state, (nick) => {
             let actions = [STOP_GAME];
-            actions = actions.concat(state.common.game.dealer === nick ? [GIVE_CARDS] : []);
+            actions = actions.concat(state.common.game.dealer === nick && Object.keys(state.common.players).some(nick => countCards(state, nick) < 2) ? [GIVE_CARDS] : []);
             return { actions: actions };
         });
     }
@@ -53,6 +53,11 @@ export function updateActions(state : PokerState) {
         return state;
     }
     }
+}
+
+export function countCards(state : PokerState, nick : string) {
+    if(!state.common.game.deck) return 0;
+    return state.common.game.deck && state.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).length;
 }
 
 export function mapPlayers(state : PokerState, mappingFunction : (string) => $Shape<Player>){

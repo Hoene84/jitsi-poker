@@ -3,7 +3,7 @@
 import type { PokerState } from './types';
 
 import { ReducerRegistry } from '../base/redux';
-import { getDeck, update, mapPlayers, assign, giveCards, chooseDealer } from './helpers'
+import { getDeck, update, countCards, assign, giveCards, chooseDealer } from './helpers'
 
 import {
     JOIN_GAME,
@@ -65,7 +65,7 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
     }
     case GIVE_CARDS: {
         const nicks : Array<string> = Object.keys(state.common.players)
-        return update(nicks.reduce((state : PokerState, nick: string) => giveCards(state, nick, 2), state));
+        return update(nicks.reduce((state : PokerState, nick: string) => giveCards(state, nick, 2 - countCards(state, nick)), state));
     }
     case NEW_STATE_RECEIVED: {
         return assign(state, {
