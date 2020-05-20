@@ -17,3 +17,11 @@ export function pokerActionTypes(state: Object, nick : string) : Array<string> {
     const player = state['features/poker'].common.players[nick] || { actions: [] };
     return POKER_ACTIONS.filter(action => player.actions.includes(action));
 }
+
+export function cards(state: Object, nick : string) : ?Array<Card> {
+    const pokerState = (state['features/poker'] : PokerState)
+    if (!pokerState.common.game.deck) {
+        return [];
+    }
+    return pokerState.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).map(cardSlot => cardSlot.card)
+}

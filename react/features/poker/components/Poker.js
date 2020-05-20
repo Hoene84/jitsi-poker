@@ -1,6 +1,6 @@
 // @flow
 
-import type { Action } from '../types'
+import type { Action, Card as CardType } from '../types'
 
 import React, { Component } from 'react';
 import { connect } from '../../base/redux';
@@ -9,14 +9,16 @@ import { translate } from '../../base/i18n';
 import Tooltip from '@atlaskit/tooltip';
 import { GIVE_CARDS } from '../../poker/actionTypes';
 import { giveCards } from '../../poker/actions';
-import { pokerActionTypes } from '../functions';
+import { cards, pokerActionTypes } from '../functions';
+import Card from './Card';
 
 export type Props = {
     participantID: string,
-    _amount: number,
     dispatch: Function,
     t: Function,
     _actions: Array<Action>,
+    _amount: number,
+    _cards: Array<CardType>,
     _state: string
 }
 
@@ -60,7 +62,10 @@ class Poker extends Component<Props, State> {
                         </Tooltip>
                     </button>)
                 })}
-                <div> {this.props._state}</div>
+                {this.props._cards.map(card => {
+                    return (<Card card={card}/>)
+                })}
+                {/*<div> {this.props._state}</div>*/}
             </div>
         );
     }
@@ -88,6 +93,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
     return {
         _amount: player ? player.amount : null,
         _actions: pokerActionTypes(state, nick),
+        _cards: cards(state, nick),
         _state: JSON.stringify(state['features/poker'])
     };
 }
