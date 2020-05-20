@@ -7,8 +7,8 @@ import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
 import Tooltip from '@atlaskit/tooltip';
-import { GIVE_CARDS, giveCards, JOIN_GAME } from '../../poker';
-import { Icon, IconAdd } from '../../base/icons';
+import { GIVE_CARDS } from '../../poker/actionTypes';
+import { giveCards } from '../../poker/actions';
 import { pokerActionTypes } from '../functions';
 
 export type Props = {

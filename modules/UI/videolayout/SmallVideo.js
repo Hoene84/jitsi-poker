@@ -28,7 +28,7 @@ import {
     setTileView,
     shouldDisplayTileView
 } from '../../../react/features/video-layout';
-import { Poker } from '../../../react/features/poker';
+import { Poker } from '../../../react/features/poker/components';
 /* eslint-enable no-unused-vars */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);

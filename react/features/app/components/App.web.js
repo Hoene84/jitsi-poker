@@ -15,6 +15,7 @@ import '../../room-lock';
 import '../../talk-while-muted';
 import '../../video-layout';
 import '../../old-client-notification';
+import '../../poker';
 
 import { AbstractApp } from './AbstractApp';
 

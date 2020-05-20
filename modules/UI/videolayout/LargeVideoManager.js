@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { Avatar } from '../../../react/features/base/avatar';
 import { i18next } from '../../../react/features/base/i18n';
 import { PresenceLabel } from '../../../react/features/presence-status';
-import { Poker } from '../../../react/features/poker';
+import { Poker } from '../../../react/features/poker/components';
 /* eslint-enable no-unused-vars */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
