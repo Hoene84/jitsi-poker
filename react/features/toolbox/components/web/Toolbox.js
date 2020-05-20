@@ -1405,6 +1405,7 @@ function _mapStateToProps(state) {
         overflowMenuVisible
     } = state['features/toolbox'];
     const localParticipant = getLocalParticipant(state);
+    const displayName = getParticipantDisplayName(state, localParticipant.id)
     const localRecordingStates = state['features/local-recording'];
     const localVideo = getLocalVideoTrack(state['features/base/tracks']);
     const addPeopleEnabled = isAddPeopleEnabled(state);
@@ -1455,8 +1456,8 @@ function _mapStateToProps(state) {
             || sharedVideoStatus === 'pause',
         _visible: isToolboxVisible(state),
         _visibleButtons: equals(visibleButtons, buttons) ? visibleButtons : buttons,
-        _nameToDisplay : getParticipantDisplayName(state, localParticipant.id),
-        _pokerAction : toolboxAction(state, localParticipant.id)
+        _nameToDisplay : displayName,
+        _pokerAction : toolboxAction(state, displayName)
     };
 }
 

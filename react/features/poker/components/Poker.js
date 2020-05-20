@@ -87,7 +87,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
 
     return {
         _amount: player ? player.amount : null,
-        _actions: pokerActionTypes(state, (participantID)),
+        _actions: pokerActionTypes(state, nick),
         _state: JSON.stringify(state['features/poker'])
     };
 }
