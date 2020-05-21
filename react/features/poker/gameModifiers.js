@@ -2,9 +2,10 @@
 
 import type { Deck, Player, PokerState, Suit, Symbol } from './types';
 
-import { GIVE_CARDS, JOIN_GAME, STOP_GAME, START_GAME } from './actionTypes';
+import { JOIN_GAME, START_GAME, STOP_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
-import { assign, countCards } from './helpers';
+import { assign } from './helpers';
+import { canGiveCards } from './canDo';
 
 export function getDeck(): Deck {
     return {
@@ -41,15 +42,12 @@ export function updateActions(state: PokerState) {
     }
     case 'running': {
         return mapPlayers(state, nick => {
-            let actions = [ STOP_GAME ];
-            const otherNicks = Object.keys(state.common.players);
-
-            const isDealer = state.common.game.dealer === nick;
-            const cardsMissing = otherNicks.some(playerNick => countCards(state, playerNick) < 2);
-
-            actions = actions.concat(isDealer && cardsMissing ? [ GIVE_CARDS ] : []);
-
-            return { actions };
+            return {
+                actions: [
+                    STOP_GAME,
+                    canGiveCards(state, nick)
+                ].filter(Boolean)
+            };
         });
     }
     default: {
