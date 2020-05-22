@@ -4,28 +4,27 @@
 import type { APokerState, PokerState } from './types';
 
 import { ReducerRegistry } from '../base/redux';
+import { chooseDealer, getDeck, giveCards, update } from './gameModifiers';
 import {
-    getDeck,
-    update,
-    giveCards,
-    chooseDealer
-} from './gameModifiers';
-import {
+    assignToCurrentPlayer,
+    assignToGame,
+    assignToPlayers,
+    assignToState,
+    chainableAssign,
     countCards,
-    nextPlayerAfter,
     currentPlayer,
-    assignToGame, assignToCurrentPlayer, assignToState, assignToPlayers
+    nextPlayerAfter
 } from './helpers';
 
 import {
-    JOIN_GAME,
-    START_GAME,
-    STOP_GAME,
-    GIVE_CARDS,
-    NEW_STATE_RECEIVED,
     CHECK,
+    FOLD,
+    GIVE_CARDS,
+    JOIN_GAME,
+    NEW_STATE_RECEIVED,
     RAISE,
-    FOLD
+    START_GAME,
+    STOP_GAME
 } from './actionTypes';
 import uuid from 'uuid';
 
@@ -51,69 +50,71 @@ const DEFAULT_STATE: PokerState = {
 ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action) => {
     switch (action.type) {
     case JOIN_GAME: {
-        const newState = assignToPlayers(initialState, () => ({
+        return assignToPlayers(initialState, () => ({
             [action.nick]: {
                 amount: initialState.common.game.startAmount,
                 cards: null,
                 actions: []
             }
-        }));
-
-        return update(assignToState(newState, () => ({
+        }))
+        .next(state => assignToState(state, () => ({
             nick: action.nick
-        })));
+        })))
+        .next(state => update(state));
     }
     case STOP_GAME: {
-        return DEFAULT_STATE;
+        return assignToState(initialState, () => DEFAULT_STATE)
+        .next(state => update(state));
     }
     case START_GAME: {
-        const dealer = chooseDealer(initialState.common.players);
-
-
-        return update(assignToGame(initialState, () => ({
+        return assignToGame(initialState, () => ({
+            dealer: chooseDealer(initialState.common.players)
+        }))
+        .next(state => assignToGame(state, () => ({
             state: 'running',
-            dealer,
             deck: getDeck(),
-            currentPlayer: nextPlayerAfter(initialState, dealer)
-        })));
+            currentPlayer: nextPlayerAfter(initialState, state.common.game.dealer)
+        })))
+        .next(state => update(state));
     }
     case GIVE_CARDS: {
         const nicks: Array<string> = Object.keys(initialState.common.players);
 
-        return update(nicks.reduce((modifiedState: APokerState, nick: string) => {
+        return nicks.reduce((modifiedState: APokerState, nick: string) => {
             const missingCards = 2 - countCards(modifiedState, nick);
 
             return giveCards(modifiedState, nick, missingCards);
-        }, initialState));
+        }, chainableAssign(initialState, {}))
+        .next(state => update(state));
     }
     case CHECK: {
-        return update(assignToGame(initialState, () => ({
+        return assignToGame(initialState, () => ({
             currentPlayer: nextPlayerAfter(initialState)
-        })));
+        }))
+        .next(state => update(state));
     }
     case RAISE: {
-        let newState = initialState;
-
-        newState = assignToCurrentPlayer(newState, (nick, player) => ({
+        return assignToCurrentPlayer(initialState, (nick, player) => ({
             amount: player.amount - action.amount,
             bet: action.amount
-        }));
-        newState = assignToGame(newState, () => ({
-            currentPlayer: nextPlayerAfter(newState)
-        }));
-
-        return update(newState);
+        }))
+        .next(state => assignToGame(state, () => ({
+            currentPlayer: nextPlayerAfter(state)
+        })))
+        .next(state => update(state));
     }
     case FOLD: {
-        return update(assignToCurrentPlayer(assignToGame(initialState, () => ({
+        return assignToGame(initialState, () => ({
             currentPlayer: nextPlayerAfter(initialState),
             pot: initialState.common.game.pot + currentPlayer(initialState)?.bet
-        })), () => {
+        }))
+        .next(state => assignToCurrentPlayer(state, () => {
             return {
                 fold: true,
                 bet: 0
             };
-        }));
+        }))
+        .next(state => update(state));
     }
     case NEW_STATE_RECEIVED: {
         return assignToState(initialState, () => ({

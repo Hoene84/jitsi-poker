@@ -12,7 +12,12 @@ import type {
 
 import { JOIN_GAME, START_GAME, STOP_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
-import { assignToAllPlayer, assignToCommon, chainableAssign } from './helpers';
+import {
+    assignToAllPlayer,
+    assignToCommon,
+    assignToGame,
+    chainableAssign
+} from './helpers';
 import { canCheck, canFold, canGiveCards, canRaise } from './canDo';
 
 export function getDeck(): Deck {
@@ -65,7 +70,7 @@ export function updateActions(state: APokerState): ChainablePokerState {
     }
 }
 
-export function giveCards(state: APokerState, owner: string, n: number): APokerState {
+export function giveCards(state: APokerState, owner: string, n: number) {
     const deck: ?Deck = state.common.game.deck;
 
     if (deck) {
@@ -77,7 +82,7 @@ export function giveCards(state: APokerState, owner: string, n: number): APokerS
 
     state.common.game.deck = deck;
 
-    return state;
+    return assignToGame(state, () => ({ deck }));
 }
 
 export function chooseDealer(players: { [string]: Player }) {
