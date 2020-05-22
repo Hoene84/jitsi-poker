@@ -5,7 +5,7 @@ import type { Deck, Player, PokerState, Suit, Symbol } from './types';
 import { JOIN_GAME, START_GAME, STOP_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
 import { assign } from './helpers';
-import { canGiveCards } from './canDo';
+import { canCheck, canFold, canGiveCards, canRaise } from './canDo';
 
 export function getDeck(): Deck {
     return {
@@ -45,7 +45,10 @@ export function updateActions(state: PokerState) {
             return {
                 actions: [
                     STOP_GAME,
-                    canGiveCards(state, nick)
+                    canGiveCards(state, nick),
+                    canCheck(state, nick),
+                    canRaise(state, nick),
+                    canFold(state, nick)
                 ].filter(Boolean)
             };
         });
@@ -56,16 +59,22 @@ export function updateActions(state: PokerState) {
     }
 }
 
-export function mapPlayers(state: PokerState, mappingFunction: (string) => $Shape<Player>) {
+export function mapPlayers(state: PokerState, mappingFunction: (string, Player) => $Shape<Player>) {
     return assign(state, {
         common: {
             ...state.common,
-            players: Object.fromEntries(Object.entries(state.common.players).map(([ nick, player ]) => [ nick, {
-                ...player,
-                ...mappingFunction(nick)
+            players: Object.fromEntries(Object.keys(state.common.players).map(nick => [ nick, {
+                ...state.common.players[nick],
+                ...mappingFunction(nick, state.common.players[nick])
             } ]))
         }
     });
+}
+
+export function mapCurrentPlayer(state: PokerState, mappingFunction: (string, Player) => $Shape<Player>) {
+    const isCurrent = nick => state.common.game.currentPlayer === nick;
+
+    return mapPlayers(state, (nick, player) => isCurrent(nick) ? mappingFunction(nick, player) : {});
 }
 
 export function giveCards(state: PokerState, owner: string, n: number): PokerState {

@@ -3,15 +3,24 @@
 import type { PokerState } from './types';
 
 import { ReducerRegistry } from '../base/redux';
-import { getDeck, update, giveCards, chooseDealer } from './gameModifiers';
-import { assign, countCards, nextPlayerAfter } from './helpers';
+import {
+    getDeck,
+    update,
+    giveCards,
+    chooseDealer,
+    mapCurrentPlayer
+} from './gameModifiers';
+import { assign, countCards, nextPlayerAfter, currentPlayer } from './helpers';
 
 import {
     JOIN_GAME,
     START_GAME,
     STOP_GAME,
     GIVE_CARDS,
-    NEW_STATE_RECEIVED
+    NEW_STATE_RECEIVED,
+    CHECK,
+    RAISE,
+    FOLD
 } from './actionTypes';
 import uuid from 'uuid';
 
@@ -24,7 +33,8 @@ const DEFAULT_STATE: PokerState = {
             startAmount: 20000,
             currentPlayer: null,
             dealer: null,
-            deck: null
+            deck: null,
+            pot: 0
         },
         table: [],
         players: {},
@@ -75,6 +85,49 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
 
             return giveCards(modifiedState, nick, missingCards);
         }, state));
+    }
+    case CHECK: {
+        return update(assign(state, {
+            common: assign(state.common, {
+                game: assign(state.common.game, {
+                    currentPlayer: nextPlayerAfter(state)
+                })
+            })
+        }));
+    }
+    case RAISE: {
+        let newState = state;
+
+        newState = mapCurrentPlayer(newState, (nick, player) => {
+            return {
+                amount: player.amount - action.amount,
+                bet: action.amount
+            };
+        });
+        newState = assign(newState, {
+            common: assign(newState.common, {
+                game: assign(newState.common.game, {
+                    currentPlayer: nextPlayerAfter(newState)
+                })
+            })
+        });
+
+        return update(newState);
+    }
+    case FOLD: {
+        return update(mapCurrentPlayer(assign(state, {
+            common: assign(state.common, {
+                game: assign(state.common.game, {
+                    currentPlayer: nextPlayerAfter(state),
+                    pot: state.common.game.pot + currentPlayer(state)?.bet
+                })
+            })
+        }), () => {
+            return {
+                fold: true,
+                bet: 0
+            };
+        }));
     }
     case NEW_STATE_RECEIVED: {
         return assign(state, {

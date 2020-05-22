@@ -7,6 +7,7 @@ module.exports = {
     ],
     'rules': {
         'require-jsdoc': 'off',
-        '@react/jsx-no-bind': 'off'
+        '@react/jsx-no-bind': 'off',
+        'no-confusing-arrow': 'off'
     }
 };

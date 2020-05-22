@@ -1,10 +1,10 @@
 // @flow
 
-import { GIVE_CARDS, JOIN_GAME } from './actionTypes';
+import { CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE } from './actionTypes';
 import { startGame, joinGame, stopGame } from './actions';
 import type { PokerState, Card } from './types';
 
-const POKER_ACTIONS = [ GIVE_CARDS ];
+const POKER_ACTIONS = [ GIVE_CARDS, CHECK, RAISE, FOLD ];
 
 export function toolboxAction(state: Object, nick: string) {
     const players = state['features/poker'].common.players;
