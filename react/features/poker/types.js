@@ -31,12 +31,15 @@ export type Game = {|
     startAmount: number,
     currentPlayer: ?string,
     dealer: ?string,
-    deck: ?Deck
+    deck: ?Deck,
+    pot: number,
 |}
 
 export type Player = {|
     amount: number,
     actions: Array<Action>,
+    bet: number,
+    fold: boolean
 |}
 
 export type CommonState = {|

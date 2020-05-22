@@ -7,8 +7,8 @@ import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
 import Tooltip from '@atlaskit/tooltip';
-import { GIVE_CARDS } from '../../poker/actionTypes';
-import { giveCards } from '../../poker/actions';
+import { CHECK, FOLD, GIVE_CARDS, RAISE } from '../../poker/actionTypes';
+import { giveCards, check, raise, fold } from '../actions';
 import { cards, currentPlayer, pokerActionTypes } from '../functions';
 import Card from './Card';
 
@@ -26,8 +26,6 @@ export type Props = {
 type State = {
 
 }
-
-export const DEFAULT_SIZE = 65;
 
 /**
  * Implements a class to render poker in the app.
@@ -77,6 +75,15 @@ class Poker extends Component<Props, State> {
         switch (action) {
         case GIVE_CARDS:
             this.props.dispatch(giveCards());
+            break;
+        case CHECK:
+            this.props.dispatch(check());
+            break;
+        case RAISE:
+            this.props.dispatch(raise(100));
+            break;
+        case FOLD:
+            this.props.dispatch(fold());
             break;
         default:
             console.log('unknown action');

@@ -2,8 +2,8 @@ module.exports = {
     'extends': [
         'eslint-config-jitsi'
     ],
-    "plugins": [
-        "only-warn"
+    'plugins': [
+        'only-warn'
     ],
     'rules': {
         'require-jsdoc': 'off',
