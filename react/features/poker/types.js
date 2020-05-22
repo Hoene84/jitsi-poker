@@ -48,7 +48,18 @@ export type CommonState = {|
     players: { [string]: Player },
     lastModifiedBy: ?string
 |}
+
 export type PokerState = {|
     common: CommonState,
-    nick: ?string
+    nick: ?string,
+|}
+
+export interface APokerState {
+    common: CommonState,
+    nick: ?string,
+}
+
+export type ChainablePokerState = {|
+    ...PokerState,
+    next: ((APokerState) => APokerState) => ChainablePokerState
 |}

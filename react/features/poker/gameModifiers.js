@@ -1,11 +1,18 @@
 /* eslint-disable arrow-body-style */
 // @flow
 
-import type { Deck, Player, PokerState, Suit, Symbol } from './types';
+import type {
+    APokerState,
+    ChainablePokerState,
+    Deck,
+    Player,
+    Suit,
+    Symbol
+} from './types';
 
 import { JOIN_GAME, START_GAME, STOP_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
-import { assignToAllPlayer, assignToCommon } from './helpers';
+import { assignToAllPlayer, assignToCommon, chainableAssign } from './helpers';
 import { canCheck, canFold, canGiveCards, canRaise } from './canDo';
 
 export function getDeck(): Deck {
@@ -25,13 +32,13 @@ export function getDeck(): Deck {
     };
 }
 
-export function update(state: PokerState) {
+export function update(state: APokerState) {
     return updateActions(assignToCommon(state, () => ({
         lastModifiedBy: state.nick
     })));
 }
 
-export function updateActions(state: PokerState) {
+export function updateActions(state: APokerState): ChainablePokerState {
     switch (state.common.game.state) {
     case 'none': {
         // return mapPlayers(state, (_) => ({actions: [JOIN_GAME]}));
@@ -53,12 +60,12 @@ export function updateActions(state: PokerState) {
         });
     }
     default: {
-        return state;
+        return chainableAssign(state, {});
     }
     }
 }
 
-export function giveCards(state: PokerState, owner: string, n: number): PokerState {
+export function giveCards(state: APokerState, owner: string, n: number): APokerState {
     const deck: ?Deck = state.common.game.deck;
 
     if (deck) {
