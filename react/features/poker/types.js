@@ -48,7 +48,7 @@ export type CommonState = {|
     players: { [string]: Player },
     lastModifiedBy: ?string
 |}
-export type PokerState = {
+export type PokerState = {|
     common: CommonState,
     nick: ?string
-}
+|}
