@@ -1,10 +1,11 @@
+/* eslint-disable arrow-body-style */
 // @flow
 
 import type { Deck, Player, PokerState, Suit, Symbol } from './types';
 
 import { JOIN_GAME, START_GAME, STOP_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
-import { assign } from './helpers';
+import { assignToAllPlayer, assignToCommon } from './helpers';
 import { canCheck, canFold, canGiveCards, canRaise } from './canDo';
 
 export function getDeck(): Deck {
@@ -25,23 +26,21 @@ export function getDeck(): Deck {
 }
 
 export function update(state: PokerState) {
-    return updateActions(assign(state, {
-        common: assign(state.common, {
-            lastModifiedBy: state.nick
-        })
-    }));
+    return updateActions(assignToCommon(state, () => ({
+        lastModifiedBy: state.nick
+    })));
 }
 
 export function updateActions(state: PokerState) {
     switch (state.common.game.state) {
     case 'none': {
         // return mapPlayers(state, (_) => ({actions: [JOIN_GAME]}));
-        return mapPlayers(state, nick => {
+        return assignToAllPlayer(state, nick => {
             return { actions: state.common.players[nick] ? [ START_GAME ] : [ JOIN_GAME ] };
         });
     }
     case 'running': {
-        return mapPlayers(state, nick => {
+        return assignToAllPlayer(state, nick => {
             return {
                 actions: [
                     STOP_GAME,
@@ -57,24 +56,6 @@ export function updateActions(state: PokerState) {
         return state;
     }
     }
-}
-
-export function mapPlayers(state: PokerState, mappingFunction: (string, Player) => $Shape<Player>) {
-    return assign(state, {
-        common: {
-            ...state.common,
-            players: Object.fromEntries(Object.keys(state.common.players).map(nick => [ nick, {
-                ...state.common.players[nick],
-                ...mappingFunction(nick, state.common.players[nick])
-            } ]))
-        }
-    });
-}
-
-export function mapCurrentPlayer(state: PokerState, mappingFunction: (string, Player) => $Shape<Player>) {
-    const isCurrent = nick => state.common.game.currentPlayer === nick;
-
-    return mapPlayers(state, (nick, player) => isCurrent(nick) ? mappingFunction(nick, player) : {});
 }
 
 export function giveCards(state: PokerState, owner: string, n: number): PokerState {

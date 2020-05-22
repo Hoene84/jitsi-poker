@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 // @flow
 
 import type { PokerState } from './types';
@@ -7,10 +8,14 @@ import {
     getDeck,
     update,
     giveCards,
-    chooseDealer,
-    mapCurrentPlayer
+    chooseDealer
 } from './gameModifiers';
-import { assign, countCards, nextPlayerAfter, currentPlayer } from './helpers';
+import {
+    countCards,
+    nextPlayerAfter,
+    currentPlayer,
+    assignToGame, assignToCurrentPlayer, assignToState, assignToPlayers
+} from './helpers';
 
 import {
     JOIN_GAME,
@@ -46,18 +51,17 @@ const DEFAULT_STATE: PokerState = {
 ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case JOIN_GAME: {
-        return update(assign<PokerState>(state, {
-            common: assign(state.common, {
-                players: assign(state.common.players, {
-                    [action.nick]: {
-                        amount: state.common.game.startAmount,
-                        cards: null,
-                        actions: []
-                    }
-                })
-            }),
-            nick: action.nick
+        const newState = assignToPlayers(state, () => ({
+            [action.nick]: {
+                amount: state.common.game.startAmount,
+                cards: null,
+                actions: []
+            }
         }));
+
+        return update(assignToState(newState, () => ({
+            nick: action.nick
+        })));
     }
     case STOP_GAME: {
         return DEFAULT_STATE;
@@ -66,16 +70,12 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
         const dealer = chooseDealer(state.common.players);
 
 
-        return update(assign(state, {
-            common: assign(state.common, {
-                game: assign(state.common.game, {
-                    state: 'running',
-                    dealer,
-                    deck: getDeck(),
-                    currentPlayer: nextPlayerAfter(state, dealer)
-                })
-            })
-        }));
+        return update(assignToGame(state, () => ({
+            state: 'running',
+            dealer,
+            deck: getDeck(),
+            currentPlayer: nextPlayerAfter(state, dealer)
+        })));
     }
     case GIVE_CARDS: {
         const nicks: Array<string> = Object.keys(state.common.players);
@@ -87,42 +87,28 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
         }, state));
     }
     case CHECK: {
-        return update(assign(state, {
-            common: assign(state.common, {
-                game: assign(state.common.game, {
-                    currentPlayer: nextPlayerAfter(state)
-                })
-            })
-        }));
+        return update(assignToGame(state, () => ({
+            currentPlayer: nextPlayerAfter(state)
+        })));
     }
     case RAISE: {
         let newState = state;
 
-        newState = mapCurrentPlayer(newState, (nick, player) => {
-            return {
-                amount: player.amount - action.amount,
-                bet: action.amount
-            };
-        });
-        newState = assign(newState, {
-            common: assign(newState.common, {
-                game: assign(newState.common.game, {
-                    currentPlayer: nextPlayerAfter(newState)
-                })
-            })
-        });
+        newState = assignToCurrentPlayer(newState, (nick, player) => ({
+            amount: player.amount - action.amount,
+            bet: action.amount
+        }));
+        newState = assignToGame(newState, () => ({
+            currentPlayer: nextPlayerAfter(newState)
+        }));
 
         return update(newState);
     }
     case FOLD: {
-        return update(mapCurrentPlayer(assign(state, {
-            common: assign(state.common, {
-                game: assign(state.common.game, {
-                    currentPlayer: nextPlayerAfter(state),
-                    pot: state.common.game.pot + currentPlayer(state)?.bet
-                })
-            })
-        }), () => {
+        return update(assignToCurrentPlayer(assignToGame(state, () => ({
+            currentPlayer: nextPlayerAfter(state),
+            pot: state.common.game.pot + currentPlayer(state)?.bet
+        })), () => {
             return {
                 fold: true,
                 bet: 0
@@ -130,9 +116,9 @@ ReducerRegistry.register('features/poker', (state = DEFAULT_STATE, action) => {
         }));
     }
     case NEW_STATE_RECEIVED: {
-        return assign(state, {
+        return assignToState(state, () => ({
             common: action.common
-        });
+        }));
     }
     }
 
