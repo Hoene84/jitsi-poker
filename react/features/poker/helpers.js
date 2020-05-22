@@ -13,42 +13,34 @@ export function assignToState(state: PokerState, assignFunction: (PokerState) =>
 }
 
 export function assignToCommon(state: PokerState, assignFunction: (CommonState) => $Shape<CommonState>): PokerState {
-    return assign(state, {
-        ...state,
+    return assignToState(state, () => ({
         common: assign(state.common, assignFunction(state.common))
-    });
+    }));
 }
 
 export function assignToGame(state: PokerState, assignFunction: (Game) => $Shape<Game>): PokerState {
-    return assign(state, {
-        common: assign(state.common, {
-            game: assign(state.common.game, assignFunction(state.common.game))
-        })
-    });
+    return assignToCommon(state, () => ({
+        game: assign(state.common.game, assignFunction(state.common.game))
+    }));
 }
 
 export function assignToPlayers(state: PokerState, assignFunction: ({ [string]: Player }) => $Shape<{ [string]: Player }>) {
-    return assign(state, {
-        common: assign(state.common, {
-            ...state.common,
-            players: {
-                ...state.common.players,
-                ...assignFunction(state.common.players)
-            }
-        })
-    });
+    return assignToCommon(state, () => ({
+        players: {
+            ...state.common.players,
+            ...assignFunction(state.common.players)
+        }
+    }));
 }
 
 export function assignToAllPlayer(state: PokerState, assignFunction: (string, Player) => $Shape<Player>) {
-    return assign(state, {
-        common: assign(state.common, {
-            players: Object.fromEntries(Object.keys(state.common.players)
-                .map(nick => [ nick, {
-                    ...state.common.players[nick],
-                    ...assignFunction(nick, state.common.players[nick])
-                } ]))
-        })
-    });
+    return assignToCommon(state, () => ({
+        players: Object.fromEntries(Object.keys(state.common.players)
+            .map(nick => [ nick, {
+                ...state.common.players[nick],
+                ...assignFunction(nick, state.common.players[nick])
+            } ]))
+    }));
 }
 
 export function assignToCurrentPlayer(state: PokerState, assignFunction: (string, Player) => $Shape<Player>) {
