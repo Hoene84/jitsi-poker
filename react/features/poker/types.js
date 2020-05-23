@@ -42,6 +42,11 @@ export type Player = {|
     fold: boolean
 |}
 
+export type PlayerEntry = {|
+    nick: string,
+    player: Player
+|}
+
 export type CommonState = {|
     game: Game,
     table: Array<Card>,

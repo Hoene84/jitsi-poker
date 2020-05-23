@@ -51,10 +51,12 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     switch (action.type) {
     case JOIN_GAME: {
         return assignToPlayers(initialState, () => ({
-            [action.nick]: {
+            nick: action.nick,
+            player: {
                 amount: initialState.common.game.startAmount,
-                cards: null,
-                actions: []
+                actions: [],
+                bet: 0,
+                fold: true
             }
         }))
         .next(state => assignToState(state, () => ({

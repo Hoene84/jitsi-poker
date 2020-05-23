@@ -6,6 +6,7 @@ import type {
     CommonState,
     Game,
     Player,
+    PlayerEntry,
     PokerState
 } from './types';
 import { assign as reduxAssign } from '../base/redux';
@@ -50,12 +51,14 @@ export function assignToGame(state: APokerState, assignFunction: (Game) => $Shap
 
 export function assignToPlayers(
         state: APokerState,
-        assignFunction: ({ [string]: Player }) => $Shape<{ [string]: Player }>): ChainablePokerState {
+        assignFunction: ({ [string]: Player }) => PlayerEntry): ChainablePokerState {
+    const playerEntry = assignFunction(state.common.players);
+
     return assignToCommon(state, () => {
         return {
             players: {
                 ...state.common.players,
-                ...assignFunction(state.common.players)
+                ...{ [playerEntry.nick]: playerEntry.player }
             }
         };
     });
