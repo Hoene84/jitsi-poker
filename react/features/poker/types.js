@@ -24,6 +24,11 @@ export type Deck = {|
     cards: Array<CardSlot>
 |}
 
+export type Blind = {|
+    small: number,
+    big: number
+|}
+
 export type Game = {|
     id: string,
     ticks: ?number,
@@ -33,6 +38,7 @@ export type Game = {|
     dealer: ?string,
     deck: ?Deck,
     pot: number,
+    blind: Blind,
 |}
 
 export type Player = {|

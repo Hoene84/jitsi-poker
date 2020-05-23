@@ -78,23 +78,26 @@ export function assignToAllPlayer(
     });
 }
 
-export function assignToCurrentPlayer(
+export function assignToPlayer(
         state: APokerState,
+        nick: string,
         assignFunction: (string, Player) => $Shape<Player>): ChainablePokerState {
-
-    return assignToAllPlayer(state, (nick, player) => {
-        const isCurrent = state.common.game.currentPlayer === nick;
-
-        return isCurrent ? assignFunction(nick, player) : {};
+    // eslint-disable-next-line arrow-body-style
+    return assignToAllPlayer(state, (aNick, player) => {
+        return nick === aNick ? assignFunction(nick, player) : {};
     });
 }
 
-export function countCards(state: APokerState, nick: string) {
-    if (!state.common.game.deck) {
-        return 0;
-    }
+export function assignToCurrentPlayer(
+        state: APokerState,
+        assignFunction: (string, Player) => $Shape<Player>): ChainablePokerState {
+    return state.common.game.currentPlayer
+        ? assignToPlayer(state, state.common.game.currentPlayer, assignFunction)
+        : chainableAssign(state, {});
+}
 
-    return state.common.game.deck && state.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).length;
+export function countCards(state: APokerState, nick: string) {
+    return state.common.game.deck ? state.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).length : 0;
 }
 
 export function nextPlayerAfter(state: APokerState, nick: ?string = state.common.game.currentPlayer) {

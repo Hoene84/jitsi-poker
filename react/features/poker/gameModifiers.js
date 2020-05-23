@@ -16,7 +16,9 @@ import {
     assignToAllPlayer,
     assignToCommon,
     assignToGame,
-    chainableAssign
+    assignToPlayer,
+    chainableAssign,
+    nextPlayerAfter
 } from './helpers';
 import { canCheck, canFold, canGiveCards, canRaise } from './canDo';
 
@@ -89,4 +91,23 @@ export function chooseDealer(players: { [string]: Player }) {
     const nicks = Object.keys(players);
 
     return nicks[Math.floor(Math.random() * nicks.length)];
+}
+
+export function payBlinds(initalState: APokerState) {
+    const small = nextPlayerAfter(initalState, initalState.common.game.dealer);
+    const big = nextPlayerAfter(initalState, small);
+
+    return _payBlind(initalState, small, initalState.common.game.blind.small)
+    .next(state => _payBlind(state, big, state.common.game.blind.big));
+}
+
+function _payBlind(state: APokerState, nick: string, amount: number) {
+    return assignToPlayer(state, nick, (_, player) => {
+        const amountToPay = Math.max(0, amount - player.bet);
+
+        return {
+            bet: player.bet + amountToPay,
+            amount: player.amount - amountToPay
+        };
+    });
 }

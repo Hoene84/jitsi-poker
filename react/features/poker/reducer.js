@@ -4,7 +4,13 @@
 import type { APokerState, PokerState } from './types';
 
 import { ReducerRegistry } from '../base/redux';
-import { chooseDealer, getDeck, giveCards, update } from './gameModifiers';
+import {
+    chooseDealer,
+    getDeck,
+    giveCards,
+    payBlinds,
+    update
+} from './gameModifiers';
 import {
     assignToCurrentPlayer,
     assignToGame,
@@ -34,11 +40,15 @@ const DEFAULT_STATE: PokerState = {
             id: uuid.v4().toUpperCase(),
             ticks: 0,
             state: 'none',
-            startAmount: 20000,
+            startAmount: 1000,
             currentPlayer: null,
             dealer: null,
             deck: null,
-            pot: 0
+            pot: 0,
+            blind: {
+                small: 5,
+                big: 10
+            }
         },
         table: [],
         players: {},
@@ -87,6 +97,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
 
             return giveCards(modifiedState, nick, missingCards);
         }, chainableAssign(initialState, {}))
+        .next(state => payBlinds(state))
         .next(state => update(state));
     }
     case CHECK: {
