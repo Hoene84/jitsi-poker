@@ -134,7 +134,7 @@ export function chooseDealer(players: { [string]: Player }) {
     return nicks[Math.floor(Math.random() * nicks.length)];
 }
 
-export function toBet(state: PokerState, amount: number) {
+export function toBet(state: APokerState, amount: number) {
     return assignToCurrentPlayer(state, (nick, player) => ({
         amount: player.amount - amount,
         bet: player.bet + amount
