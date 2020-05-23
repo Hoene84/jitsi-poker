@@ -18,6 +18,7 @@ export type Props = {
     t: Function,
     _actions: Array<Action>,
     _amount: number,
+    _bet: number,
     _cards: Array<CardType>,
     _state: string,
     _isCurrentPlayer: boolean
@@ -49,7 +50,8 @@ class Poker extends Component<Props, State> {
 
         return (
             <div className = { `player ${this.props._isCurrentPlayer ? 'current' : ''}` }>
-                <div>{this.props._amount}</div>
+                <div>Amount: {this.props._amount}</div>
+                <div>Bet: {this.props._bet}</div>
                 {this.props._actions.map(action => (<button
                     aria-label = { t(`poker.action.${action}`) }
                     className = 'poker-button'
@@ -100,6 +102,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
 
     return {
         _amount: player ? player.amount : null,
+        _bet: player ? player.bet : null,
         _actions: pokerActionTypes(state, nick),
         _cards: cards(state, nick),
         _state: JSON.stringify(state['features/poker']),
