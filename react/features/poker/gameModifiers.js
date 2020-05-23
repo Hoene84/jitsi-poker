@@ -18,6 +18,7 @@ import {
     assignToGame,
     assignToPlayer,
     chainableAssign,
+    countCards,
     nextPlayerAfter
 } from './helpers';
 import { canCheck, canFold, canGiveCards, canRaise } from './canDo';
@@ -72,7 +73,17 @@ export function updateActions(state: APokerState): ChainablePokerState {
     }
 }
 
-export function giveCards(state: APokerState, owner: string, n: number) {
+export function giveCards(state: APokerState) {
+    const nicks: Array<string> = Object.keys(state.common.players);
+
+    return nicks.reduce((modifiedState: APokerState, nick: string) => {
+        const missingCards = 2 - countCards(modifiedState, nick);
+
+        return giveCardsTo(modifiedState, nick, missingCards);
+    }, chainableAssign(state, {}))
+}
+
+export function giveCardsTo(state: APokerState, owner: string, n: number) {
     const deck: ?Deck = state.common.game.deck;
 
     if (deck) {

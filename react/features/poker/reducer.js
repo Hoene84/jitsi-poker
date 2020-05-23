@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 // @flow
 
-import type { APokerState, PokerState } from './types';
+import type { PokerState } from './types';
 
 import { ReducerRegistry } from '../base/redux';
 import {
@@ -16,8 +16,6 @@ import {
     assignToGame,
     assignToPlayers,
     assignToState,
-    chainableAssign,
-    countCards,
     currentPlayer,
     nextPlayerAfter
 } from './helpers';
@@ -90,13 +88,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .next(state => update(state));
     }
     case GIVE_CARDS: {
-        const nicks: Array<string> = Object.keys(initialState.common.players);
-
-        return nicks.reduce((modifiedState: APokerState, nick: string) => {
-            const missingCards = 2 - countCards(modifiedState, nick);
-
-            return giveCards(modifiedState, nick, missingCards);
-        }, chainableAssign(initialState, {}))
+        return giveCards(initialState)
         .next(state => payBlinds(state))
         .next(state => update(state));
     }
