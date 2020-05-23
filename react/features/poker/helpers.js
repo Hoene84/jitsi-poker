@@ -17,11 +17,13 @@ function assign<T: Object>(target: T, source: $Shape<T>): T {
 }
 
 export function chainableAssign<T: Object>(target: T, source: $Shape<T>): ChainablePokerState {
-    const state = reduxAssign(target, source);
+    return chain(reduxAssign(target, source));
+}
 
+export function chain(state: APokerState): ChainablePokerState {
     return {
         ...state,
-        next: (func: (PokerState) => PokerState) => func(state)
+        next: func => func(state)
     };
 }
 
@@ -93,7 +95,7 @@ export function assignToCurrentPlayer(
         assignFunction: (string, Player) => $Shape<Player>): ChainablePokerState {
     return state.common.game.currentPlayer
         ? assignToPlayer(state, state.common.game.currentPlayer, assignFunction)
-        : chainableAssign(state, {});
+        : chain(state);
 }
 
 export function countCards(state: APokerState, nick: string) {

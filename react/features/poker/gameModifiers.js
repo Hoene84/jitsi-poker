@@ -16,7 +16,7 @@ import {
     assignToAllPlayer,
     assignToCommon, assignToCurrentPlayer,
     assignToGame,
-    assignToPlayer,
+    assignToPlayer, chain,
     chainableAssign,
     countCards,
     nextPlayerAfter,
@@ -77,7 +77,7 @@ export function updateActions(state: APokerState): ChainablePokerState {
         });
     }
     default: {
-        return chainableAssign(state, {});
+        return chain(state);
     }
     }
 }
