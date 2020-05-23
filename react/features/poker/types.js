@@ -38,6 +38,7 @@ export type Game = {|
     dealer: ?string,
     deck: ?Deck,
     pot: number,
+    bet: number,
     blind: Blind,
 |}
 

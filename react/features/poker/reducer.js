@@ -42,6 +42,7 @@ const DEFAULT_STATE: PokerState = {
             dealer: null,
             deck: null,
             pot: 0,
+            bet: 0,
             blind: {
                 small: 5,
                 big: 10

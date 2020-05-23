@@ -84,11 +84,12 @@ export function newRound(state: APokerState) {
     return assignToGame(state, () => ({
         dealer: chooseDealer(state.common.players)
     }))
-    .next(state => assignToGame(state, () => ({
+    .next(state => assignToGame(state, game => ({
         deck: getDeck(),
-        currentPlayer: nextPlayerAfter(state, state.common.game.dealer)
+        currentPlayer: nextPlayerAfter(state, game.dealer),
+        bet: game.blind.big
     })))
-    .next(state => assignToAllPlayer(state, nick => {
+    .next(state => assignToAllPlayer(state, _ => {
         return { fold: false };
     }));
 }
