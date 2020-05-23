@@ -23,7 +23,7 @@ export function chainableAssign<T: Object>(target: T, source: $Shape<T>): Chaina
 export function chain(state: APokerState): ChainablePokerState {
     return {
         ...state,
-        next: func => func(state)
+        then: func => func(state)
     };
 }
 

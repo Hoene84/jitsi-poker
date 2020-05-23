@@ -71,73 +71,73 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
                 fold: true
             }
         }))
-        .next(state => assignToState(state, () => ({
+        .then(state => assignToState(state, () => ({
             nick: action.nick
         })))
-        .next(state => update(state));
+        .then(state => update(state));
     }
     case STOP_GAME: {
         return assignToState(initialState, () => DEFAULT_STATE)
-        .next(state => update(state));
+        .then(state => update(state));
     }
     case START_GAME: {
         return assignToGame(initialState, () => ({
             dealer: chooseDealer(initialState.common.players)
         }))
-        .next(state => assignToGame(state, () => ({
+        .then(state => assignToGame(state, () => ({
             state: 'running'
         })))
-        .next(state => newRound(state))
-        .next(state => update(state));
+        .then(state => newRound(state))
+        .then(state => update(state));
     }
     case GIVE_CARDS: {
         return giveCards(initialState)
-        .next(state => payBlinds(state))
-        .next(state => update(state));
+        .then(state => payBlinds(state))
+        .then(state => update(state));
     }
     case CHECK: {
         return assignToGame(initialState, () => ({
             currentPlayer: nextPlayerAfter(initialState)
         }))
-        .next(state => update(state));
+        .then(state => update(state));
     }
     case CALL: {
         return toBet(initialState, initialState.common.game.bet - (currentPlayer(initialState)?.bet || 0))
-        .next(state => assignToGame(state, () => ({
+        .then(state => assignToGame(state, () => ({
             raisePlayer: state.common.game.currentPlayer
         })))
-        .next(state => assignToGame(state, () => ({
+        .then(state => assignToGame(state, () => ({
             currentPlayer: nextPlayerAfter(state)
         })))
-        .next(state => update(state));
+        .then(state => update(state));
     }
     case RAISE: {
         return assignToCurrentPlayer(initialState, (nick, player) => ({
             amount: player.amount - action.amount,
             bet: player.bet + action.amount
         }))
-        .next(state => assignToGame(state, () => ({
+        .then(state => assignToGame(state, () => ({
             raisePlayer: state.common.game.currentPlayer
         })))
-        .next(state => assignToGame(state, () => ({
+        .then(state => assignToGame(state, () => ({
             currentPlayer: nextPlayerAfter(state)
         })))
-        .next(state => update(state));
+        .then(state => update(state));
     }
     case FOLD: {
         return assignToGame(initialState, () => ({
             pot: initialState.common.game.pot + currentPlayer(initialState)?.bet
         }))
-        .next(state => assignToCurrentPlayer(state, () => {
+        .then(state => assignToCurrentPlayer(state, () => {
             return {
                 fold: true,
                 bet: 0
             };
         }))
-        .next(state => assignToGame(state, () => ({
+        .then(state => assignToGame(state, () => ({
             currentPlayer: nextPlayerAfter(state)
         })))
-        .next(state => update(state));
+        .then(state => update(state));
     }
     case NEW_STATE_RECEIVED: {
         return assignToState(initialState, () => ({

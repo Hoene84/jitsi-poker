@@ -43,7 +43,7 @@ export function getDeck(): Deck {
 
 export function update(state: APokerState) {
     return updateGame(state)
-    .next(state => updateActions(assignToCommon(state, () => ({
+    .then(state => updateActions(assignToCommon(state, () => ({
         lastModifiedBy: state.nick
     }))));
 }
@@ -86,19 +86,19 @@ export function nextRound(state: APokerState) {
     return assignToGame(state, () => ({
         dealer: nextPlayerAfter(state, state.common.game.dealer)
     }))
-    .next(state => newRound(state));
+    .then(state => newRound(state));
 }
 
 export function newRound(state: APokerState) {
     return assignToGame(state, () => ({
         dealer: chooseDealer(state.common.players)
     }))
-    .next(state => assignToGame(state, game => ({
+    .then(state => assignToGame(state, game => ({
         deck: getDeck(),
         currentPlayer: nextPlayerAfter(state, game.dealer),
         bet: game.blind.big
     })))
-    .next(state => assignToAllPlayer(state, _ => {
+    .then(state => assignToAllPlayer(state, _ => {
         return { fold: false };
     }));
 }
@@ -147,7 +147,7 @@ export function payBlinds(initalState: APokerState) {
     const big = nextPlayerAfter(initalState, small);
 
     return _payBlind(initalState, small, initalState.common.game.blind.small)
-    .next(state => _payBlind(state, big, state.common.game.blind.big));
+    .then(state => _payBlind(state, big, state.common.game.blind.big));
 }
 
 function _payBlind(state: APokerState, nick: string, amount: number) {
