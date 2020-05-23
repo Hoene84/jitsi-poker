@@ -6,8 +6,7 @@ import type { PokerState } from './types';
 import { ReducerRegistry } from '../base/redux';
 import {
     chooseDealer,
-    getDeck,
-    giveCards,
+    giveCards, newRound,
     payBlinds,
     update
 } from './gameModifiers';
@@ -81,10 +80,9 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
             dealer: chooseDealer(initialState.common.players)
         }))
         .next(state => assignToGame(state, () => ({
-            state: 'running',
-            deck: getDeck(),
-            currentPlayer: nextPlayerAfter(initialState, state.common.game.dealer)
+            state: 'running'
         })))
+        .next(state => newRound(state))
         .next(state => update(state));
     }
     case GIVE_CARDS: {

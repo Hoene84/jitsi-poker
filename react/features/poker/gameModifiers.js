@@ -73,6 +73,26 @@ export function updateActions(state: APokerState): ChainablePokerState {
     }
 }
 
+export function nextRound(state: APokerState) {
+    return assignToGame(state, () => ({
+        dealer: nextPlayerAfter(state, state.common.game.dealer)
+    }))
+    .next(state => newRound(state));
+}
+
+export function newRound(state: APokerState) {
+    return assignToGame(state, () => ({
+        dealer: chooseDealer(state.common.players)
+    }))
+    .next(state => assignToGame(state, () => ({
+        deck: getDeck(),
+        currentPlayer: nextPlayerAfter(state, state.common.game.dealer)
+    })))
+    .next(state => assignToAllPlayer(state, nick => {
+        return { fold: false };
+    }));
+}
+
 export function giveCards(state: APokerState) {
     const nicks: Array<string> = Object.keys(state.common.players);
 
@@ -80,7 +100,7 @@ export function giveCards(state: APokerState) {
         const missingCards = 2 - countCards(modifiedState, nick);
 
         return giveCardsTo(modifiedState, nick, missingCards);
-    }, chainableAssign(state, {}))
+    }, chainableAssign(state, {}));
 }
 
 export function giveCardsTo(state: APokerState, owner: string, n: number) {
