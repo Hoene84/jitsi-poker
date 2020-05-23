@@ -114,6 +114,14 @@ export function currentPlayer(state: APokerState): ?Player {
     }
 }
 
+export function player(state: APokerState, nick: string): Player {
+    return state.common.players[nick];
+}
+
 export function players(state: APokerState): Array<Player> {
     return Object.keys(state.common.players).map(nick => state.common.players[nick]);
+}
+
+export function winner(state: APokerState): string {
+    return Object.keys(state.common.players)[0]
 }

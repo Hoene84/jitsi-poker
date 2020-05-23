@@ -19,8 +19,11 @@ import {
     assignToPlayer, chain,
     chainableAssign,
     countCards,
+    currentPlayer,
     nextPlayerAfter,
-    players
+    player,
+    players,
+    winner
 } from './helpers';
 import { canCall, canCheck, canFold, canGiveCards, canRaise } from './canDo';
 
@@ -90,17 +93,45 @@ export function nextRound(state: APokerState) {
 }
 
 export function newRound(state: APokerState) {
-    return assignToGame(state, () => ({
-        dealer: chooseDealer(state.common.players)
+    return chain(state)
+    .then(state => assignToGame(state, game => ({
+        dealer: nextPlayerAfter(state, game.dealer)
+    })))
+    .then(state => assignToAllPlayer(state, _ => {
+        return { fold: false };
     }))
     .then(state => assignToGame(state, game => ({
         deck: getDeck(),
         currentPlayer: nextPlayerAfter(state, game.dealer),
+        raisePlayer: null,
+        pot: 0,
         bet: game.blind.big
+    })));
+}
+
+export function nextPlayer(state: APokerState) {
+    const isDealer = state.common.game.dealer === state.common.game.currentPlayer;
+    const end = isDealer && (currentPlayer(state)?.bet || 0) === state.common.game.bet
+
+    if (end) {
+        return chain(state)
+        .then(state => collect(state))
+        .then(state => nextRound(state))
+    } else {
+        return assignToGame(state, () => ({
+            currentPlayer: nextPlayerAfter(state)
+        }));
+    }
+}
+
+export function collect(state: APokerState) {
+    return chain(state)
+    .then(state => assignToPlayer(state, winner(state), () => ({
+        amount: player(state, winner(state)).amount + players(state).reduce((amount, player) => amount + player.bet, 0)
     })))
-    .then(state => assignToAllPlayer(state, _ => {
-        return { fold: false };
-    }));
+    .then(state => assignToAllPlayer(state, () => ({
+        bet: 0
+    })));
 }
 
 export function giveCards(state: APokerState) {

@@ -10,7 +10,8 @@ import {
     newRound,
     payBlinds,
     toBet,
-    update
+    update,
+    nextPlayer
 } from './gameModifiers';
 import {
     assignToCurrentPlayer,
@@ -19,7 +20,6 @@ import {
     assignToState,
     chain,
     currentPlayer,
-    nextPlayerAfter
 } from './helpers';
 
 import {
@@ -102,9 +102,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     }
     case CHECK: {
         return chain(initialState)
-        .then(state => assignToGame(state, () => ({
-            currentPlayer: nextPlayerAfter(state)
-        })))
+        .then(state => nextPlayer(state))
         .then(state => update(state));
     }
     case CALL: {
@@ -113,9 +111,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => assignToGame(state, () => ({
             raisePlayer: state.common.game.currentPlayer
         })))
-        .then(state => assignToGame(state, () => ({
-            currentPlayer: nextPlayerAfter(state)
-        })))
+        .then(state => nextPlayer(state))
         .then(state => update(state));
     }
     case RAISE: {
@@ -127,9 +123,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => assignToGame(state, () => ({
             raisePlayer: state.common.game.currentPlayer
         })))
-        .then(state => assignToGame(state, () => ({
-            currentPlayer: nextPlayerAfter(state)
-        })))
+        .then(state => nextPlayer(state))
         .then(state => update(state));
     }
     case FOLD: {
@@ -143,9 +137,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
                 bet: 0
             };
         }))
-        .then(state => assignToGame(state, () => ({
-            currentPlayer: nextPlayerAfter(state)
-        })))
+        .then(state => nextPlayer(state))
         .then(state => update(state));
     }
     case NEW_STATE_RECEIVED: {
