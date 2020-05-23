@@ -7,8 +7,8 @@ import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
 import Tooltip from '@atlaskit/tooltip';
-import { CHECK, FOLD, GIVE_CARDS, RAISE } from '../../poker/actionTypes';
-import { giveCards, check, raise, fold } from '../actions';
+import { CALL, CHECK, FOLD, GIVE_CARDS, RAISE } from '../../poker/actionTypes';
+import { giveCards, check, call, raise, fold } from '../actions';
 import { cards, currentPlayer, pokerActionTypes } from '../functions';
 import Card from './Card';
 
@@ -80,6 +80,9 @@ class Poker extends Component<Props, State> {
             break;
         case CHECK:
             this.props.dispatch(check());
+            break;
+        case CALL:
+            this.props.dispatch(call());
             break;
         case RAISE:
             this.props.dispatch(raise(100));

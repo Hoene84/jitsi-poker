@@ -6,8 +6,10 @@ import type { PokerState } from './types';
 import { ReducerRegistry } from '../base/redux';
 import {
     chooseDealer,
-    giveCards, newRound,
+    giveCards,
+    newRound,
     payBlinds,
+    toBet,
     update
 } from './gameModifiers';
 import {
@@ -20,6 +22,7 @@ import {
 } from './helpers';
 
 import {
+    CALL,
     CHECK,
     FOLD,
     GIVE_CARDS,
@@ -39,6 +42,7 @@ const DEFAULT_STATE: PokerState = {
             state: 'none',
             startAmount: 1000,
             currentPlayer: null,
+            raisePlayer: null,
             dealer: null,
             deck: null,
             pot: 0,
@@ -97,11 +101,24 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         }))
         .next(state => update(state));
     }
+    case CALL: {
+        return toBet(initialState, initialState.common.game.bet - (currentPlayer(initialState)?.bet || 0))
+        .next(state => assignToGame(state, () => ({
+            raisePlayer: state.common.game.currentPlayer
+        })))
+        .next(state => assignToGame(state, () => ({
+            currentPlayer: nextPlayerAfter(state)
+        })))
+        .next(state => update(state));
+    }
     case RAISE: {
         return assignToCurrentPlayer(initialState, (nick, player) => ({
             amount: player.amount - action.amount,
             bet: player.bet + action.amount
         }))
+        .next(state => assignToGame(state, () => ({
+            raisePlayer: state.common.game.currentPlayer
+        })))
         .next(state => assignToGame(state, () => ({
             currentPlayer: nextPlayerAfter(state)
         })))

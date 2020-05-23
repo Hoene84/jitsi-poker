@@ -5,7 +5,7 @@ import {
     START_GAME,
     STOP_GAME,
     GIVE_CARDS,
-    NEW_STATE_RECEIVED, CHECK, RAISE, FOLD
+    NEW_STATE_RECEIVED, CHECK, RAISE, FOLD, CALL
 } from './actionTypes';
 
 export function joinGame(nick: string) {
@@ -40,6 +40,11 @@ export function check() {
     };
 }
 
+export function call() {
+    return {
+        type: CALL
+    };
+}
 export function raise(amount: number) {
     return {
         type: RAISE,

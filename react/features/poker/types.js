@@ -35,6 +35,7 @@ export type Game = {|
     state: GameState,
     startAmount: number,
     currentPlayer: ?string,
+    raisePlayer: ?string,
     dealer: ?string,
     deck: ?Deck,
     pot: number,

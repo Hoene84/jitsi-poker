@@ -1,8 +1,8 @@
 // @flow
 
 import type { Action, APokerState } from './types';
-import { countCards } from './helpers';
-import { CHECK, FOLD, GIVE_CARDS, RAISE } from './actionTypes';
+import { countCards, currentPlayer } from './helpers';
+import { CALL, CHECK, FOLD, GIVE_CARDS, RAISE } from './actionTypes';
 
 export function canGiveCards(state: APokerState, nick: string): ?Action {
     const isDealer = state.common.game.dealer === nick;
@@ -12,15 +12,23 @@ export function canGiveCards(state: APokerState, nick: string): ?Action {
 }
 
 export function canCheck(state: APokerState, nick: string): ?Action {
-    return _isCurrentPlayer(state, nick) ? CHECK : null;
+    return _isCurrentPlayer(state, nick)
+    && currentPlayer(state)?.bet === state.common.game.bet ? CHECK : null;
+}
+
+export function canCall(state: APokerState, nick: string): ?Action {
+    return _isCurrentPlayer(state, nick)
+    && (currentPlayer(state)?.bet || 0) < state.common.game.bet ? CALL : null;
 }
 
 export function canRaise(state: APokerState, nick: string): ?Action {
-    return _isCurrentPlayer(state, nick) ? RAISE : null;
+    return _isCurrentPlayer(state, nick)
+    && state.common.game.currentPlayer !== state.common.game.raisePlayer ? RAISE : null;
 }
 
 export function canFold(state: APokerState, nick: string): ?Action {
-    return _isCurrentPlayer(state, nick) ? FOLD : null;
+    return _isCurrentPlayer(state, nick)
+    && !currentPlayer(state)?.fold ? FOLD : null;
 }
 
 function _isCurrentPlayer(state: APokerState, nick: string) {

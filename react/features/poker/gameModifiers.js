@@ -5,7 +5,7 @@ import type {
     APokerState,
     ChainablePokerState,
     Deck,
-    Player,
+    Player, PokerState,
     Suit,
     Symbol
 } from './types';
@@ -14,14 +14,15 @@ import { JOIN_GAME, START_GAME, STOP_GAME } from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
 import {
     assignToAllPlayer,
-    assignToCommon,
+    assignToCommon, assignToCurrentPlayer,
     assignToGame,
     assignToPlayer,
     chainableAssign,
     countCards,
-    nextPlayerAfter
+    nextPlayerAfter,
+    players
 } from './helpers';
-import { canCheck, canFold, canGiveCards, canRaise } from './canDo';
+import { canCall, canCheck, canFold, canGiveCards, canRaise } from './canDo';
 
 export function getDeck(): Deck {
     return {
@@ -41,9 +42,16 @@ export function getDeck(): Deck {
 }
 
 export function update(state: APokerState) {
-    return updateActions(assignToCommon(state, () => ({
+    return updateGame(state)
+    .next(state => updateActions(assignToCommon(state, () => ({
         lastModifiedBy: state.nick
-    })));
+    }))));
+}
+
+export function updateGame(state: APokerState): ChainablePokerState {
+    return assignToGame(state, () => ({
+        bet: Math.max(...players(state).map((player: Player) => player.bet))
+    }));
 }
 
 export function updateActions(state: APokerState): ChainablePokerState {
@@ -61,6 +69,7 @@ export function updateActions(state: APokerState): ChainablePokerState {
                     STOP_GAME,
                     canGiveCards(state, nick),
                     canCheck(state, nick),
+                    canCall(state, nick),
                     canRaise(state, nick),
                     canFold(state, nick)
                 ].filter(Boolean)
@@ -124,6 +133,14 @@ export function chooseDealer(players: { [string]: Player }) {
 
     return nicks[Math.floor(Math.random() * nicks.length)];
 }
+
+export function toBet(state: PokerState, amount: number) {
+    return assignToCurrentPlayer(state, (nick, player) => ({
+        amount: player.amount - amount,
+        bet: player.bet + amount
+    }));
+}
+
 
 export function payBlinds(initalState: APokerState) {
     const small = nextPlayerAfter(initalState, initalState.common.game.dealer);
