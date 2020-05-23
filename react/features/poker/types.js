@@ -61,5 +61,5 @@ export interface APokerState {
 
 export type ChainablePokerState = {|
     ...PokerState,
-    next: ((APokerState) => APokerState) => ChainablePokerState
+    next: ((APokerState) => ChainablePokerState) => ChainablePokerState
 |}
