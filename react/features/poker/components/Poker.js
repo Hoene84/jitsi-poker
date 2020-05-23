@@ -1,6 +1,6 @@
 // @flow
 
-import type { Action, Card as CardType } from '../types';
+import type { Action, Card as CardType, CommonState } from '../types';
 
 import React, { Component } from 'react';
 import { connect } from '../../base/redux';
@@ -19,6 +19,7 @@ export type Props = {
     _actions: Array<Action>,
     _amount: number,
     _bet: number,
+    _folded: boolean,
     _cards: Array<CardType>,
     _state: string,
     _isCurrentPlayer: boolean
@@ -47,9 +48,8 @@ class Poker extends Component<Props, State> {
     render() {
         const { t } = this.props;
 
-
         return (
-            <div className = { `player ${this.props._isCurrentPlayer ? 'current' : ''}` }>
+            <div className = { this._pokerClasses() }>
                 <div>Amount: {this.props._amount}</div>
                 <div>Bet: {this.props._bet}</div>
                 {this.props._actions.map(action => (<button
@@ -91,10 +91,20 @@ class Poker extends Component<Props, State> {
             console.log('unknown action');
         }
     }
+
+    // _pokerClasses: () => string;
+    _pokerClasses() {
+        const classes = [ 'player' ];
+
+        if (this.props._isCurrentPlayer) classes.push('current');
+        if (this.props._folded) classes.push('folded');
+
+        return classes.join(' ');
+    }
 }
 
 export function _mapStateToProps(state: Object, ownProps: Props) {
-    const { players } = state['features/poker'].common;
+    const { players } = (state['features/poker'].common: CommonState);
     const { participantID } = ownProps;
 
     const nick = getParticipantDisplayName(state, participantID);
@@ -103,6 +113,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
     return {
         _amount: player ? player.amount : null,
         _bet: player ? player.bet : null,
+        _folded: player ? player.fold : null,
         _actions: pokerActionTypes(state, nick),
         _cards: cards(state, nick),
         _state: JSON.stringify(state['features/poker']),

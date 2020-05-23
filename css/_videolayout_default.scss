@@ -552,6 +552,11 @@
             box-sizing: border-box;
             padding: 10px;
         }
+
+        &.folded {
+            opacity: .5;
+            background: grey;
+        }
     }
 }
 
