@@ -17,6 +17,7 @@ import {
     assignToGame,
     assignToPlayers,
     assignToState,
+    chain,
     currentPlayer,
     nextPlayerAfter
 } from './helpers';
@@ -62,28 +63,31 @@ const DEFAULT_STATE: PokerState = {
 ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action) => {
     switch (action.type) {
     case JOIN_GAME: {
-        return assignToPlayers(initialState, () => ({
+        return chain(initialState)
+        .then(state => assignToPlayers(state, () => ({
             nick: action.nick,
             player: {
-                amount: initialState.common.game.startAmount,
+                amount: state.common.game.startAmount,
                 actions: [],
                 bet: 0,
                 fold: true
             }
-        }))
+        })))
         .then(state => assignToState(state, () => ({
             nick: action.nick
         })))
         .then(state => update(state));
     }
     case STOP_GAME: {
-        return assignToState(initialState, () => DEFAULT_STATE)
+        return chain(initialState)
+        .then(state => assignToState(state, () => DEFAULT_STATE))
         .then(state => update(state));
     }
     case START_GAME: {
-        return assignToGame(initialState, () => ({
-            dealer: chooseDealer(initialState.common.players)
-        }))
+        return chain(initialState)
+        .then(state => assignToGame(state, () => ({
+            dealer: chooseDealer(state.common.players)
+        })))
         .then(state => assignToGame(state, () => ({
             state: 'running'
         })))
@@ -91,18 +95,21 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => update(state));
     }
     case GIVE_CARDS: {
-        return giveCards(initialState)
+        return chain(initialState)
+        .then(state => giveCards(state))
         .then(state => payBlinds(state))
         .then(state => update(state));
     }
     case CHECK: {
-        return assignToGame(initialState, () => ({
-            currentPlayer: nextPlayerAfter(initialState)
-        }))
+        return chain(initialState)
+        .then(state => assignToGame(state, () => ({
+            currentPlayer: nextPlayerAfter(state)
+        })))
         .then(state => update(state));
     }
     case CALL: {
-        return toBet(initialState, initialState.common.game.bet - (currentPlayer(initialState)?.bet || 0))
+        return chain(initialState)
+        .then(state => toBet(state, state.common.game.bet - (currentPlayer(state)?.bet || 0)))
         .then(state => assignToGame(state, () => ({
             raisePlayer: state.common.game.currentPlayer
         })))
@@ -112,10 +119,11 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => update(state));
     }
     case RAISE: {
-        return assignToCurrentPlayer(initialState, (nick, player) => ({
+        return chain(initialState)
+        .then(state => assignToCurrentPlayer(state, (nick, player) => ({
             amount: player.amount - action.amount,
             bet: player.bet + action.amount
-        }))
+        })))
         .then(state => assignToGame(state, () => ({
             raisePlayer: state.common.game.currentPlayer
         })))
@@ -125,9 +133,10 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => update(state));
     }
     case FOLD: {
-        return assignToGame(initialState, () => ({
-            pot: initialState.common.game.pot + currentPlayer(initialState)?.bet
-        }))
+        return chain(initialState)
+        .then(state => assignToGame(state, () => ({
+            pot: state.common.game.pot + currentPlayer(state)?.bet
+        })))
         .then(state => assignToCurrentPlayer(state, () => {
             return {
                 fold: true,
@@ -140,9 +149,10 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => update(state));
     }
     case NEW_STATE_RECEIVED: {
-        return assignToState(initialState, () => ({
+        return chain(initialState)
+        .then(state => assignToState(initialState, () => ({
             common: action.common
-        }));
+        })));
     }
     }
 
