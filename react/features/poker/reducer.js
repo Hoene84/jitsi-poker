@@ -108,7 +108,6 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     }
     case FOLD: {
         return assignToGame(initialState, () => ({
-            currentPlayer: nextPlayerAfter(initialState),
             pot: initialState.common.game.pot + currentPlayer(initialState)?.bet
         }))
         .next(state => assignToCurrentPlayer(state, () => {
@@ -117,6 +116,9 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
                 bet: 0
             };
         }))
+        .next(state => assignToGame(state, () => ({
+            currentPlayer: nextPlayerAfter(state)
+        })))
         .next(state => update(state));
     }
     case NEW_STATE_RECEIVED: {
