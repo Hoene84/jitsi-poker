@@ -108,9 +108,6 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     case CALL: {
         return chain(initialState)
         .then(state => toBet(state, state.common.game.bet - (currentPlayer(state)?.bet || 0)))
-        .then(state => assignToGame(state, () => ({
-            raisePlayer: state.common.game.currentPlayer
-        })))
         .then(state => nextPlayer(state))
         .then(state => update(state));
     }
