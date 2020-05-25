@@ -46,9 +46,9 @@ export function assignToCommon(
 }
 
 export function assignToGame(state: APokerState, assignFunction: (Game) => $Shape<Game>): ChainablePokerState {
-    return assignToCommon(state, () => {
+    return assignToCommon(state, common => {
         return {
-            game: assign(state.common.game, assignFunction(state.common.game))
+            game: assign(common.game, assignFunction(common.game))
         };
     });
 }
@@ -58,10 +58,10 @@ export function addToPlayers(
         assignFunction: ({ [string]: Player }) => PlayerEntry): ChainablePokerState {
     const playerEntry = assignFunction(state.common.players);
 
-    return assignToCommon(state, () => {
+    return assignToCommon(state, common => {
         return {
             players: {
-                ...state.common.players,
+                ...common.players,
                 ...{ [playerEntry.nick]: playerEntry.player }
             }
         };
@@ -71,12 +71,12 @@ export function addToPlayers(
 export function assignToAllPlayer(
         state: APokerState,
         assignFunction: (string, Player) => $Shape<Player>): ChainablePokerState {
-    return assignToCommon(state, () => {
+    return assignToCommon(state, common => {
         return {
-            players: Object.fromEntries(Object.keys(state.common.players)
+            players: Object.fromEntries(Object.keys(common.players)
             .map(nick => [ nick, {
-                ...state.common.players[nick],
-                ...assignFunction(nick, state.common.players[nick])
+                ...common.players[nick],
+                ...assignFunction(nick, common.players[nick])
             } ]))
         };
     });

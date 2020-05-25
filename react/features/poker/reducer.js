@@ -115,16 +115,16 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
             amount: player.amount - action.amount,
             bet: player.bet + action.amount
         })))
-        .then(state => assignToGame(state, () => ({
-            raisePlayer: state.common.game.currentPlayer
+        .then(state => assignToGame(state, game => ({
+            raisePlayer: game.currentPlayer
         })))
         .then(state => nextPlayer(state))
         .then(state => update(state));
     }
     case FOLD: {
         return chain(initialState)
-        .then(state => assignToGame(state, () => ({
-            pot: state.common.game.pot + currentPlayer(state)?.bet
+        .then(state => assignToGame(state, game => ({
+            pot: game.pot + currentPlayer(state)?.bet
         })))
         .then(state => assignToCurrentPlayer(state, () => {
             return {
