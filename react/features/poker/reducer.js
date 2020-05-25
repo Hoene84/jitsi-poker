@@ -16,10 +16,10 @@ import {
 import {
     assignToCurrentPlayer,
     assignToGame,
-    assignToPlayers,
+    addToPlayers,
     assignToState,
     chain,
-    currentPlayer,
+    currentPlayer
 } from './helpers';
 
 import {
@@ -64,7 +64,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     switch (action.type) {
     case JOIN_GAME: {
         return chain(initialState)
-        .then(state => assignToPlayers(state, () => ({
+        .then(state => addToPlayers(state, () => ({
             nick: action.nick,
             player: {
                 amount: state.common.game.startAmount,
@@ -86,9 +86,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     case START_GAME: {
         return chain(initialState)
         .then(state => assignToGame(state, () => ({
-            dealer: chooseDealer(state.common.players)
-        })))
-        .then(state => assignToGame(state, () => ({
+            dealer: chooseDealer(state),
             state: 'running'
         })))
         .then(state => newRound(state))
@@ -130,8 +128,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         })))
         .then(state => assignToCurrentPlayer(state, () => {
             return {
-                fold: true,
-                bet: 0
+                fold: true
             };
         }))
         .then(state => nextPlayer(state))
@@ -139,7 +136,7 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     }
     case NEW_STATE_RECEIVED: {
         return chain(initialState)
-        .then(state => assignToState(initialState, () => ({
+        .then(() => assignToState(initialState, () => ({
             common: action.common
         })));
     }

@@ -10,6 +10,8 @@ export const CARD_TURN_SOUND_ID = 'CARD_TURN_SOUND';
  */
 export const GAME_STATE_CHANGED_EVENT = 'poker-state-changed';
 
+export const OWNER_TABLE = '_table';
+
 export const SUITS = Object.freeze({
     club: 'club',
     diamond: 'diamond',

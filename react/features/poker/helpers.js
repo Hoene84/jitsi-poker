@@ -2,6 +2,7 @@
 
 import type {
     APokerState,
+    Card, CardSlot,
     ChainablePokerState,
     CommonState,
     Game,
@@ -10,6 +11,7 @@ import type {
     PokerState
 } from './types';
 import { assign as reduxAssign } from '../base/redux';
+import { OWNER_TABLE } from './constants';
 
 // workaround for https://github.com/facebook/flow/issues/4312?
 function assign<T: Object>(target: T, source: $Shape<T>): T {
@@ -51,7 +53,7 @@ export function assignToGame(state: APokerState, assignFunction: (Game) => $Shap
     });
 }
 
-export function assignToPlayers(
+export function addToPlayers(
         state: APokerState,
         assignFunction: ({ [string]: Player }) => PlayerEntry): ChainablePokerState {
     const playerEntry = assignFunction(state.common.players);
@@ -80,13 +82,23 @@ export function assignToAllPlayer(
     });
 }
 
+export function assignToPlayers(
+        state: APokerState,
+        nicks: Array<string>,
+        assignFunction: (string, Player) => $Shape<Player>): ChainablePokerState {
+    // eslint-disable-next-line arrow-body-style
+    return assignToAllPlayer(state, (aNick, aPlayer) => {
+        return nicks.includes(aNick) ? assignFunction(aNick, aPlayer) : {};
+    });
+}
+
 export function assignToPlayer(
         state: APokerState,
         nick: string,
         assignFunction: (string, Player) => $Shape<Player>): ChainablePokerState {
     // eslint-disable-next-line arrow-body-style
-    return assignToAllPlayer(state, (aNick, player) => {
-        return nick === aNick ? assignFunction(nick, player) : {};
+    return assignToAllPlayer(state, (aNick, aPlayer) => {
+        return nick === aNick ? assignFunction(nick, aPlayer) : {};
     });
 }
 
@@ -122,6 +134,16 @@ export function players(state: APokerState): Array<Player> {
     return Object.keys(state.common.players).map(nick => state.common.players[nick]);
 }
 
-export function winner(state: APokerState): string {
-    return Object.keys(state.common.players)[0]
+export function activePlayers(state: APokerState): Array<string> {
+    return Object.keys(state.common.players).filter(nick => !player(state, nick).fold);
+}
+
+export function cards(state: APokerState, nick: string): Array<Card> {
+    return cardSlots(state)
+        .filter(slot => [ nick, OWNER_TABLE ].includes(slot.owner))
+        .map(slot => slot.card);
+}
+
+export function cardSlots(state: APokerState): Array<CardSlot> {
+    return state.common.game.deck?.cards || [];
 }
