@@ -34,6 +34,7 @@ import {
     STOP_GAME
 } from './actionTypes';
 import uuid from 'uuid';
+import { rank, winner } from './ranking';
 
 const DEFAULT_STATE: PokerState = {
     common: {
@@ -63,6 +64,14 @@ const DEFAULT_STATE: PokerState = {
 ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action) => {
     switch (action.type) {
     case JOIN_GAME: {
+
+        const rankPair = winner([
+            {suit: 'club', symbol: '_5'},
+            {suit: 'club', symbol: '_5'},
+            {suit: 'club', symbol: '_6'},
+            {suit: 'club', symbol: '_2'},
+            {suit: 'club', symbol: '_2'}
+        ])
         return chain(initialState)
         .then(state => assignToPlayers(state, () => ({
             nick: action.nick,

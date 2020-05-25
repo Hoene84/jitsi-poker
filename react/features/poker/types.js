@@ -2,11 +2,12 @@
 
 import * as actions from './actionTypes';
 
-import { SUITS, SYMBOLS } from './constants';
+import { HANDS, SUITS, SYMBOLS } from './constants';
 
 type GameState = "none" | "running";
 export type Suit = $Keys<typeof SUITS>;
 export type Symbol = $Keys<typeof SYMBOLS>;
+export type Hand = $Keys<typeof HANDS>;
 export type Action = $Values<typeof actions>
 
 export type Card = {|
@@ -75,4 +76,10 @@ export interface APokerState {
 export type ChainablePokerState = {|
     ...PokerState,
     then: ((APokerState) => ChainablePokerState) => ChainablePokerState
+|}
+
+export type Rank = {|
+    hand: Hand,
+    symbol: Array<Symbol>,
+    kickers: Array<Symbol>
 |}
