@@ -99,15 +99,20 @@ class Poker extends Component<Props, State> {
     _pokerClasses() {
         const classes = [ 'player' ];
 
-        if (this.props._isCurrentPlayer) classes.push('current');
-        if (this.props._folded) classes.push('folded');
+        if (this.props._isCurrentPlayer) {
+            classes.push('current');
+        }
+        if (this.props._folded) {
+            classes.push('folded');
+        }
 
         return classes.join(' ');
     }
 }
 
 export function _mapStateToProps(state: Object, ownProps: Props) {
-    const { players } = (state['features/poker'].common: CommonState);
+    const commonState: CommonState = state['features/poker'].common;
+    const { players } = commonState;
     const { participantID } = ownProps;
 
     const nick = getParticipantDisplayName(state, participantID);
