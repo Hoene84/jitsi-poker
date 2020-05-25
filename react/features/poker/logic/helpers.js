@@ -9,9 +9,9 @@ import type {
     Player,
     PlayerEntry,
     PokerState
-} from './types';
-import { assign as reduxAssign } from '../base/redux';
-import { OWNER_TABLE } from './constants';
+} from '../types';
+import { assign as reduxAssign } from '../../base/redux';
+import { OWNER_TABLE } from '../constants';
 
 // workaround for https://github.com/facebook/flow/issues/4312?
 function assign<T: Object>(target: T, source: $Shape<T>): T {

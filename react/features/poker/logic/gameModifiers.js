@@ -1,10 +1,10 @@
 /* eslint-disable arrow-body-style */
 // @flow
 
-import type { APokerState, ChainablePokerState, Deck, Player, Suit, Symbol } from './types';
+import type { APokerState, ChainablePokerState, Deck, Player, Suit, Symbol } from '../types';
 
-import { JOIN_GAME, START_GAME, STOP_GAME } from './actionTypes';
-import { SUITS, SYMBOLS } from './constants';
+import { JOIN_GAME, START_GAME, STOP_GAME } from '../actionTypes';
+import { SUITS, SYMBOLS } from '../constants';
 import {
     activePlayers,
     assignToAllPlayer,

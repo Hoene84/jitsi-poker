@@ -1,8 +1,8 @@
 // @flow
 
-import type { Action, APokerState } from './types';
+import type { Action, APokerState } from '../types';
 import { countCards, currentPlayer } from './helpers';
-import { CALL, CHECK, FOLD, GIVE_CARDS, RAISE } from './actionTypes';
+import { CALL, CHECK, FOLD, GIVE_CARDS, RAISE } from '../actionTypes';
 
 export function canGiveCards(state: APokerState, nick: string): ?Action {
     const isDealer = state.common.game.dealer === nick;

@@ -12,7 +12,7 @@ import {
     toBet,
     update,
     nextPlayer
-} from './gameModifiers';
+} from './logic/gameModifiers';
 import {
     assignToCurrentPlayer,
     assignToGame,
@@ -20,7 +20,7 @@ import {
     assignToState,
     chain,
     currentPlayer
-} from './helpers';
+} from './logic/helpers';
 
 import {
     CALL,

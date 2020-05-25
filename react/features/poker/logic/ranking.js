@@ -1,6 +1,6 @@
 // @flow
 
-import type { APokerState, Card, Suit, Symbol } from './types';
+import type { APokerState, Card, Suit, Symbol } from '../types';
 import { Hand } from 'pokersolver';
 import { activePlayers, cards } from './helpers';
 
