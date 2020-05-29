@@ -1,4 +1,5 @@
 {
+  "homepage": "http://hoene84.github.io/jitsi-poker",
   "name": "jitsi-meet",
   "version": "0.0.0",
   "description": "A sample app for the Jitsi Videobridge",
@@ -122,6 +123,7 @@
     "eslint-plugin-react-native": "3.3.0",
     "expose-loader": "0.7.5",
     "flow-bin": "0.104.0",
+    "gh-pages": "^2.2.0",
     "imports-loader": "0.7.1",
     "jetifier": "1.6.4",
     "metro-react-native-babel-preset": "0.56.0",
@@ -142,7 +144,9 @@
   "scripts": {
     "lint": "eslint . && flow",
     "postinstall": "jetify",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "predeploy": "make compile deploy",
+    "deploy": "gh-pages -d build_gh_pages"
   },
   "browser": {
     "jQuery-Impromptu": "jQuery-Impromptu/src/jquery-impromptu.js"
