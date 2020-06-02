@@ -29,8 +29,8 @@ export const SYMBOLS = Object.freeze({
     _8: '8',
     _9: '9',
     _10: '10',
-    jack: 'jack',
-    queen: 'queen',
-    king: 'king',
-    ace: 'ace'
+    jack: 'J',
+    queen: 'Q',
+    king: 'K',
+    ace: 'A'
 });

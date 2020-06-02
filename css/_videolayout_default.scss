@@ -558,6 +558,34 @@
             background: grey;
         }
     }
+
+    .poker-card {
+
+        background-color: white;
+        width: 40px;
+        height: 56px;
+        color: black;
+        position: relative;
+        border-radius: 5px;
+        margin: 5px;
+        display: inline-block;
+
+        .symbol {
+            position: absolute;
+            font-size: 22px;
+            font-weight: 900;
+            left: 4px;
+        }
+
+        .suite {
+            position: absolute;
+            font-size: 24px;
+            left: 8px;
+            top: 16px;
+            font-family: apple color emoji,segoe ui emoji,noto color emoji,android emoji,emojisymbols,emojione mozilla,twemoji mozilla,segoe ui symbol;
+        }
+
+    }
 }
 
 #videoNotAvailableScreen {
