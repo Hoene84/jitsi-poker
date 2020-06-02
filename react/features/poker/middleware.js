@@ -47,6 +47,7 @@ StateListenerRegistry.register(
         const conference = getCurrentConference(getState());
 
         if (conference
+            && currentState.nick
             && currentState.common.lastModifiedBy === currentState.nick) {
             conference.sendMessage({
                 state: currentState.common,

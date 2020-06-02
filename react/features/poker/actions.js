@@ -2,6 +2,7 @@
 
 import {
     JOIN_GAME,
+    TAKE_OVER,
     START_GAME,
     STOP_GAME,
     GIVE_CARDS,
@@ -11,6 +12,13 @@ import {
 export function joinGame(nick: string) {
     return {
         type: JOIN_GAME,
+        nick
+    };
+}
+
+export function takeOver(nick: string) {
+    return {
+        type: TAKE_OVER,
         nick
     };
 }

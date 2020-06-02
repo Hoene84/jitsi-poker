@@ -11,7 +11,8 @@ import {
     payBlinds,
     toBet,
     update,
-    nextPlayer
+    nextPlayer,
+    checkSeatControl
 } from './logic/gameModifiers';
 import {
     assignToCurrentPlayer,
@@ -19,7 +20,8 @@ import {
     addToPlayers,
     assignToState,
     chain,
-    currentPlayer
+    currentPlayer,
+    assignToCommon
 } from './logic/helpers';
 
 import {
@@ -28,6 +30,7 @@ import {
     FOLD,
     GIVE_CARDS,
     JOIN_GAME,
+    TAKE_OVER,
     NEW_STATE_RECEIVED,
     RAISE,
     START_GAME,
@@ -78,9 +81,16 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         })))
         .then(state => update(state));
     }
+    case TAKE_OVER: {
+        return chain(initialState)
+        .then(state => assignToState(state, () => ({
+            nick: action.nick
+        })))
+        .then(state => update(state));
+    }
     case STOP_GAME: {
         return chain(initialState)
-        .then(state => assignToState(state, () => DEFAULT_STATE))
+        .then(state => assignToCommon(state, () => DEFAULT_STATE.common))
         .then(state => update(state));
     }
     case START_GAME: {
@@ -136,9 +146,10 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     }
     case NEW_STATE_RECEIVED: {
         return chain(initialState)
-        .then(() => assignToState(initialState, () => ({
+        .then(state => assignToState(state, () => ({
             common: action.common
-        })));
+        })))
+        .then(state => checkSeatControl(state));
     }
     }
 

@@ -1,21 +1,35 @@
 // @flow
 
 import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE } from './actionTypes';
-import { startGame, joinGame, stopGame } from './actions';
+import { startGame, joinGame, stopGame, takeOver } from './actions';
 import type { PokerState, Card } from './types';
+import { getLocalParticipant, getParticipantDisplayName } from '../base/participants';
+import { isNotInSeatControl } from './logic/helpers';
 
 const POKER_ACTIONS = [ GIVE_CARDS, CHECK, CALL, RAISE, FOLD ];
 
-export function toolboxAction(state: Object, nick: string) {
-    const players = state['features/poker'].common.players;
+export function toolboxAction(state: Object) {
+    const nick = getParticipantDisplayName(state, getLocalParticipant(state).id);
+    const pokerState = state['features/poker'];
+
+    if (isNotInSeatControl(pokerState, nick)) {
+        return takeOver(nick);
+    }
+
+    const players = pokerState.common.players;
     const player = players[nick] || { actions: [ JOIN_GAME ] };
 
     return [ startGame(), joinGame(nick), stopGame() ].filter(action => player.actions.includes(action.type))[0];
 }
 
 export function pokerActionTypes(state: Object, nick: string): Array<string> {
-    const player = state['features/poker'].common.players[nick] || { actions: [] };
+    const localNick = getParticipantDisplayName(state, getLocalParticipant(state).id);
+    const pokerState = state['features/poker'];
+    const player = pokerState.common.players[nick] || { actions: [] };
 
+    if (isNotInSeatControl(pokerState, localNick)) {
+        return [];
+    }
 
     return POKER_ACTIONS.filter(action => player.actions.includes(action));
 }

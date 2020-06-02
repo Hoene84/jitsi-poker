@@ -370,6 +370,7 @@
         "toggleChat": "Open or close the chat",
         "poker": {
             "JOIN_GAME" : "Join Game",
+            "TAKE_OVER" : "Take Over Seat for {{player}}",
             "START_GAME" : "Start Game",
             "STOP_GAME" : "Stop current Game"
         },
@@ -637,6 +638,7 @@
             "chat": "Toggle chat window",
             "poker": {
                 "JOIN_GAME" : "Join Game",
+                "TAKE_OVER" : "Take Over Seat for {{player}}",
                 "START_GAME" : "Start Game",
                 "STOP_GAME" : "Stop current Game"
             },
@@ -684,6 +686,7 @@
         "chat": "Open / Close chat",
         "poker": {
             "JOIN_GAME" : "Join Game",
+            "TAKE_OVER" : "Take Over Seat for {{player}}",
             "START_GAME" : "Start Game",
             "STOP_GAME" : "Stop current Game"
         },

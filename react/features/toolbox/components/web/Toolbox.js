@@ -187,6 +187,7 @@ type Props = {
     _visibleButtons: Set<string>,
 
     _pokerAction: Object,
+    _nameToDisplay: Object,
 
     /**
      * Invoked to active other features of the app.
@@ -1140,11 +1141,13 @@ class Toolbox extends Component<Props, State> {
             case 'poker':
                 return (<OverflowMenuItem
                     accessibilityLabel =
-                        { t(`toolbar.accessibilityLabel.poker.${this.props._pokerAction.type}`) }
+                        { t(`toolbar.accessibilityLabel.poker.${this.props._pokerAction.type}`,
+                            { player: this.props._nameToDisplay }) }
                     icon = { IconPoker }
                     key = 'poker'
                     onClick = { this._onToolbarPoker }
-                    text = { t(`toolbar.poker.${this.props._pokerAction.type}`) } />);
+                    text = { t(`toolbar.poker.${this.props._pokerAction.type}`,
+                        { player: this.props._nameToDisplay }) } />);
             case 'info':
                 return <InfoDialogButton showLabel = { true } />;
             case 'invite':
@@ -1327,7 +1330,7 @@ class Toolbox extends Component<Props, State> {
                     }
 
                     <div className = { `toolbox-button ${this.props._pokerAction.type}` }>
-                        { t(`toolbar.poker.${this.props._pokerAction.type}`) }
+                        { t(`toolbar.poker.${this.props._pokerAction.type}`, { player: this.props._nameToDisplay }) }
                     </div>
                 </div>
                 <div className = 'button-group-center'>
@@ -1459,7 +1462,7 @@ function _mapStateToProps(state) {
         _visible: isToolboxVisible(state),
         _visibleButtons: equals(visibleButtons, buttons) ? visibleButtons : buttons,
         _nameToDisplay: displayName,
-        _pokerAction: toolboxAction(state, displayName)
+        _pokerAction: toolboxAction(state)
     };
 }
 

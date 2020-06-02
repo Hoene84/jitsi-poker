@@ -13,6 +13,7 @@ import {
     assignToGame,
     assignToPlayer,
     assignToPlayers,
+    assignToState,
     chain,
     chainableAssign,
     countCards,
@@ -182,6 +183,17 @@ export function payBlinds(initalState: APokerState) {
 
     return _payBlind(initalState, small, initalState.common.game.blind.small)
     .then(state => _payBlind(state, big, state.common.game.blind.big));
+}
+
+export function checkSeatControl(initialState: APokerState) {
+    if (initialState.common.lastModifiedBy === initialState.nick) {
+        return chain(initialState).then(state => assignToState(state, () => ({
+            nick: state.common.lastModifiedBy === state.nick ? null : state.nick
+        })))
+        .then(state => update(state));
+    }
+
+    return chain(initialState);
 }
 
 function _payBlind(state: APokerState, nick: string, amount: number) {

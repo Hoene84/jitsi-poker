@@ -147,3 +147,7 @@ export function cards(state: APokerState, nick: string): Array<Card> {
 export function cardSlots(state: APokerState): Array<CardSlot> {
     return state.common.game.deck?.cards || [];
 }
+
+export function isNotInSeatControl(state: APokerState, nick: string) {
+    return state.nick === null && state.common.players[nick];
+}
