@@ -1,19 +1,16 @@
 // @flow
 
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app';
-import {
-    CONFERENCE_JOINED,
-    getCurrentConference
-} from '../base/conference';
-import {
-    JitsiConferenceEvents
-} from '../base/lib-jitsi-meet';
+import { CONFERENCE_JOINED, getCurrentConference } from '../base/conference';
+import { JitsiConferenceEvents } from '../base/lib-jitsi-meet';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { registerSound, unregisterSound } from '../base/sounds';
 import { newStateReceived } from './actions';
 
 import { CARD_TURN_SOUND_FILE } from './sounds';
 import { CARD_TURN_SOUND_ID, GAME_STATE_CHANGED_EVENT } from './constants';
+import { setDominantSpeaker } from './functions';
+import type { CommonState } from './types';
 
 /**
  * Implements the middleware of the poker feature.
@@ -43,7 +40,7 @@ MiddlewareRegistry.register(store => next => action => {
 
 StateListenerRegistry.register(
     state => state['features/poker'],
-    (currentState, { getState } = {}) => {
+    (currentState, { dispatch, getState } = {}) => {
         const conference = getCurrentConference(getState());
 
         if (conference
@@ -53,6 +50,7 @@ StateListenerRegistry.register(
                 state: currentState.common,
                 type: GAME_STATE_CHANGED_EVENT
             });
+            setDominantSpeaker(getState(), currentState.common, dispatch);
         }
     });
 
@@ -62,7 +60,11 @@ function _registerGameUpdateListener(conference, store) {
         (id, message) => {
             if (message.type === GAME_STATE_CHANGED_EVENT) {
                 console.log(message);
-                store.dispatch(newStateReceived(message.state));
+
+                const newState: CommonState = message.state;
+
+                setDominantSpeaker(store, newState, store.dispatch);
+                store.dispatch(newStateReceived(newState));
             }
         }
     );

@@ -2,9 +2,16 @@
 
 import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE } from './actionTypes';
 import { startGame, joinGame, stopGame, takeOver } from './actions';
-import type { PokerState, Card } from './types';
-import { getLocalParticipant, getParticipantDisplayName } from '../base/participants';
+import type { PokerState, Card, CommonState } from './types';
+import type { Dispatch } from 'redux';
+import {
+    dominantSpeakerChanged,
+    getLocalParticipant,
+    getParticipantDisplayName,
+    getParticipants
+} from '../base/participants';
 import { isNotInSeatControl } from './logic/helpers';
+import { getCurrentConference } from '../base/conference';
 
 const POKER_ACTIONS = [ GIVE_CARDS, CHECK, CALL, RAISE, FOLD ];
 
@@ -42,6 +49,19 @@ export function cards(state: Object, nick: string): ?Array<Card> {
     }
 
     return pokerState.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).map(cardSlot => cardSlot.card);
+}
+
+export function setDominantSpeaker(state: Object, pokerState: CommonState, dispatch: Dispatch<any>): ?Array<string> {
+    const conference = getCurrentConference(state);
+    const participantId = getParticipantId(state, pokerState.game.currentPlayer);
+
+    if (participantId && conference) {
+        dispatch(dominantSpeakerChanged(participantId, conference));
+    }
+}
+
+export function getParticipantId(state: Object, nick: ?string): ?Array<string> {
+    return getParticipants(state).filter(participant => participant.name === nick)[0]?.id;
 }
 
 export function currentPlayer(state: Object, nick: string): boolean {
