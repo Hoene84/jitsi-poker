@@ -143,6 +143,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint . && flow",
+    "flow": "flow",
     "postinstall": "jetify",
     "validate": "npm ls",
     "predeploy": "make compile deploy",

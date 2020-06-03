@@ -33,7 +33,8 @@ function getPerformanceHints(size) {
 const config = {
     devServer: {
         https: true,
-        inline: true,
+        inline: false,
+        hot: false,
         proxy: {
             '/': {
                 bypass: devServerProxyBypass,
