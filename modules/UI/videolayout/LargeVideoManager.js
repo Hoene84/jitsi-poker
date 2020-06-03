@@ -376,7 +376,7 @@ export default class LargeVideoManager {
         ReactDOM.render(
             <Provider store = { APP.store }>
                 <I18nextProvider i18n = { i18next }>
-                    <Poker/>
+                    <Poker participantID = { this.id }/>
                 </I18nextProvider>
             </Provider>,
             this._dominantSpeakerPokerContainer

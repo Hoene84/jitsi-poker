@@ -45,8 +45,10 @@ class LargeVideo extends Component<Props> {
                 <div id = 'dominantSpeaker'>
                     <div className = 'dynamic-shadow' />
                     <div id = 'dominantSpeakerAvatarContainer' />
-                    <div className = 'poker-container' />
                 </div>
+
+                <div className = 'poker-container' />
+
                 <div id = 'remotePresenceMessage' />
                 <span id = 'remoteConnectionMessage' />
                 <div id = 'largeVideoElementsContainer'>
