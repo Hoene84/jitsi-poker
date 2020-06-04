@@ -11,6 +11,7 @@ import { CARD_TURN_SOUND_FILE } from './sounds';
 import { CARD_TURN_SOUND_ID, GAME_STATE_CHANGED_EVENT } from './constants';
 import { setDominantSpeaker } from './functions';
 import type { CommonState } from './types';
+import { participantJoined } from '../base/participants';
 
 /**
  * Implements the middleware of the poker feature.
@@ -32,6 +33,12 @@ MiddlewareRegistry.register(store => next => action => {
 
     case CONFERENCE_JOINED:
         _registerGameUpdateListener(action.conference, store);
+        dispatch(participantJoined({
+            conference: action.conference,
+            id: 'table',
+            isFakeParticipant: true,
+            name: 'Table'
+        }));
         break;
     }
 

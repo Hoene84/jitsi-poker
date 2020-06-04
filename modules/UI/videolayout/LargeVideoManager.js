@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { Avatar } from '../../../react/features/base/avatar';
 import { i18next } from '../../../react/features/base/i18n';
 import { PresenceLabel } from '../../../react/features/presence-status';
-import { Poker } from '../../../react/features/poker/components';
+import LargePokerContainer from '../../../react/features/poker/components/LargePokerContainer';
 /* eslint-enable no-unused-vars */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
@@ -369,14 +369,11 @@ export default class LargeVideoManager {
         );
     }
 
-    /**
-     * Updates the src of the dominant speaker avatar
-     */
     updatePoker() {
         ReactDOM.render(
-            <Provider store = { APP.store }>
-                <I18nextProvider i18n = { i18next }>
-                    <Poker participantID = { this.id }/>
+            <Provider store={APP.store}>
+                <I18nextProvider i18n={i18next}>
+                    <LargePokerContainer participantId = { this.id }/>
                 </I18nextProvider>
             </Provider>,
             this._dominantSpeakerPokerContainer
