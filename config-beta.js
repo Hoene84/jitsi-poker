@@ -1,3 +1,4 @@
+/* eslint-disable */
 var subdomain = "";
 if (subdomain) {
     subdomain = subdomain.substr(0,subdomain.length-1).split('.').join('_').toLowerCase() + '.';
