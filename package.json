@@ -142,7 +142,7 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "lint": "eslint . && flow",
+    "lint": "eslint --max-warnings 0 . && flow",
     "flow": "flow",
     "postinstall": "jetify",
     "validate": "npm ls",
