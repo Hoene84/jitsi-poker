@@ -1,7 +1,7 @@
 #!/bin/bash
 
 while read line; do
-  FROM=$(echo $line | cut -d' ' -f1)
+  FROM=$(echo "$line" | cut -d'	' -f1 | cut -d' ' -f1)
   TO=$(echo $line | rev | cut -d' ' -f1 | rev)
   TO_SUB_DIR=${TO#'/usr/share/jitsi-meet/'}
 
