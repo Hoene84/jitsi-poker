@@ -16,7 +16,7 @@ import { getCurrentConference } from '../base/conference';
 const POKER_ACTIONS = [ GIVE_CARDS, CHECK, CALL, RAISE, FOLD ];
 
 export function toolboxAction(state: Object) {
-    const nick = getParticipantDisplayName(state, getLocalParticipant(state).id);
+    const nick = getNick(state);
     const pokerState = state['features/poker'];
 
     if (isNotInSeatControl(pokerState, nick)) {
@@ -62,6 +62,10 @@ export function setDominantSpeaker(state: Object, pokerState: CommonState, dispa
 
 export function getParticipantId(state: Object, nick: ?string): ?Array<string> {
     return getParticipants(state).filter(participant => participant.name === nick)[0]?.id;
+}
+
+export function getNick(state: Object): string {
+    return getParticipantDisplayName(state, getLocalParticipant(state).id);
 }
 
 export function currentPlayer(state: Object, nick: string): boolean {

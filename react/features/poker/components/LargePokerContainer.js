@@ -8,11 +8,14 @@ import Game from './Game';
 import Poker from './Poker';
 import { getCurrentLayout } from '../../video-layout';
 import { LAYOUTS } from '../../video-layout/constants';
+import ControlPanel from './ControlPanel';
+import { getLocalParticipant } from '../../base/participants';
 
 export type Props = {
     participantId: string,
     t: Function,
     _currentLayout: string,
+    _localParticipantId: string,
 }
 
 type State = {
@@ -37,13 +40,14 @@ class LargePokerContainer extends Component<Props, State> {
             <div>
                 {this.props._currentLayout !== LAYOUTS.TILE_VIEW
                 && <div className = 'largePokerContainer'>
-                    <Poker participantID = { this.props.participantId } />
+                    <Poker participantId = { this.props.participantId } />
                     <div className = 'poker-table-container'>
                         <Table />
                     </div>
                     {this.props.participantId === 'table'
                     && <Game />}
                 </div>}
+                <ControlPanel participantId = { this.props._localParticipantId } />
             </div>
         );
     }
@@ -51,7 +55,8 @@ class LargePokerContainer extends Component<Props, State> {
 
 export function _mapStateToProps(state: Object) {
     return {
-        _currentLayout: getCurrentLayout(state)
+        _currentLayout: getCurrentLayout(state),
+        _localParticipantId: getLocalParticipant(state).id
     };
 }
 

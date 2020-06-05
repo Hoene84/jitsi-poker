@@ -752,7 +752,7 @@ export default class SmallVideo {
         ReactDOM.render(
             <Provider store = { APP.store }>
                 <I18nextProvider i18n = { i18next }>
-                    <Poker participantID={ this.id }/>
+                    <Poker participantId={ this.id }/>
                 </I18nextProvider>
             </Provider>,
             poker

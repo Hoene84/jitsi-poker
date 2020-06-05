@@ -1,22 +1,19 @@
 // @flow
 
-import type { Action, Card as CardType, CommonState } from '../types';
+import type { Card as CardType, CommonState } from '../types';
 
 import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
-import Tooltip from '@atlaskit/tooltip';
-import { CALL, CHECK, FOLD, GIVE_CARDS, RAISE } from '../../poker/actionTypes';
-import { giveCards, check, call, raise, fold } from '../actions';
-import { cards, currentPlayer, pokerActionTypes } from '../functions';
+import { cards, currentPlayer } from '../functions';
 import Card from './Card';
+import ControlPanel from './ControlPanel';
 
 export type Props = {
-    participantID: string,
+    participantId: string,
     dispatch: Function,
     t: Function,
-    _actions: Array<Action>,
     _amount: number,
     _bet: number,
     _folded: boolean,
@@ -40,59 +37,20 @@ class Poker extends Component<Props, State> {
         this.state = {
             // value: false
         };
-
-        // Bind event handlers so they are only bound once for every instance.
-        this._onAction = this._onAction.bind(this);
     }
 
     render() {
-        const { t } = this.props;
-
         return (
             <div className = { this._pokerClasses() }>
                 <div>Amount: {this.props._amount}</div>
                 <div>Bet: {this.props._bet}</div>
-                {this.props._actions.map(action => (<button
-                    aria-label = { t(`poker.action.${action}`) }
-                    className = 'poker-button'
-                    key = { action }
-                    /* eslint-disable-next-line react/jsx-no-bind */
-                    onClick = { e => this._onAction(e, action) }>
-                    <Tooltip content = { t(`poker.action.${action}`) }>
-                        <div className = { 'poker-action' }>
-                            { t(`poker.action.${action}`) }
-                        </div>
-                    </Tooltip>
-                </button>))}
+                <ControlPanel participantId = { this.props.participantId } />
                 {this.props._cards.map((card, i) => (<Card
                     card = { card }
                     key = { i } />))}
                 {/* <div> {this.props._state}</div>*/}
             </div>
         );
-    }
-
-    _onAction: (Object, string) => void;
-    _onAction(event, action) {
-        switch (action) {
-        case GIVE_CARDS:
-            this.props.dispatch(giveCards());
-            break;
-        case CHECK:
-            this.props.dispatch(check());
-            break;
-        case CALL:
-            this.props.dispatch(call());
-            break;
-        case RAISE:
-            this.props.dispatch(raise(100));
-            break;
-        case FOLD:
-            this.props.dispatch(fold());
-            break;
-        default:
-            console.log('unknown action');
-        }
     }
 
     // _pokerClasses: () => string;
@@ -113,16 +71,15 @@ class Poker extends Component<Props, State> {
 export function _mapStateToProps(state: Object, ownProps: Props) {
     const commonState: CommonState = state['features/poker'].common;
     const { players } = commonState;
-    const { participantID } = ownProps;
+    const { participantId } = ownProps;
 
-    const nick = getParticipantDisplayName(state, participantID);
+    const nick = getParticipantDisplayName(state, participantId);
     const player = players[nick];
 
     return {
         _amount: player ? player.amount : null,
         _bet: player ? player.bet : null,
         _folded: player ? player.fold : null,
-        _actions: pokerActionTypes(state, nick),
         _cards: cards(state, nick),
         _state: JSON.stringify(state['features/poker']),
         _isCurrentPlayer: currentPlayer(state, nick)
