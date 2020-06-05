@@ -8,7 +8,6 @@ import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
 import { cards, currentPlayer } from '../functions';
 import Card from './Card';
-import ControlPanel from './ControlPanel';
 
 export type Props = {
     participantId: string,
@@ -44,7 +43,6 @@ class Poker extends Component<Props, State> {
             <div className = { this._pokerClasses() }>
                 <div>Amount: {this.props._amount}</div>
                 <div>Bet: {this.props._bet}</div>
-                <ControlPanel participantId = { this.props.participantId } />
                 {this.props._cards.map((card, i) => (<Card
                     card = { card }
                     key = { i } />))}

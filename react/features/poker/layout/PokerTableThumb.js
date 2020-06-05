@@ -13,9 +13,11 @@ export default class PokerTableThumb extends SmallVideo {
 
     constructor(videoLayout) {
         super(videoLayout);
+        this.id = 'table';
         this.container = this.createContainer();
         this.$container = $(this.container);
         this._setThumbnailSize();
+        this.container.onclick = this._onContainerClick;
     }
 
     createContainer() {
