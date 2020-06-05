@@ -582,6 +582,28 @@
     box-sizing: border-box;
 }
 
+.filmstripPokerContainer {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    pointer-events: none;
+}
+
+.poker-control-panel {
+
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+
+    .poker-button {
+        pointer-events: auto;
+        font-size: 30px;
+        margin: 10px;
+    }
+}
+
 .poker-container {
     color: white;
     position: absolute;

@@ -8,7 +8,6 @@ import Game from './Game';
 import Poker from './Poker';
 import { getCurrentLayout } from '../../video-layout';
 import { LAYOUTS } from '../../video-layout/constants';
-import ControlPanel from './ControlPanel';
 import { getLocalParticipant } from '../../base/participants';
 
 export type Props = {
@@ -47,7 +46,6 @@ class LargePokerContainer extends Component<Props, State> {
                     {this.props.participantId === 'table'
                     && <Game />}
                 </div>}
-                <ControlPanel participantId = { this.props._localParticipantId } />
             </div>
         );
     }
