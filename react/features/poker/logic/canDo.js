@@ -13,17 +13,17 @@ export function canGiveCards(state: APokerState, nick: string): ?Action {
 
 export function canCheck(state: APokerState, nick: string): ?Action {
     return _isCurrentPlayer(state, nick)
-    && currentPlayer(state)?.bet === state.common.game.bet ? CHECK : null;
+    && currentPlayer(state)?.bet === state.common.game.round.bet ? CHECK : null;
 }
 
 export function canCall(state: APokerState, nick: string): ?Action {
     return _isCurrentPlayer(state, nick)
-    && (currentPlayer(state)?.bet || 0) < state.common.game.bet ? CALL : null;
+    && (currentPlayer(state)?.bet || 0) < state.common.game.round.bet ? CALL : null;
 }
 
 export function canRaise(state: APokerState, nick: string): ?Action {
     return _isCurrentPlayer(state, nick)
-    && state.common.game.currentPlayer !== state.common.game.raisePlayer ? RAISE : null;
+    && state.common.game.round.currentPlayer !== state.common.game.round.bettingRound.raisePlayer ? RAISE : null;
 }
 
 export function canFold(state: APokerState, nick: string): ?Action {
@@ -32,5 +32,5 @@ export function canFold(state: APokerState, nick: string): ?Action {
 }
 
 function _isCurrentPlayer(state: APokerState, nick: string) {
-    return state.common.game.currentPlayer === nick;
+    return state.common.game.round.currentPlayer === nick;
 }

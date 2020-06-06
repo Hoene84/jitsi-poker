@@ -4,20 +4,20 @@
 import type { APokerState, ChainablePokerState, Deck, Player, Suit, Symbol } from '../types';
 
 import { JOIN_GAME, START_GAME, STOP_GAME } from '../actionTypes';
-import { SUITS, SYMBOLS } from '../constants';
+import { SUITS, SYMBOLS, DEFAULT_STATE } from '../constants';
 import {
     activePlayers,
-    assignToAllPlayer,
+    assignToAllPlayer, assignToBettingRound,
     assignToCommon,
     assignToCurrentPlayer,
     assignToGame,
     assignToPlayer,
-    assignToPlayers,
+    assignToPlayers, assignToRound,
     assignToState,
     chain,
     chainableAssign,
     countCards,
-    currentPlayer,
+    currentPlayer, logState,
     nextPlayerAfter,
     players
 } from './helpers';
@@ -46,11 +46,12 @@ export function update(initialState: APokerState) {
     .then(state => updateGame(state))
     .then(state => updateActions(assignToCommon(state, () => ({
         lastModifiedBy: state.nick
-    }))));
+    }))))
+    .then(state => logState(state));
 }
 
 export function updateGame(state: APokerState): ChainablePokerState {
-    return assignToGame(state, () => ({
+    return assignToRound(state, () => ({
         bet: Math.max(...players(state).map((player: Player) => player.bet))
     }));
 }
@@ -83,6 +84,36 @@ export function updateActions(state: APokerState): ChainablePokerState {
     }
 }
 
+export function nextBettingRound(initialState: APokerState) {
+    switch (initialState.common.game.round.state) {
+    case 'preflop': {
+        return chain(initialState)
+        .then(state => assignToBettingRound(state, () => DEFAULT_STATE.common.game.round.bettingRound))
+        .then(state => giveCardsTo(state, 'table', 3))
+        .then(state => assignToRound(state, () => ({ state: 'flop' })));
+    }
+    case 'flop': {
+        return chain(initialState)
+        .then(state => assignToBettingRound(state, () => DEFAULT_STATE.common.game.round.bettingRound))
+        .then(state => giveCardsTo(state, 'table', 1))
+        .then(state => assignToRound(state, () => ({ state: 'turn' })));
+    }
+    case 'turn': {
+        return chain(initialState)
+        .then(state => assignToBettingRound(state, () => DEFAULT_STATE.common.game.round.bettingRound))
+        .then(state => giveCardsTo(state, 'table', 1))
+        .then(state => assignToRound(state, () => ({ state: 'river' })));
+    }
+    case 'river': {
+        return chain(initialState)
+        .then(state => collect(state))
+        .then(state => nextRound(state));
+    }
+    }
+
+    return chain(initialState);
+}
+
 export function nextRound(initialState: APokerState) {
     return chain(initialState)
     .then(state => assignToGame(state, () => ({
@@ -99,26 +130,23 @@ export function newRound(initialState: APokerState) {
     .then(state => assignToAllPlayer(state, () => {
         return { fold: false };
     }))
-    .then(state => assignToGame(state, game => ({
+    .then(state => assignToRound(state, () => DEFAULT_STATE.common.game.round))
+    .then(state => assignToRound(state, () => ({
         deck: getDeck(),
-        currentPlayer: nextPlayerAfter(state, game.dealer),
-        raisePlayer: null,
-        pot: 0,
-        bet: game.blind.big
+        currentPlayer: nextPlayerAfter(state, state.common.game.dealer),
+        bet: state.common.game.blind.big
     })));
 }
 
 export function nextPlayer(initialState: APokerState) {
-    const isDealer = initialState.common.game.dealer === initialState.common.game.currentPlayer;
-    const allCalled = isDealer && (currentPlayer(initialState)?.bet || 0) === initialState.common.game.bet;
+    const isDealer = initialState.common.game.dealer === initialState.common.game.round.currentPlayer;
+    const allCalled = isDealer && (currentPlayer(initialState)?.bet || 0) === initialState.common.game.round.bet;
 
     if (allCalled || activePlayers(initialState).length < 2) {
-        return chain(initialState)
-        .then(state => collect(state))
-        .then(state => nextRound(state));
+        return nextBettingRound(initialState);
     }
 
-    return assignToGame(initialState, () => ({
+    return assignToRound(initialState, () => ({
         currentPlayer: nextPlayerAfter(initialState)
     }));
 }
@@ -149,7 +177,7 @@ export function giveCards(state: APokerState) {
 }
 
 export function giveCardsTo(state: APokerState, owner: string, n: number) {
-    const deck: ?Deck = state.common.game.deck;
+    const deck: ?Deck = state.common.game.round.deck;
 
     if (deck) {
         for (let i = 0; i < n; i++) {
@@ -158,9 +186,9 @@ export function giveCardsTo(state: APokerState, owner: string, n: number) {
         }
     }
 
-    state.common.game.deck = deck;
+    state.common.game.round.deck = deck;
 
-    return assignToGame(state, () => ({ deck }));
+    return assignToRound(state, () => ({ deck }));
 }
 
 export function chooseDealer(state: APokerState) {
@@ -177,12 +205,14 @@ export function toBet(state: APokerState, amount: number) {
 }
 
 
-export function payBlinds(initalState: APokerState) {
-    const small = nextPlayerAfter(initalState, initalState.common.game.dealer);
-    const big = nextPlayerAfter(initalState, small);
+export function payBlinds(initialState: APokerState) {
+    const small = nextPlayerAfter(initialState, initialState.common.game.dealer);
+    const big = nextPlayerAfter(initialState, small);
 
-    return _payBlind(initalState, small, initalState.common.game.blind.small)
-    .then(state => _payBlind(state, big, state.common.game.blind.big));
+    return chain(initialState)
+    .then(state => _payBlind(state, small, state.common.game.blind.small))
+    .then(state => _payBlind(state, big, state.common.game.blind.big))
+    .then(state => assignToRound(state, () => ({ bet: state.common.game.blind.big })));
 }
 
 export function checkSeatControl(initialState: APokerState) {

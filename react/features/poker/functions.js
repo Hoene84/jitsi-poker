@@ -43,17 +43,18 @@ export function pokerActionTypes(state: Object, nick: string): Array<string> {
 
 export function cards(state: Object, nick: string): ?Array<Card> {
     const pokerState: PokerState = state['features/poker'];
+    const deck = pokerState.common.game.round.deck;
 
-    if (!pokerState.common.game.deck) {
+    if (!deck) {
         return [];
     }
 
-    return pokerState.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).map(cardSlot => cardSlot.card);
+    return deck.cards.filter(cardSlot => cardSlot.owner === nick).map(cardSlot => cardSlot.card);
 }
 
 export function setDominantSpeaker(state: Object, pokerState: CommonState, dispatch: Dispatch<any>): ?Array<string> {
     const conference = getCurrentConference(state);
-    const participantId = getParticipantId(state, pokerState.game.currentPlayer);
+    const participantId = getParticipantId(state, pokerState.game.round.currentPlayer);
 
     if (participantId && conference) {
         dispatch(dominantSpeakerChanged(participantId, conference));
@@ -71,5 +72,5 @@ export function getNick(state: Object): string {
 export function currentPlayer(state: Object, nick: string): boolean {
     const pokerState: PokerState = state['features/poker'];
 
-    return pokerState.common.game.currentPlayer === nick;
+    return pokerState.common.game.round.currentPlayer === nick;
 }

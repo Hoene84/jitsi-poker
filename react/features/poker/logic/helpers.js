@@ -1,14 +1,14 @@
 // @flow
 
 import type {
-    APokerState,
+    APokerState, BettingRound,
     Card, CardSlot,
     ChainablePokerState,
     CommonState,
     Game,
     Player,
     PlayerEntry,
-    PokerState
+    PokerState, Round
 } from '../types';
 import { assign as reduxAssign } from '../../base/redux';
 import { OWNER_TABLE } from '../constants';
@@ -49,6 +49,24 @@ export function assignToGame(state: APokerState, assignFunction: (Game) => $Shap
     return assignToCommon(state, common => {
         return {
             game: assign(common.game, assignFunction(common.game))
+        };
+    });
+}
+
+export function assignToRound(state: APokerState, assignFunction: (Round) => $Shape<Round>): ChainablePokerState {
+    return assignToGame(state, game => {
+        return {
+            round: assign(game.round, assignFunction(game.round))
+        };
+    });
+}
+
+export function assignToBettingRound(
+        state: APokerState,
+        assignFunction: (BettingRound) => $Shape<BettingRound>): ChainablePokerState {
+    return assignToRound(state, round => {
+        return {
+            bettingRound: assign(round.bettingRound, assignFunction(round.bettingRound))
         };
     });
 }
@@ -105,24 +123,26 @@ export function assignToPlayer(
 export function assignToCurrentPlayer(
         state: APokerState,
         assignFunction: (string, Player) => $Shape<Player>): ChainablePokerState {
-    return state.common.game.currentPlayer
-        ? assignToPlayer(state, state.common.game.currentPlayer, assignFunction)
+    return state.common.game.round.currentPlayer
+        ? assignToPlayer(state, state.common.game.round.currentPlayer, assignFunction)
         : chain(state);
 }
 
 export function countCards(state: APokerState, nick: string) {
-    return state.common.game.deck ? state.common.game.deck.cards.filter(cardSlot => cardSlot.owner === nick).length : 0;
+    const deck = state.common.game.round.deck;
+
+    return deck ? deck.cards.filter(cardSlot => cardSlot.owner === nick).length : 0;
 }
 
-export function nextPlayerAfter(state: APokerState, nick: ?string = state.common.game.currentPlayer) {
+export function nextPlayerAfter(state: APokerState, nick: ?string = state.common.game.round.currentPlayer) {
     const nicks = Object.keys(state.common.players);
 
     return nicks[(nicks.indexOf(nick) + 1) % nicks.length];
 }
 
 export function currentPlayer(state: APokerState): ?Player {
-    if (state.common.game.currentPlayer) {
-        return state.common.players[state.common.game.currentPlayer];
+    if (state.common.game.round.currentPlayer) {
+        return state.common.players[state.common.game.round.currentPlayer];
     }
 }
 
@@ -145,9 +165,15 @@ export function cards(state: APokerState, nick: string): Array<Card> {
 }
 
 export function cardSlots(state: APokerState): Array<CardSlot> {
-    return state.common.game.deck?.cards || [];
+    return state.common.game.round.deck?.cards || [];
 }
 
 export function isNotInSeatControl(state: APokerState, nick: string) {
     return state.nick === null && state.common.players[nick];
+}
+
+export function logState(state: APokerState) {
+    console.log(state);
+
+    return chain(state);
 }

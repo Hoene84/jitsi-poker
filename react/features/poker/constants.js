@@ -1,5 +1,8 @@
 // @flow
 
+import type { PokerState } from './types';
+import uuid from 'uuid';
+
 /**
  * Sound
  */
@@ -34,3 +37,33 @@ export const SYMBOLS = Object.freeze({
     king: 'K',
     ace: 'A'
 });
+
+export const DEFAULT_STATE: PokerState = {
+    common: {
+        game: {
+            id: uuid.v4().toUpperCase(),
+            ticks: 0,
+            state: 'none',
+            startAmount: 1000,
+            dealer: null,
+            blind: {
+                small: 5,
+                big: 10
+            },
+            round: {
+                state: 'preflop',
+                currentPlayer: null,
+                deck: null,
+                pot: 0,
+                bet: 0,
+                bettingRound: {
+                    raisePlayer: null
+                }
+            }
+        },
+        table: [],
+        players: {},
+        lastModifiedBy: null
+    },
+    nick: null
+};

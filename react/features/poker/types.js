@@ -5,6 +5,7 @@ import * as actions from './actionTypes';
 import { SUITS, SYMBOLS } from './constants';
 
 type GameState = "none" | "running";
+type BettingRoundState = "preflop" | "flop" | "turn" | "river";
 export type Suit = $Keys<typeof SUITS>;
 export type Symbol = $Keys<typeof SYMBOLS>;
 export type Action = $Values<typeof actions>
@@ -29,18 +30,27 @@ export type Blind = {|
     big: number
 |}
 
+export type BettingRound = {|
+    raisePlayer: ?string,
+|}
+
+export type Round = {|
+    state: BettingRoundState,
+    currentPlayer: ?string,
+    deck: ?Deck,
+    pot: number,
+    bet: number,
+    bettingRound: BettingRound
+|}
+
 export type Game = {|
     id: string,
     ticks: ?number,
     state: GameState,
     startAmount: number,
-    currentPlayer: ?string,
-    raisePlayer: ?string,
     dealer: ?string,
-    deck: ?Deck,
-    pot: number,
-    bet: number,
     blind: Blind,
+    round: Round
 |}
 
 export type Player = {|
