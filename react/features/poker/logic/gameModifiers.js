@@ -38,6 +38,7 @@ export function getDeck(): Deck {
                         owner: null
                     };
                 }))
+                .sort(() => Math.random() - 0.5)
     };
 }
 
