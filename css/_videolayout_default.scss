@@ -589,18 +589,97 @@
     bottom: 0;
     position: fixed;
     pointer-events: none;
+    z-index: 11;
 }
 
 .poker-control-panel {
 
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-    .poker-button {
-        pointer-events: auto;
-        font-size: 30px;
-        margin: 10px;
+    .poker-buttons {
+
+        display: flex;
+        justify-content: center;
+        padding-top: 20px;
+
+        .poker-button {
+            pointer-events: auto;
+            font-size: 30px;
+            margin: 10px;
+        }
+    }
+
+    .poker-hand {
+        img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .card {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            width: 152px;
+            height: 186px;
+        }
+
+        .card-one {
+            right: 218px;
+            bottom: 147px;
+            transform: rotate(12deg);
+        }
+        .card-two {
+            right: 99px;
+            bottom: 162px;
+            transform: rotate(24deg);
+        }
+
+        .symbol {
+            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+            font-size: 100px;
+            color: black;
+            font-weight: 900;
+            width: 120px;
+            height: 112px;
+            letter-spacing: -10px;
+            margin-left: -12px;
+
+            &.red {
+                color: #e94440;
+                @supports (-webkit-text-stroke: 2px #c53632) {
+                    -webkit-text-stroke: 2px #c53632
+                }
+                @supports not (-webkit-text-stroke: 2px #c53632) {
+                    text-shadow: 2px 2px 2px #c53632
+                }
+            }
+            &.black {
+                background-image: linear-gradient(0deg, rgba(18,18,18,1) 0%, rgba(114,114,114,1) 100%);;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                @supports (-webkit-text-stroke: 2px rgba(46, 46, 46, 0.01)) {
+                    -webkit-text-stroke: 2px rgba(46, 46, 46, 0.01)
+                }
+                @supports not (-webkit-text-stroke: 2px rgba(46, 46, 46, 0.01)) {
+                    text-shadow: 1px 1px 1px rgba(46, 46, 46, 0.5);
+                }
+            }
+        }
+
+        .suite {
+            font-size: 46px;
+            font-family: apple color emoji,segoe ui emoji,noto color emoji,android emoji,emojisymbols,emojione mozilla,twemoji mozilla,segoe ui symbol;
+            width: 120px;
+            height: 100px;
+            margin-top: 12px;
+            margin-left: -12px;
+        }
     }
 }
 
