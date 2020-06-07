@@ -78,7 +78,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _amount: player ? player.amount : null,
         _bet: player ? player.bet : null,
         _folded: player ? player.fold : null,
-        _cards: cards(state, nick),
+        _cards: cards(state, nick, true),
         _state: JSON.stringify(state['features/poker']),
         _isCurrentPlayer: currentPlayer(state, nick)
     };

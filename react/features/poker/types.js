@@ -17,7 +17,8 @@ export type Card = {|
 
 export type CardSlot = {|
     card: Card,
-    owner: ?string
+    owner: ?string,
+    flipped: boolean
 |}
 
 export type Deck = {|

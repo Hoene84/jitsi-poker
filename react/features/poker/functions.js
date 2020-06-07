@@ -41,7 +41,7 @@ export function pokerActionTypes(state: Object, nick: string): Array<string> {
     return POKER_ACTIONS.filter(action => player.actions.includes(action));
 }
 
-export function cards(state: Object, nick: string): ?Array<Card> {
+export function cards(state: Object, nick: string, flippedOnly: boolean = false): Array<Card> {
     const pokerState: PokerState = state['features/poker'];
     const deck = pokerState.common.game.round.deck;
 
@@ -49,7 +49,10 @@ export function cards(state: Object, nick: string): ?Array<Card> {
         return [];
     }
 
-    return deck.cards.filter(cardSlot => cardSlot.owner === nick).map(cardSlot => cardSlot.card);
+    // eslint-disable-next-line arrow-body-style
+    return deck.cards.filter(cardSlot => {
+        return cardSlot.owner === nick && (!flippedOnly || cardSlot.flipped);
+    }).map(cardSlot => cardSlot.card);
 }
 
 export function setDominantSpeaker(state: Object, pokerState: CommonState, dispatch: Dispatch<any>): ?Array<string> {

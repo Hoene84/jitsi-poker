@@ -35,7 +35,8 @@ export function getDeck(): Deck {
                             suit,
                             symbol
                         },
-                        owner: null
+                        owner: null,
+                        flipped: false
                     };
                 }))
                 .sort(() => Math.random() - 0.5)
