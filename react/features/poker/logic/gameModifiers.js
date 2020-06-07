@@ -108,19 +108,11 @@ export function nextBettingRound(initialState: APokerState) {
     case 'river': {
         return chain(initialState)
         .then(state => collect(state))
-        .then(state => nextRound(state));
+        .then(state => newRound(state));
     }
     }
 
     return chain(initialState);
-}
-
-export function nextRound(initialState: APokerState) {
-    return chain(initialState)
-    .then(state => assignToGame(state, () => ({
-        dealer: nextPlayerAfter(state, state.common.game.dealer)
-    })))
-    .then(state => newRound(state));
 }
 
 export function newRound(initialState: APokerState) {
