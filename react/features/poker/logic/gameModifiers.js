@@ -132,6 +132,14 @@ export function newRound(initialState: APokerState) {
 }
 
 export function nextPlayer(initialState: APokerState) {
+    return chain(initialState)
+    .then(state => tryFinishBettingRound(state))
+    .then(state => assignToRound(state, () => ({
+        currentPlayer: nextPlayerAfter(state)
+    })));
+}
+
+export function tryFinishBettingRound(initialState: APokerState) {
     const isDealer = initialState.common.game.dealer === initialState.common.game.round.currentPlayer;
     const allCalled = isDealer && (currentPlayer(initialState)?.bet || 0) === initialState.common.game.round.bet;
 
@@ -139,9 +147,7 @@ export function nextPlayer(initialState: APokerState) {
         return nextBettingRound(initialState);
     }
 
-    return assignToRound(initialState, () => ({
-        currentPlayer: nextPlayerAfter(initialState)
-    }));
+    return chain(initialState);
 }
 
 export function collect(initialState: APokerState) {
