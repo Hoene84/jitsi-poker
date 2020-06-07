@@ -3,10 +3,14 @@
 import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { translate } from '../../base/i18n';
+import { cards } from '../functions';
+import Card from './Card';
+import type { Card as CardType } from '../types';
 
 export type Props = {
     dispatch: Function,
     t: Function,
+    _cards: Array<CardType>
 }
 
 type State = {
@@ -31,14 +35,20 @@ class Table extends Component<Props, State> {
 
     render() {
         return (
-            <div className = 'poker-table' />
+            <div className = 'poker-table'>
+                {this.props._cards.map((card, i) => (<Card
+                    card = { card }
+                    key = { i } />))}
+            </div>
         );
     }
 
 }
 
-export function _mapStateToProps() {
-    return {};
+export function _mapStateToProps(state: Object) {
+    return {
+        _cards: cards(state, 'table')
+    };
 }
 
 export default translate(connect(_mapStateToProps)(Table));
