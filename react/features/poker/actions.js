@@ -6,7 +6,7 @@ import {
     START_GAME,
     STOP_GAME,
     GIVE_CARDS,
-    NEW_STATE_RECEIVED, CHECK, RAISE, FOLD, CALL
+    NEW_STATE_RECEIVED, CHECK, RAISE, FOLD, CALL, SEND_GAME_STATE
 } from './actionTypes';
 
 export function joinGame(nick: string) {
@@ -70,5 +70,11 @@ export function newStateReceived(common: Object) {
     return {
         type: NEW_STATE_RECEIVED,
         common
+    };
+}
+
+export function sendGameState() {
+    return {
+        type: SEND_GAME_STATE
     };
 }

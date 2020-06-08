@@ -5,10 +5,10 @@ import { CONFERENCE_JOINED, getCurrentConference } from '../base/conference';
 import { JitsiConferenceEvents } from '../base/lib-jitsi-meet';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { registerSound, unregisterSound } from '../base/sounds';
-import { newStateReceived } from './actions';
+import { newStateReceived, sendGameState } from './actions';
 
 import { CARD_TURN_SOUND_FILE } from './sounds';
-import { CARD_TURN_SOUND_ID, GAME_STATE_CHANGED_EVENT } from './constants';
+import { CARD_TURN_SOUND_ID, GAME_STATE_CHANGED_EVENT, REQUEST_GAME_STATE_EVENT } from './constants';
 import { setDominantSpeaker } from './functions';
 import type { CommonState } from './types';
 import { participantJoined } from '../base/participants';
@@ -32,6 +32,7 @@ MiddlewareRegistry.register(store => next => action => {
         break;
 
     case CONFERENCE_JOINED:
+        _requestGamesState(action.conference);
         _registerGameUpdateListener(action.conference, store);
         dispatch(participantJoined({
             conference: action.conference,
@@ -72,7 +73,15 @@ function _registerGameUpdateListener(conference, store) {
 
                 setDominantSpeaker(store, newState, store.dispatch);
                 store.dispatch(newStateReceived(newState));
+            } else if (message.type === REQUEST_GAME_STATE_EVENT) {
+                store.dispatch(sendGameState());
             }
         }
     );
+}
+
+function _requestGamesState(conference) {
+    conference.sendMessage({
+        type: REQUEST_GAME_STATE_EVENT
+    });
 }

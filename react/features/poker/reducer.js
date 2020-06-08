@@ -32,6 +32,7 @@ import {
     JOIN_GAME,
     NEW_STATE_RECEIVED,
     RAISE,
+    SEND_GAME_STATE,
     START_GAME,
     STOP_GAME,
     TAKE_OVER
@@ -126,6 +127,10 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
             common: action.common
         })))
         .then(state => checkSeatControl(state));
+    }
+    case SEND_GAME_STATE: {
+        return chain(initialState)
+        .then(state => update(state));
     }
     }
 

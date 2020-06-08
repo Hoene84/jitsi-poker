@@ -10,3 +10,4 @@ export const CALL = 'CALL';
 export const RAISE = 'RAISE';
 export const FOLD = 'FOLD';
 export const NEW_STATE_RECEIVED = 'NEW_STATE_RECEIVED';
+export const SEND_GAME_STATE = 'SEND_GAME_STATE';
