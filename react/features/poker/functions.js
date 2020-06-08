@@ -1,8 +1,8 @@
 // @flow
 
 import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE } from './actionTypes';
-import { startGame, joinGame, stopGame, takeOver } from './actions';
-import type { PokerState, Card, CommonState } from './types';
+import { joinGame, startGame, stopGame, takeOver } from './actions';
+import type { Card, CommonState, PlayerState, PokerState } from './types';
 import type { Dispatch } from 'redux';
 import {
     dominantSpeakerChanged,
@@ -76,4 +76,20 @@ export function currentPlayer(state: Object, nick: string): boolean {
     const pokerState: PokerState = state['features/poker'];
 
     return pokerState.common.game.round.currentPlayer === nick;
+}
+
+export function playerState(state: Object, nick: string): PlayerState {
+    const pokerState: PokerState = state['features/poker'];
+
+    if (pokerState.common.game.round.bettingRound.raisePlayer === nick) {
+        return 'raiser';
+    }
+    if (pokerState.common.game.round.currentPlayer === nick) {
+        return 'current';
+    }
+    if (pokerState.common.players[nick].fold) {
+        return 'folded';
+    }
+
+    return 'none';
 }

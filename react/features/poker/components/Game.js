@@ -4,10 +4,15 @@ import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { translate } from '../../base/i18n';
 import Table from './Table';
+import type { CommonState } from '../types';
+import PlayerListEntry from './PlayerListEntry';
+import { getCurrentLayout } from '../../video-layout';
 
 export type Props = {
     dispatch: Function,
     t: Function,
+    _nicks: Array<string>,
+    _currentLayout: string
 }
 
 type State = {
@@ -32,8 +37,18 @@ class Game extends Component<Props, State> {
 
     render() {
         return (
-            <div className = 'game'>
-                <div>GAME</div>
+            <div className = { `game ${this.props._currentLayout}` }>
+                <div className = 'player-list table'>
+                    <div className = 'table-row'>
+                        <div className = 'table-cell'>Name</div>
+                        <div className = 'table-cell'>Amount</div>
+                        <div className = 'table-cell'>Bet</div>
+                        <div className = 'table-cell'>State</div>
+                    </div>
+                    {this.props._nicks.map(nick => (<PlayerListEntry
+                        key = { nick }
+                        nick = { nick } />))}
+                </div>
                 <div className = 'gameTable'>
                     <Table />
                 </div>
@@ -43,8 +58,14 @@ class Game extends Component<Props, State> {
 
 }
 
-export function _mapStateToProps() {
-    return {};
+export function _mapStateToProps(state: Object) {
+    const commonState: CommonState = state['features/poker'].common;
+    const nicks: Array<string> = Object.keys(commonState.players);
+
+    return {
+        _nicks: nicks,
+        _currentLayout: getCurrentLayout(state)
+    };
 }
 
 export default translate(connect(_mapStateToProps)(Game));

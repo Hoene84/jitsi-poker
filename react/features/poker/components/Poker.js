@@ -17,6 +17,7 @@ export type Props = {
     _bet: number,
     _folded: boolean,
     _cards: Array<CardType>,
+    _dealer: boolean,
     _state: string,
     _isCurrentPlayer: boolean
 }
@@ -46,7 +47,10 @@ class Poker extends Component<Props, State> {
                 {this.props._cards.map((card, i) => (<Card
                     card = { card }
                     key = { i } />))}
-                {/* <div> {this.props._state}</div>*/}
+                <div>
+                    {this.props._dealer
+                    && <span className = 'dealer'><span>Dealer</span></span>}
+                </div>
             </div>
         );
     }
@@ -79,6 +83,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _bet: player ? player.bet : null,
         _folded: player ? player.fold : null,
         _cards: cards(state, nick, true),
+        _dealer: commonState.game.dealer === nick,
         _state: JSON.stringify(state['features/poker']),
         _isCurrentPlayer: currentPlayer(state, nick)
     };
