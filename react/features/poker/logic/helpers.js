@@ -135,7 +135,8 @@ export function countCards(state: APokerState, nick: string) {
 }
 
 export function nextPlayerAfter(state: APokerState, nick: ?string = state.common.game.round.currentPlayer) {
-    const nicks = Object.keys(state.common.players);
+    const allNicks = Object.keys(state.common.players);
+    const nicks = allNicks.filter(playerNick => !player(state, playerNick).fold || playerNick === nick);
 
     return nicks[(nicks.indexOf(nick) + 1) % nicks.length];
 }

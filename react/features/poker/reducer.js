@@ -2,16 +2,7 @@
 // @flow
 
 import { ReducerRegistry } from '../base/redux';
-import {
-    checkSeatControl,
-    chooseDealer,
-    giveCards,
-    newRound,
-    nextPlayer,
-    payBlinds,
-    toBet,
-    update
-} from './logic/gameModifiers';
+import { checkSeatControl, chooseDealer, giveCards, newRound, nextPlayer, toBet, update } from './logic/gameModifiers';
 import {
     addToPlayers,
     assignToBettingRound,
@@ -82,7 +73,6 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     case GIVE_CARDS: {
         return chain(initialState)
         .then(state => giveCards(state))
-        .then(state => payBlinds(state))
         .then(state => update(state));
     }
     case CHECK: {
