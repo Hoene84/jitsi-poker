@@ -48,8 +48,8 @@ MiddlewareRegistry.register(store => next => action => {
 
 StateListenerRegistry.register(
     state => state['features/poker'],
-    (currentState, { dispatch, getState } = {}) => {
-        const conference = getCurrentConference(getState());
+    (currentState, state = {}) => {
+        const conference = getCurrentConference(state.getState());
 
         if (conference
             && currentState.nick
@@ -58,7 +58,7 @@ StateListenerRegistry.register(
                 state: currentState.common,
                 type: GAME_STATE_CHANGED_EVENT
             });
-            setDominantSpeaker(getState(), currentState.common, dispatch);
+            setDominantSpeaker(state);
         }
     });
 
@@ -71,8 +71,8 @@ function _registerGameUpdateListener(conference, store) {
 
                 const newState: CommonState = message.state;
 
-                setDominantSpeaker(store, newState, store.dispatch);
                 store.dispatch(newStateReceived(newState));
+                setDominantSpeaker(store);
             } else if (message.type === REQUEST_GAME_STATE_EVENT) {
                 store.dispatch(sendGameState());
             }

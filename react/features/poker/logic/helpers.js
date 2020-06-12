@@ -1,14 +1,17 @@
 // @flow
 
 import type {
-    APokerState, BettingRound,
-    Card, CardSlot,
+    APokerState,
+    BettingRound,
+    Card,
+    CardSlot,
     ChainablePokerState,
     CommonState,
     Game,
     Player,
     PlayerEntry,
-    PokerState, Round
+    PokerState,
+    Round
 } from '../types';
 import { assign as reduxAssign } from '../../base/redux';
 import { OWNER_TABLE } from '../constants';
@@ -177,4 +180,19 @@ export function logState(state: APokerState) {
     console.log(state);
 
     return chain(state);
+}
+
+export function addStagePerformance(initialState: APokerState, nick: ?string, durationMillis: number = 3500) {
+    if (nick) {
+        return assignToCommon(initialState, common => {
+            return {
+                stagePerformances: common.stagePerformances.concat({
+                    nick,
+                    durationMillis
+                })
+            };
+        });
+    }
+
+    return chain(initialState);
 }

@@ -2,8 +2,7 @@
 
 import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE } from './actionTypes';
 import { joinGame, startGame, stopGame, takeOver } from './actions';
-import type { Card, CommonState, PlayerState, PokerState } from './types';
-import type { Dispatch } from 'redux';
+import type { Card, PlayerState, PokerState } from './types';
 import {
     dominantSpeakerChanged,
     getLocalParticipant,
@@ -55,12 +54,22 @@ export function cards(state: Object, nick: string, flippedOnly: boolean = false)
     }).map(cardSlot => cardSlot.card);
 }
 
-export function setDominantSpeaker(state: Object, pokerState: CommonState, dispatch: Dispatch<any>): ?Array<string> {
+export function setDominantSpeaker(state: Object): ?Array<string> {
+    const pokerState: PokerState = state.getState()['features/poker'];
     const conference = getCurrentConference(state);
-    const participantId = getParticipantId(state, pokerState.game.round.currentPlayer);
 
-    if (participantId && conference) {
-        dispatch(dominantSpeakerChanged(participantId, conference));
+    if (pokerState.common.stagePerformances.length > 0) {
+        const performance = pokerState.common.stagePerformances.splice(0, 1)[0];
+        const participantId = getParticipantId(state, performance.nick) || performance.nick;
+
+        if (participantId && conference) {
+            state.dispatch(dominantSpeakerChanged(participantId, conference));
+        }
+
+        setTimeout(() => {
+            setDominantSpeaker(state);
+        }, performance.durationMillis);
+
     }
 }
 

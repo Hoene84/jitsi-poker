@@ -67,10 +67,16 @@ export type PlayerEntry = {|
     player: Player
 |}
 
+export type StagePerformance = {|
+    nick: string,
+    durationMillis: number
+|}
+
 export type CommonState = {|
     game: Game,
     table: Array<Card>,
     players: { [string]: Player },
+    stagePerformances: Array<StagePerformance>,
     lastModifiedBy: ?string
 |}
 

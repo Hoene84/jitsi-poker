@@ -64,6 +64,7 @@ export const DEFAULT_STATE: PokerState = {
         },
         table: [],
         players: {},
+        stagePerformances: [],
         lastModifiedBy: null
     },
     nick: null

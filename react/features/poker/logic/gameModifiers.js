@@ -6,7 +6,7 @@ import type { APokerState, ChainablePokerState, Deck, Player, Suit, Symbol } fro
 import { JOIN_GAME, START_GAME, STOP_GAME } from '../actionTypes';
 import { SUITS, SYMBOLS, DEFAULT_STATE } from '../constants';
 import {
-    activePlayers,
+    activePlayers, addStagePerformance,
     assignToAllPlayer, assignToBettingRound,
     assignToCommon,
     assignToCurrentPlayer,
@@ -130,12 +130,14 @@ export function newRound(initialState: APokerState) {
         deck: getDeck(),
         currentPlayer: nextPlayerAfter(state, state.common.game.dealer),
         bet: state.common.game.blind.big
-    })));
+    })))
+    .then(state => addStagePerformance(state, state.common.game.round.currentPlayer));
 }
 
 export function nextPlayer(initialState: APokerState) {
     return chain(initialState)
-    .then(state => tryFinishBettingRound(state));
+    .then(state => tryFinishBettingRound(state))
+    .then(state => addStagePerformance(state, state.common.game.round.currentPlayer));
 }
 
 export function tryFinishBettingRound(initialState: APokerState) {
@@ -153,14 +155,16 @@ export function tryFinishBettingRound(initialState: APokerState) {
     }
 
     if (nextIsRaisePlayer || (isDealer && allCalled)) {
-        return nextBettingRound(initialState).then(state => assignToRound(state, () => ({
+        return nextBettingRound(initialState)
+        .then(state => assignToRound(state, () => ({
             currentPlayer: nextPlayerAfter(state, state.common.game.dealer)
-        })));
+        })))
+        .then(state => addStagePerformance(state, 'table'));
     }
 
     return assignToRound(initialState, () => ({
         currentPlayer: nextPlayerAfter(initialState)
-    }));
+    })).then(state => addStagePerformance(state, state.common.game.round.currentPlayer));
 }
 
 export function collect(initialState: APokerState) {
@@ -175,7 +179,8 @@ export function collect(initialState: APokerState) {
     })))
     .then(state => assignToAllPlayer(state, () => ({
         bet: 0
-    })));
+    })))
+    .then(state => addStagePerformance(state, allWinners[allWinners.length - 1]));
 }
 
 export function giveCards(initialState: APokerState) {

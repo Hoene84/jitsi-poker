@@ -4,6 +4,7 @@
 import { ReducerRegistry } from '../base/redux';
 import { checkSeatControl, chooseDealer, giveCards, newRound, nextPlayer, toBet, update } from './logic/gameModifiers';
 import {
+    addStagePerformance,
     addToPlayers,
     assignToBettingRound,
     assignToCommon,
@@ -47,7 +48,8 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => assignToState(state, () => ({
             nick: action.nick
         })))
-        .then(state => update(state));
+        .then(state => update(state))
+        .then(state => addStagePerformance(state, 'table'));
     }
     case TAKE_OVER: {
         return chain(initialState)
