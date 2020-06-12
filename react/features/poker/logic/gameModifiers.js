@@ -137,7 +137,7 @@ export function newRound(initialState: APokerState) {
 export function nextPlayer(initialState: APokerState) {
     return chain(initialState)
     .then(state => tryFinishBettingRound(state))
-    .then(state => addStagePerformance(state, state.common.game.round.currentPlayer));
+    .then(state => setCurrentAsDominantSpeaker(state));
 }
 
 export function tryFinishBettingRound(initialState: APokerState) {
@@ -164,7 +164,7 @@ export function tryFinishBettingRound(initialState: APokerState) {
 
     return assignToRound(initialState, () => ({
         currentPlayer: nextPlayerAfter(initialState)
-    })).then(state => addStagePerformance(state, state.common.game.round.currentPlayer));
+    }));
 }
 
 export function collect(initialState: APokerState) {
@@ -255,4 +255,10 @@ function _payBlind(state: APokerState, nick: string, amount: number) {
             amount: player.amount - amountToPay
         };
     });
+}
+
+function setCurrentAsDominantSpeaker(initialState: APokerState) {
+    return chain(initialState)
+    .then(state => addStagePerformance(state, state.common.game.round.bettingRound.raisePlayer, 0))
+    .then(state => addStagePerformance(state, state.common.game.round.currentPlayer));
 }
