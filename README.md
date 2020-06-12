@@ -16,6 +16,11 @@ If you like to fiddle around with the current state, visit: https://hoene84.gith
 * start a conference
 * join and start the game with the poker cards button in the toolbar
 
+*It's recommended to use different profiles to test. Otherwise the nick used to identify a user is shared over the local store of your browser.
+use
+`chromium-browser --user-data-dir=/tmp/chrome/[id] &`   
+to avoid this.*
+
 # Architecture
 
 This is a pure frontend project. It uses the backend of jitsi, currently alpha.jitsi.net. 
