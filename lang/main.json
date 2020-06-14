@@ -847,7 +847,11 @@
     },
     "poker": {
         "action": {
-            "GIVE_CARDS": "Give Cards"
+            "GIVE_CARDS": "Give Cards",
+            "CHECK": "Check",
+            "CALL": "Call",
+            "RAISE": "Raise",
+            "FOLD": "Fold"
         }
 
     }
