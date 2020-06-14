@@ -790,5 +790,10 @@
     "lonelyMeetingExperience": {
         "button": "Andere einladen",
         "youAreAlone": "Nur Sie sind in diesem Meeting"
+    },
+    "poker": {
+        "action": {
+            "GIVE_CARDS": "Karten austeilen"
+        }
     }
 }
