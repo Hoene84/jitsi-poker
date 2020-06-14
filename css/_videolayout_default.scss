@@ -667,7 +667,11 @@
 
         display: flex;
         justify-content: center;
-        padding-top: 20px;
+        position: absolute;
+        bottom: 160px;
+        z-index: 12;
+        left: 40px;
+
 
         .poker-button {
             pointer-events: auto;
