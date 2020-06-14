@@ -62,7 +62,7 @@ class GenericAction extends Component<Props> {
     }
 }
 
-export function _mapStateToProps(state: Object, ownProps: Props) {
+export function _mapStateToProps() {
     return {};
 }
 

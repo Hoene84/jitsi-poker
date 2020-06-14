@@ -25,7 +25,7 @@ class RaiseAction extends Component<Props, State> {
 
         // Bind event handlers so they are only bound once for every instance.
         this._onChange = this._onChange.bind(this);
-        this._raise = this._raise.bind(this);
+        this._onClick = this._onClick.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
     }
 
@@ -35,25 +35,25 @@ class RaiseAction extends Component<Props, State> {
 
         return (
             <button
-                aria-label = { t(`poker.action.RAISE`) }
-                onClick = { this._raise }
-                className = 'poker-button raise'>
+                aria-label = { t('poker.action.RAISE') }
+                className = 'poker-button raise'
+                onClick = { this._onClick }>
                 <input
                     autoFocus = { true }
                     onChange = { this._onChange }
-                    onKeyDown={this._onKeyDown}
+                    onKeyDown = { this._onKeyDown }
                     placeholder = { t('poker.raise.amount') }
                     type = 'number'
                     value = { this.state.amount } />
                 <div className = { 'poker-action' }>
-                    {t(`poker.action.RAISE`)}
+                    {t('poker.action.RAISE')}
                 </div>
             </button>
         );
     }
 
-    _raise: () => void;
-    _raise(event) {
+    _onClick: () => void;
+    _onClick(event) {
         if (event.target.tagName !== 'INPUT') {
             this.raise();
         }
@@ -61,9 +61,13 @@ class RaiseAction extends Component<Props, State> {
 
     _onChange: () => void;
     _onChange(event) {
-        this.setState({
-            amount: parseInt(event.target.value)
-        });
+        const number = parseInt(event.target.value, 10);
+
+        if (!isNaN(number) || event.target.value === '') {
+            this.setState({
+                amount: parseInt(event.target.value, 10)
+            });
+        }
     }
 
     _onKeyDown: () => void;

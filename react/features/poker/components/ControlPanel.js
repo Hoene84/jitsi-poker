@@ -29,7 +29,7 @@ type State = {
 class ControlPanel extends Component<Props, State> {
 
     render() {
-        const { t, _actions } = this.props;
+        const { _actions } = this.props;
 
         return (
             <div className = 'poker-control-panel'>
@@ -83,10 +83,14 @@ class ControlPanel extends Component<Props, State> {
     _action(action) {
         switch (action) {
         case RAISE:
-            return <RaiseAction action = { action } />;
+            return (<RaiseAction
+                action = { action }
+                key = { action } />);
         }
 
-        return <GenericAction action = { action } key = { action }/>;
+        return (<GenericAction
+            action = { action }
+            key = { action } />);
     }
 }
 
