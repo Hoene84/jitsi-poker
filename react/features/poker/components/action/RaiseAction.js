@@ -26,6 +26,7 @@ class RaiseAction extends Component<Props, State> {
         // Bind event handlers so they are only bound once for every instance.
         this._onChange = this._onChange.bind(this);
         this._raise = this._raise.bind(this);
+        this._onKeyDown = this._onKeyDown.bind(this);
     }
 
     render() {
@@ -33,27 +34,29 @@ class RaiseAction extends Component<Props, State> {
         const { t } = this.props;
 
         return (
-            <span className = 'poker-button'>
+            <button
+                aria-label = { t(`poker.action.RAISE`) }
+                onClick = { this._raise }
+                className = 'poker-button raise'>
                 <input
                     autoFocus = { true }
                     onChange = { this._onChange }
+                    onKeyDown={this._onKeyDown}
                     placeholder = { t('poker.raise.amount') }
                     type = 'number'
                     value = { this.state.amount } />
-                <button
-                    aria-label = { t(`poker.action.RAISE`) }
-                    onClick = { this._raise }>
-                    <div className = { 'poker-action' }>
-                        {t(`poker.action.RAISE`)}
-                    </div>
-                </button>
-            </span>
+                <div className = { 'poker-action' }>
+                    {t(`poker.action.RAISE`)}
+                </div>
+            </button>
         );
     }
 
     _raise: () => void;
-    _raise() {
-        this.props.dispatch(raise(this.state.amount));
+    _raise(event) {
+        if (event.target.tagName !== 'INPUT') {
+            this.raise();
+        }
     }
 
     _onChange: () => void;
@@ -61,6 +64,17 @@ class RaiseAction extends Component<Props, State> {
         this.setState({
             amount: parseInt(event.target.value)
         });
+    }
+
+    _onKeyDown: () => void;
+    _onKeyDown(event) {
+        if (event.key === 'Enter') {
+            this.raise();
+        }
+    }
+
+    raise() {
+        this.props.dispatch(raise(this.state.amount));
     }
 }
 

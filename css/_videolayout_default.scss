@@ -676,6 +676,30 @@
         .poker-button {
             pointer-events: auto;
             margin: 10px;
+            box-shadow: inset 0px 68px 0px -30px #b54b3a;
+            text-shadow:0px -2px 0px #7a2a1d;
+            border:2px solid #241d13;
+            background-color: #a73f2d;
+            color: white;
+            padding: 10px 20px;
+            font-variant: small-caps;
+            font-weight: bold;
+
+            &:hover {
+                background:linear-gradient(to bottom, #b34332 5%, #a73f2d 100%);
+                background-color:#b34332;
+            }
+            &:active {
+                top:1px;
+            }
+
+            &.raise {
+                display: flex;
+            }
+
+            input {
+                margin-right: 20px;
+            }
         }
     }
 
