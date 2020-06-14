@@ -4,14 +4,14 @@ import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { translate } from '../../base/i18n';
 import type { Action, Card as CardType } from '../types';
-import Tooltip from '@atlaskit/tooltip';
-import { CALL, CHECK, FOLD, GIVE_CARDS, RAISE } from '../actionTypes';
-import { call, check, fold, giveCards, raise } from '../actions';
 import { cards, pokerActionTypes } from '../functions';
 import { getParticipantDisplayName } from '../../base/participants';
 import { SYMBOLS } from '../constants';
+import GenericAction from './action/GenericAction';
+import { RAISE } from '../actionTypes';
+import RaiseAction from './action/RaiseAction';
 
-export type Props = {
+type Props = {
     participantId: string,
     dispatch: Function,
     t: Function,
@@ -28,35 +28,13 @@ type State = {
  */
 class ControlPanel extends Component<Props, State> {
 
-    constructor(props: Props) {
-        super(props);
-
-        this.state = {
-            // value: false
-        };
-
-        // Bind event handlers so they are only bound once for every instance.
-        this._onAction = this._onAction.bind(this);
-    }
-
     render() {
         const { t, _actions } = this.props;
 
         return (
             <div className = 'poker-control-panel'>
                 <div className = 'poker-buttons'>
-                    {_actions.map(action => (<button
-                        aria-label = { t(`poker.action.${action}`) }
-                        className = 'poker-button'
-                        key = { action }
-                        /* eslint-disable-next-line react/jsx-no-bind */
-                        onClick = { e => this._onAction(e, action) }>
-                        <Tooltip content = { t(`poker.action.${action}`) }>
-                            <div className = { 'poker-action' }>
-                                {t(`poker.action.${action}`)}
-                            </div>
-                        </Tooltip>
-                    </button>))}
+                    {_actions.map(action => this._action(action))}
                 </div>
                 {this.props._cards.length === 2
                 && <div className = 'poker-hand'>
@@ -101,27 +79,14 @@ class ControlPanel extends Component<Props, State> {
         return 'symbol black';
     }
 
-    _onAction: (Object, string) => void;
-    _onAction(event, action) {
+
+    _action(action) {
         switch (action) {
-        case GIVE_CARDS:
-            this.props.dispatch(giveCards());
-            break;
-        case CHECK:
-            this.props.dispatch(check());
-            break;
-        case CALL:
-            this.props.dispatch(call());
-            break;
         case RAISE:
-            this.props.dispatch(raise(100));
-            break;
-        case FOLD:
-            this.props.dispatch(fold());
-            break;
-        default:
-            console.log('unknown action');
+            return <RaiseAction action = { action } />;
         }
+
+        return <GenericAction action = { action } key = { action }/>;
     }
 }
 
