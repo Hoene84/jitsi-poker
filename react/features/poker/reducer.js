@@ -95,6 +95,9 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
         .then(state => assignToBettingRound(state, () => ({
             raisePlayer: state.common.game.round.currentPlayer
         })))
+        .then(state => assignToRound(state, () => ({
+            raiseAmount: action.amount
+        })))
         .then(state => nextPlayer(state))
         .then(state => update(state));
     }

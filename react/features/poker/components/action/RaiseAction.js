@@ -4,10 +4,14 @@ import React, { Component } from 'react';
 import { raise } from '../../actions';
 import { translate } from '../../../base/i18n';
 import { connect } from '../../../base/redux';
+import type { CommonState } from '../../types';
 
 type Props = {
+    nick: string,
     dispatch: Function,
     t: Function,
+    _minAmount: number,
+    _maxAmount: number,
 }
 
 type State = {
@@ -20,7 +24,7 @@ class RaiseAction extends Component<Props, State> {
         super(props);
 
         this.state = {
-            amount: 100
+            amount: props._minAmount
         };
 
         // Bind event handlers so they are only bound once for every instance.
@@ -61,11 +65,13 @@ class RaiseAction extends Component<Props, State> {
 
     _onChange: () => void;
     _onChange(event) {
-        const number = parseInt(event.target.value, 10);
+        let number = parseInt(event.target.value, 10);
 
         if (!isNaN(number) || event.target.value === '') {
+            number = Math.min(number, this.props._maxAmount);
+            number = Math.max(number, this.props._minAmount);
             this.setState({
-                amount: parseInt(event.target.value, 10)
+                amount: number
             });
         }
     }
@@ -82,8 +88,13 @@ class RaiseAction extends Component<Props, State> {
     }
 }
 
-export function _mapStateToProps() {
-    return {};
+export function _mapStateToProps(state: Object, ownProps: Props) {
+    const commonState: CommonState = state['features/poker'].common;
+
+    return {
+        _minAmount: commonState.game.round.raiseAmount,
+        _maxAmount: commonState.players[ownProps.nick].amount
+    };
 }
 
 export default translate(connect(_mapStateToProps)(RaiseAction));

@@ -42,6 +42,7 @@ export type Round = {|
     deck: ?Deck,
     pot: number,
     bet: number,
+    raiseAmount: number,
     bettingRound: BettingRound
 |}
 

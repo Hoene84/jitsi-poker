@@ -17,6 +17,7 @@ type Props = {
     t: Function,
     _cards: Array<CardType>,
     _actions: Array<Action>,
+    _nick: Array<Action>
 }
 
 type State = {
@@ -84,8 +85,8 @@ class ControlPanel extends Component<Props, State> {
         switch (action) {
         case RAISE:
             return (<RaiseAction
-                action = { action }
-                key = { action } />);
+                key = { action }
+                nick = { this.props._nick } />);
         }
 
         return (<GenericAction
@@ -101,7 +102,8 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
 
     return {
         _actions: pokerActionTypes(state, nick),
-        _cards: cards(state, nick)
+        _cards: cards(state, nick),
+        _nick: nick
     };
 }
 

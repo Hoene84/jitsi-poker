@@ -57,6 +57,7 @@ export const DEFAULT_STATE: PokerState = {
                 deck: null,
                 pot: 0,
                 bet: 0,
+                raiseAmount: 0,
                 bettingRound: {
                     raisePlayer: null
                 }

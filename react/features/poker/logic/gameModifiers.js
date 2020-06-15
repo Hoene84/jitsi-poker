@@ -124,12 +124,11 @@ export function newRound(initialState: APokerState) {
     .then(state => assignToGame(state, game => ({
         dealer: nextPlayerAfter(state, game.dealer)
     })))
-    .then(state => payBlinds(state))
     .then(state => assignToRound(state, () => DEFAULT_STATE.common.game.round))
+    .then(state => payBlinds(state))
     .then(state => assignToRound(state, () => ({
         deck: getDeck(),
-        currentPlayer: nextPlayerAfter(state, state.common.game.dealer),
-        bet: state.common.game.blind.big
+        currentPlayer: nextPlayerAfter(state, state.common.game.dealer)
     })))
     .then(state => addStagePerformance(state, state.common.game.round.currentPlayer));
 }
@@ -232,7 +231,10 @@ export function payBlinds(initialState: APokerState) {
     return chain(initialState)
     .then(state => _payBlind(state, small, state.common.game.blind.small))
     .then(state => _payBlind(state, big, state.common.game.blind.big))
-    .then(state => assignToRound(state, () => ({ bet: state.common.game.blind.big })));
+    .then(state => assignToRound(state, () => ({
+        bet: state.common.game.blind.big,
+        raiseAmount: state.common.game.blind.big
+    })));
 }
 
 export function checkSeatControl(initialState: APokerState) {
