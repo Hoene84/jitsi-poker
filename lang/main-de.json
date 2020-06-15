@@ -794,6 +794,12 @@
     "poker": {
         "action": {
             "GIVE_CARDS": "Karten austeilen"
+        },
+        "state": {
+            "current": "Am Zug",
+            "none": "",
+            "joined": "Beigetreten",
+            "spectator": "Zuschauer"
         }
     }
 }

@@ -852,6 +852,16 @@
             "CALL": "Call",
             "RAISE": "Raise",
             "FOLD": "Fold"
+        },
+        "stack": "Stack",
+        "bet": "Bet",
+        "state": {
+            "folded": "Folded",
+            "raiser": "Raiser",
+            "current": "Current",
+            "none": "",
+            "joined": "Joined",
+            "spectator": "Spectator"
         }
 
     }

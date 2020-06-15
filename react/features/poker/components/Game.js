@@ -40,7 +40,7 @@ class Game extends Component<Props, State> {
             <div className = { `game ${this.props._currentLayout}` }>
                 <div className = 'player-list table'>
                     <div className = 'table-row'>
-                        <div className = 'table-cell'>Name</div>
+                        <div className = 'table-cell nick'>Name</div>
                         <div className = 'table-cell'>Amount</div>
                         <div className = 'table-cell'>Bet</div>
                         <div className = 'table-cell'>State</div>

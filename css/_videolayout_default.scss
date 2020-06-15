@@ -593,9 +593,32 @@
     }
 }
 
+.table-cell.state.current,
+.current .info .state {
+    color: green;
+}
+
+.table-cell.state {
+    &.folded,
+    &.spectator,
+    &.joined,
+    {
+        color: darkgray;
+    }
+}
+
+.folded,
+.spectator,
+.joined,
+{
+    .info .state {
+        color: darkgray;
+    }
+}
+
 .largePokerContainer {
+    font-size: 8vh;
     .game {
-        font-size: 3vh;;
         padding: 100px;
 
         .poker-table {
@@ -607,15 +630,28 @@
             margin-right: 100px;
         }
     }
+    .vertical-filmstrip-view {
+        .info {
+            margin-right: 0;
+        }
+    }
 }
 
-.tableThumb {
-    .game.tile-view {
-        font-size: 2vh;;
+.vertical-filmstrip-view {
+    .info {
+        margin-right: -100px;
+    }
+}
 
-        .poker-table {
-            margin-top: 20px;
-        }
+.tile-view .remote-videos-container {
+    font-size: 4vh;
+    .info {
+        margin-right: 0;
+        right: 20px !important;
+    }
+
+    .poker-table {
+        margin-top: 20px;
     }
 }
 
@@ -654,6 +690,13 @@
     display: table;
 }
 
+.poker-container,
+.poker-control-panel,
+.poker-buttons button{
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
 .poker-control-panel {
 
     position: absolute;
@@ -661,7 +704,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    font-size: 30px;
 
     .poker-buttons {
 
@@ -677,13 +719,12 @@
             pointer-events: auto;
             margin: 10px;
             box-shadow: inset 0px 68px 0px -30px #b54b3a;
-            text-shadow:0px -2px 0px #7a2a1d;
+            font-size: 30px;
             border:2px solid #241d13;
             background-color: #a73f2d;
             color: white;
             padding: 10px 20px;
-            font-variant: small-caps;
-            font-weight: bold;
+            text-shadow:0px -2px 0px #7a2a1d;
 
             &:hover {
                 background:linear-gradient(to bottom, #b34332 5%, #a73f2d 100%);
@@ -802,6 +843,11 @@
         left: 0;
         right: 0;
         bottom: 0;
+
+        .info {
+            width: fit-content;
+            position: absolute;
+        }
 
         &.current {
             border: 10px dashed green;

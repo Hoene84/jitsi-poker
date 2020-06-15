@@ -90,6 +90,12 @@ export function currentPlayer(state: Object, nick: string): boolean {
 export function playerState(state: Object, nick: string): PlayerState {
     const pokerState: PokerState = state['features/poker'];
 
+    if (!pokerState.common.players[nick]) {
+        return 'spectator';
+    }
+    if (pokerState.common.game.state === 'none') {
+        return 'joined';
+    }
     if (pokerState.common.game.round.bettingRound.raisePlayer === nick) {
         return 'raiser';
     }

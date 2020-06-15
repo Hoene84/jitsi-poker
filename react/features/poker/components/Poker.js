@@ -6,8 +6,9 @@ import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
-import { cards, currentPlayer } from '../functions';
+import { cards, playerState } from '../functions';
 import Card from './Card';
+import { getCurrentLayout } from '../../video-layout';
 
 export type Props = {
     participantId: string,
@@ -19,12 +20,15 @@ export type Props = {
     _cards: Array<CardType>,
     _dealer: boolean,
     _state: string,
-    _isCurrentPlayer: boolean
+    _playerState: string,
+    _currentLayout: string
 }
 
 type State = {
 
 }
+
+declare var interfaceConfig: Object;
 
 /**
  * Implements a class to render poker in the app.
@@ -40,10 +44,28 @@ class Poker extends Component<Props, State> {
     }
 
     render() {
+
+        const { t } = this.props;
+
+        if (this.props.participantId === 'table') {
+            return <div />;
+        }
+
         return (
             <div className = { this._pokerClasses() }>
-                <div>Amount: {this.props._amount}</div>
-                <div>Bet: {this.props._bet}</div>
+                <div
+                    className = 'info'
+                    style = {{ right: `${(interfaceConfig.FILM_STRIP_MAX_HEIGHT || 120) + 25 + 100}px` }}>
+
+                    {this.props._amount > 0
+                    && <div>{ t('poker.stack') }: {this.props._amount}</div>}
+
+                    {this.props._bet > 0
+                    && <div>{ t('poker.bet') }: {this.props._bet}</div>}
+
+                    <div className = 'state'>{ t(`poker.state.${this.props._playerState}`) }</div>
+
+                </div>
                 {this.props._cards.map((card, i) => (<Card
                     card = { card }
                     key = { i } />))}
@@ -57,16 +79,7 @@ class Poker extends Component<Props, State> {
 
     // _pokerClasses: () => string;
     _pokerClasses() {
-        const classes = [ 'player' ];
-
-        if (this.props._isCurrentPlayer) {
-            classes.push('current');
-        }
-        if (this.props._folded) {
-            classes.push('folded');
-        }
-
-        return classes.join(' ');
+        return [ 'player', this.props._playerState, this.props._currentLayout ].join(' ');
     }
 }
 
@@ -85,7 +98,8 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _cards: cards(state, nick, true),
         _dealer: commonState.game.dealer === nick,
         _state: JSON.stringify(state['features/poker']),
-        _isCurrentPlayer: currentPlayer(state, nick)
+        _playerState: playerState(state, nick),
+        _currentLayout: getCurrentLayout(state)
     };
 }
 

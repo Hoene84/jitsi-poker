@@ -8,6 +8,7 @@ import { playerState } from '../functions';
 
 export type Props = {
     nick: string,
+    t: Function,
     _amount: number,
     _bet: number,
     _state: PlayerState,
@@ -17,6 +18,9 @@ export type Props = {
 export class PlayerListEntry extends Component<Props> {
 
     render() {
+
+        const { t } = this.props;
+
         return (
             <div className = 'player-list-entry table-row'>
                 <div className = 'table-cell nick'>
@@ -27,7 +31,9 @@ export class PlayerListEntry extends Component<Props> {
                 </div>
                 <div className = 'table-cell amount'>{ this.props._amount }</div>
                 <div className = 'table-cell bet'>{ this.props._bet }</div>
-                <div className = 'table-cell state'>{ this.props._state }</div>
+                <div className = { `table-cell state ${this.props._state}` }>
+                    { t(`poker.state.${this.props._state}`) }
+                </div>
             </div>
         );
     }
