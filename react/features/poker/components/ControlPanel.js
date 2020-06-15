@@ -51,7 +51,9 @@ class ControlPanel extends Component<Props, State> {
                     {this.props._bet > 0
                     && <div>{ t('poker.bet') }: {this.props._bet}</div>}
 
-                    <div className = {`state ${this.props._playerState}`}>{ t(`poker.state.${this.props._playerState}`) }</div>
+                    <div className = { `state ${this.props._playerState}` }>
+                        { t(`poker.state.${this.props._playerState}`) }
+                    </div>
                 </div>
                 <div className = 'poker-buttons'>
                     {_actions.map(action => this._action(action))}

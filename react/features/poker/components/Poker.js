@@ -63,7 +63,9 @@ class Poker extends Component<Props, State> {
                     {this.props._bet > 0
                     && <div>{ t('poker.bet') }: {this.props._bet}</div>}
 
-                    <div className = {`state ${this.props._playerState}`}>{ t(`poker.state.${this.props._playerState}`) }</div>
+                    <div className = { `state ${this.props._playerState}` }>
+                        { t(`poker.state.${this.props._playerState}`) }
+                    </div>
 
                     {this.props._dealer
                     && <span className = 'dealer'><span>Dealer</span></span>}
