@@ -3,8 +3,8 @@
 import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { translate } from '../../base/i18n';
-import type { Action, Card as CardType } from '../types';
-import { cards, pokerActionTypes } from '../functions';
+import type { Action, Card as CardType, CommonState } from '../types';
+import { cards, playerState, pokerActionTypes } from '../functions';
 import { getParticipantDisplayName } from '../../base/participants';
 import { SYMBOLS } from '../constants';
 import GenericAction from './action/GenericAction';
@@ -17,7 +17,10 @@ type Props = {
     t: Function,
     _cards: Array<CardType>,
     _actions: Array<Action>,
-    _nick: Array<Action>
+    _nick: Array<Action>,
+    _amount: number,
+    _bet: number,
+    _playerState: string,
 }
 
 type State = {
@@ -30,10 +33,20 @@ type State = {
 class ControlPanel extends Component<Props, State> {
 
     render() {
-        const { _actions } = this.props;
+        const { t, _actions } = this.props;
 
         return (
             <div className = 'poker-control-panel'>
+                <div className = 'info'>
+
+                    {this.props._amount > 0
+                    && <div>{ t('poker.stack') }: {this.props._amount}</div>}
+
+                    {this.props._bet > 0
+                    && <div>{ t('poker.bet') }: {this.props._bet}</div>}
+
+                    <div className = {`state ${this.props._playerState}`}>{ t(`poker.state.${this.props._playerState}`) }</div>
+                </div>
                 <div className = 'poker-buttons'>
                     {_actions.map(action => this._action(action))}
                 </div>
@@ -96,14 +109,20 @@ class ControlPanel extends Component<Props, State> {
 }
 
 export function _mapStateToProps(state: Object, ownProps: Props) {
+    const commonState: CommonState = state['features/poker'].common;
+    const { players } = commonState;
+
     const { participantId } = ownProps;
     const nick = getParticipantDisplayName(state, participantId);
-
+    const player = players[nick];
 
     return {
         _actions: pokerActionTypes(state, nick),
         _cards: cards(state, nick),
-        _nick: nick
+        _nick: nick,
+        _amount: player ? player.amount : null,
+        _bet: player ? player.bet : null,
+        _playerState: playerState(state, nick),
     };
 }
 

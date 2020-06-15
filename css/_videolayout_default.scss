@@ -593,12 +593,14 @@
     }
 }
 
-.table-cell.state.current,
-.current .info .state {
-    color: green;
+.state {
+    &.current
+    {
+        color: green;
+    }
 }
 
-.table-cell.state {
+.state {
     &.folded,
     &.spectator,
     &.joined,
@@ -607,17 +609,8 @@
     }
 }
 
-.folded,
-.spectator,
-.joined,
-{
-    .info .state {
-        color: darkgray;
-    }
-}
-
 .largePokerContainer {
-    font-size: 8vh;
+    font-size: 3vw;
     .game {
         padding: 100px;
 
@@ -698,12 +691,17 @@
 }
 
 .poker-control-panel {
-
+    font-size: 3vw;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+
+    .info {
+        left: 50px;
+        bottom: 240px;
+    }
 
     .poker-buttons {
 
@@ -814,6 +812,11 @@
     }
 }
 
+.info {
+    width: fit-content;
+    position: absolute;
+}
+
 .poker-container {
     color: white;
     position: absolute;
@@ -843,11 +846,6 @@
         left: 0;
         right: 0;
         bottom: 0;
-
-        .info {
-            width: fit-content;
-            position: absolute;
-        }
 
         &.current {
             border: 10px dashed green;
