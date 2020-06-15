@@ -10,6 +10,7 @@ import { SYMBOLS } from '../constants';
 import GenericAction from './action/GenericAction';
 import { RAISE } from '../actionTypes';
 import RaiseAction from './action/RaiseAction';
+import { getCurrentLayout } from '../../video-layout';
 
 type Props = {
     participantId: string,
@@ -18,9 +19,11 @@ type Props = {
     _cards: Array<CardType>,
     _actions: Array<Action>,
     _nick: Array<Action>,
+    _dealer: boolean,
     _amount: number,
     _bet: number,
     _playerState: string,
+    _currentLayout: string
 }
 
 type State = {
@@ -36,8 +39,11 @@ class ControlPanel extends Component<Props, State> {
         const { t, _actions } = this.props;
 
         return (
-            <div className = 'poker-control-panel'>
+            <div className = { `poker-control-panel ${this.props._currentLayout}` }>
                 <div className = 'info'>
+
+                    {this.props._dealer
+                    && <span className = 'dealer'><span>Dealer</span></span>}
 
                     {this.props._amount > 0
                     && <div>{ t('poker.stack') }: {this.props._amount}</div>}
@@ -120,9 +126,11 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _actions: pokerActionTypes(state, nick),
         _cards: cards(state, nick),
         _nick: nick,
+        _dealer: commonState.game.dealer === nick,
         _amount: player ? player.amount : null,
         _bet: player ? player.bet : null,
         _playerState: playerState(state, nick),
+        _currentLayout: getCurrentLayout(state)
     };
 }
 

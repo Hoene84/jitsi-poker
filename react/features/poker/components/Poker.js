@@ -65,14 +65,12 @@ class Poker extends Component<Props, State> {
 
                     <div className = {`state ${this.props._playerState}`}>{ t(`poker.state.${this.props._playerState}`) }</div>
 
+                    {this.props._dealer
+                    && <span className = 'dealer'><span>Dealer</span></span>}
                 </div>
                 {this.props._cards.map((card, i) => (<Card
                     card = { card }
                     key = { i } />))}
-                <div>
-                    {this.props._dealer
-                    && <span className = 'dealer'><span>Dealer</span></span>}
-                </div>
             </div>
         );
     }
