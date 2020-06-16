@@ -798,6 +798,7 @@
         "state": {
             "current": "Am Zug",
             "none": "",
+            "waiting": "Warted ({{cue}})",
             "joined": "Beigetreten",
             "spectator": "Zuschauer"
         }

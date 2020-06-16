@@ -9,7 +9,7 @@ import {
     getParticipantDisplayName,
     getParticipants
 } from '../base/participants';
-import { isNotInSeatControl } from './logic/helpers';
+import { activePlayers, isNotInSeatControl } from './logic/helpers';
 import { getCurrentConference } from '../base/conference';
 import { getCurrentLayout, LAYOUTS } from '../video-layout';
 
@@ -107,7 +107,19 @@ export function playerState(state: Object, nick: string): PlayerState {
         return 'folded';
     }
 
-    return 'none';
+    return 'waiting';
+}
+
+export function playerStateI18nParams(state: Object, nick: string): Object {
+    const pokerState: PokerState = state['features/poker'];
+    const activeNicks = activePlayers(pokerState);
+
+    const indexCurrent = activeNicks.indexOf(pokerState.common.game.round.currentPlayer);
+    const indexNick = activeNicks.indexOf(nick);
+
+    return {
+        cue: (indexNick - indexCurrent + activeNicks.length) % activeNicks.length
+    };
 }
 
 export function getFontPercentage(state: Object): number {

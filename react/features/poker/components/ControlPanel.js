@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { translate } from '../../base/i18n';
 import type { Action, Card as CardType, CommonState } from '../types';
-import { cards, playerState, pokerActionTypes } from '../functions';
+import { cards, playerState, playerStateI18nParams, pokerActionTypes } from '../functions';
 import { getParticipantDisplayName } from '../../base/participants';
 import { SYMBOLS } from '../constants';
 import GenericAction from './action/GenericAction';
@@ -23,6 +23,7 @@ type Props = {
     _amount: number,
     _bet: number,
     _playerState: string,
+    _playerStateI18nParams: Object,
     _currentLayout: string
 }
 
@@ -52,7 +53,7 @@ class ControlPanel extends Component<Props, State> {
                     && <div>{ t('poker.bet') }: {this.props._bet}</div>}
 
                     <div className = { `state ${this.props._playerState}` }>
-                        { t(`poker.state.${this.props._playerState}`) }
+                        { t(`poker.state.${this.props._playerState}`, this.props._playerStateI18nParams) }
                     </div>
                 </div>
                 <div className = 'poker-buttons'>
@@ -132,6 +133,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _amount: player ? player.amount : null,
         _bet: player ? player.bet : null,
         _playerState: playerState(state, nick),
+        _playerStateI18nParams: playerStateI18nParams(state, nick),
         _currentLayout: getCurrentLayout(state)
     };
 }

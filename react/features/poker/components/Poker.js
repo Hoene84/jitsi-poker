@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { connect } from '../../base/redux';
 import { getParticipantDisplayName } from '../../base/participants';
 import { translate } from '../../base/i18n';
-import { cards, getFontPercentage, playerState } from '../functions';
+import { cards, getFontPercentage, playerState, playerStateI18nParams } from '../functions';
 import Card from './Card';
 import { getCurrentLayout } from '../../video-layout';
 
@@ -21,6 +21,7 @@ export type Props = {
     _dealer: boolean,
     _state: string,
     _playerState: string,
+    _playerStateI18nParams: Object,
     _currentLayout: string,
     _fontPercentage: number
 }
@@ -67,7 +68,7 @@ class Poker extends Component<Props, State> {
                     && <div>{ t('poker.bet') }: {this.props._bet}</div>}
 
                     <div className = { `state ${this.props._playerState}` }>
-                        { t(`poker.state.${this.props._playerState}`) }
+                        { t(`poker.state.${this.props._playerState}`, this.props._playerStateI18nParams) }
                     </div>
 
                     {this.props._dealer
@@ -102,6 +103,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _dealer: commonState.game.dealer === nick,
         _state: JSON.stringify(state['features/poker']),
         _playerState: playerState(state, nick),
+        _playerStateI18nParams: playerStateI18nParams(state, nick),
         _currentLayout: getCurrentLayout(state),
         _fontPercentage: getFontPercentage(state)
     };

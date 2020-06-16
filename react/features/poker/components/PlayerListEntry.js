@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import type { CommonState, Player, PlayerState } from '../types';
 import { translate } from '../../base/i18n';
 import { connect } from '../../base/redux';
-import { playerState } from '../functions';
+import { playerState, playerStateI18nParams } from '../functions';
 
 export type Props = {
     nick: string,
@@ -12,6 +12,7 @@ export type Props = {
     _amount: number,
     _bet: number,
     _state: PlayerState,
+    _playerStateI18nParams: Object,
     _dealer: boolean
 }
 
@@ -31,7 +32,7 @@ export class PlayerListEntry extends Component<Props> {
                 <div className = 'table-cell amount'>{ this.props._amount }</div>
                 <div className = 'table-cell bet'>{ this.props._bet }</div>
                 <div className = { `table-cell state ${this.props._state}` }>
-                    { t(`poker.state.${this.props._state}`) }
+                    { t(`poker.state.${this.props._state}`, this.props._playerStateI18nParams) }
                 </div>
             </div>
         );
@@ -46,6 +47,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _amount: player.amount,
         _bet: player.bet,
         _state: playerState(state, ownProps.nick),
+        _playerStateI18nParams: playerStateI18nParams(state, ownProps.nick),
         _dealer: common.game.dealer === ownProps.nick
     };
 }

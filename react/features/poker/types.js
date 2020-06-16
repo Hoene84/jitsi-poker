@@ -6,7 +6,7 @@ import { SUITS, SYMBOLS } from './constants';
 
 type GameState = "none" | "running";
 type BettingRoundState = "preflop" | "flop" | "turn" | "river";
-export type PlayerState = "folded" | "raiser" | "current" | "none" | "spectator" | "joined";
+export type PlayerState = "folded" | "raiser" | "current" | "waiting" | "spectator" | "joined";
 export type Suit = $Keys<typeof SUITS>;
 export type Symbol = $Keys<typeof SYMBOLS>;
 export type Action = $Values<typeof actions>
