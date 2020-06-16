@@ -539,7 +539,7 @@
 .poker-table-container {
     position: absolute;
     width: 400px;
-    height: 100px;
+    height: 97px;
     left: 20px;
     bottom: 40px;
 }
@@ -568,6 +568,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    overflow: scroll;
 
     .gameTable {
         position: relative;
@@ -673,6 +674,7 @@
     border: 15px solid #a95555;
     z-index: 10;
     box-sizing: border-box;
+    min-height: 97px;
 }
 
 .filmstripPokerContainer {
@@ -880,34 +882,34 @@
             background: grey;
         }
     }
+}
 
-    .poker-card {
+.poker-card {
 
-        background-color: white;
-        width: 40px;
-        height: 56px;
-        color: black;
-        position: relative;
-        border-radius: 5px;
-        margin: 5px;
-        display: inline-block;
+    background-color: white;
+    width: 40px;
+    height: 56px;
+    color: black;
+    position: relative;
+    border-radius: 5px;
+    margin: 5px;
+    display: inline-block;
 
-        .symbol {
-            position: absolute;
-            font-size: 22px;
-            font-weight: 900;
-            left: 4px;
-        }
-
-        .suite {
-            position: absolute;
-            font-size: 24px;
-            left: 8px;
-            top: 16px;
-            font-family: apple color emoji,segoe ui emoji,noto color emoji,android emoji,emojisymbols,emojione mozilla,twemoji mozilla,segoe ui symbol;
-        }
-
+    .symbol {
+        position: absolute;
+        font-size: 22px;
+        font-weight: 900;
+        left: 4px;
     }
+
+    .suite {
+        position: absolute;
+        font-size: 24px;
+        left: 8px;
+        top: 16px;
+        font-family: apple color emoji,segoe ui emoji,noto color emoji,android emoji,emojisymbols,emojione mozilla,twemoji mozilla,segoe ui symbol;
+    }
+
 }
 
 #videoNotAvailableScreen {
