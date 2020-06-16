@@ -47,9 +47,9 @@ var interfaceConfig = {
      * jwt.
      */
     TOOLBAR_BUTTONS: [
-        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+        'microphone', 'camera', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'info', 'chat', 'recording',
-        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+        'livestreaming', 'etherpad', 'sharedvideo', 'settings',
         'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
         'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
         'e2ee'
@@ -78,7 +78,7 @@ var interfaceConfig = {
     SHOW_PROMOTIONAL_CLOSE_PAGE: false,
     RANDOM_AVATAR_URL_PREFIX: false,
     RANDOM_AVATAR_URL_SUFFIX: false,
-    FILM_STRIP_MAX_HEIGHT: 360,
+    FILM_STRIP_MAX_HEIGHT: 200,
 
     // Enables feedback star animation.
     ENABLE_FEEDBACK_ANIMATION: false,
