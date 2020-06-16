@@ -694,11 +694,18 @@
     display: table;
 }
 
+.vertical-filmstrip .filmstrip div#filmstripRemoteVideos {
+    padding-left: 400px;
+    margin-left: -400px;
+}
+
 .poker-container,
 .poker-control-panel,
+.game,
 .poker-buttons button{
     font-variant: small-caps;
     font-weight: bold;
+    color: white;
 }
 
 .poker-control-panel {

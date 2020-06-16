@@ -7,12 +7,14 @@ import Table from './Table';
 import type { CommonState } from '../types';
 import PlayerListEntry from './PlayerListEntry';
 import { getCurrentLayout } from '../../video-layout';
+import { getFontPercentage } from '../functions';
 
 export type Props = {
     dispatch: Function,
     t: Function,
     _nicks: Array<string>,
-    _currentLayout: string
+    _currentLayout: string,
+    _fontPercentage: number
 }
 
 type State = {
@@ -37,7 +39,9 @@ class Game extends Component<Props, State> {
 
     render() {
         return (
-            <div className = { `game ${this.props._currentLayout}` }>
+            <div
+                className = { `game ${this.props._currentLayout}` }
+                style = {{ fontSize: `${this.props._fontPercentage * 60 / 100}%` }}>
                 <div className = 'player-list table'>
                     <div className = 'table-row'>
                         <div className = 'table-cell nick'>Name</div>
@@ -64,7 +68,8 @@ export function _mapStateToProps(state: Object) {
 
     return {
         _nicks: nicks,
-        _currentLayout: getCurrentLayout(state)
+        _currentLayout: getCurrentLayout(state),
+        _fontPercentage: getFontPercentage(state)
     };
 }
 

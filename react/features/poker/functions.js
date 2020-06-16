@@ -5,12 +5,13 @@ import { joinGame, startGame, stopGame, takeOver } from './actions';
 import type { Card, PlayerState, PokerState } from './types';
 import {
     dominantSpeakerChanged,
-    getLocalParticipant,
+    getLocalParticipant, getParticipantCount,
     getParticipantDisplayName,
     getParticipants
 } from '../base/participants';
 import { isNotInSeatControl } from './logic/helpers';
 import { getCurrentConference } from '../base/conference';
+import { getCurrentLayout, LAYOUTS } from '../video-layout';
 
 const POKER_ACTIONS = [ GIVE_CARDS, CHECK, CALL, RAISE, FOLD ];
 
@@ -107,4 +108,11 @@ export function playerState(state: Object, nick: string): PlayerState {
     }
 
     return 'none';
+}
+
+export function getFontPercentage(state: Object): number {
+    const participantCount = getParticipantCount(state);
+    const currentLayout = getCurrentLayout(state);
+
+    return currentLayout === LAYOUTS.TILE_VIEW ? 200 / Math.ceil(Math.sqrt(participantCount)) : 100;
 }
