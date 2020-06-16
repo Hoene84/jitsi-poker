@@ -44,6 +44,7 @@ class Game extends Component<Props, State> {
                 style = {{ fontSize: `${this.props._fontPercentage * 60 / 100}%` }}>
                 <div className = 'player-list table'>
                     <div className = 'table-row'>
+                        <div className = 'table-cell dealer'>Name</div>
                         <div className = 'table-cell nick'>Name</div>
                         <div className = 'table-cell'>Amount</div>
                         <div className = 'table-cell'>Bet</div>

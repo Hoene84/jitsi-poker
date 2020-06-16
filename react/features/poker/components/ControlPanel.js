@@ -43,7 +43,7 @@ class ControlPanel extends Component<Props, State> {
                 <div className = 'info'>
 
                     {this.props._dealer
-                    && <span className = 'dealer'><span>Dealer</span></span>}
+                    && <span className = 'dealer-button'><span>Dealer</span></span>}
 
                     {this.props._amount > 0
                     && <div>{ t('poker.stack') }: {this.props._amount}</div>}

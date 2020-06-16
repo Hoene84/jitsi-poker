@@ -544,7 +544,7 @@
     bottom: 40px;
 }
 
-.dealer {
+.dealer-button {
     background-color: white;
     color: black;
     border-radius: 50%;
@@ -575,22 +575,16 @@
     }
 
     .player-list {
-        .table-cell.nick {
-            text-align: left;
-        }
-        span.nick {
-            position: relative;
-            .dealer {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: -100px;
-                margin-top: auto;
-                margin-bottom: auto;
+        .table-cell {
+            &.nick {
+                text-align: left;
+            }
 
+            &.dealer {
+                max-height: 0;
+                display: flex;
             }
         }
-
     }
 }
 
@@ -641,6 +635,15 @@
     }
 }
 
+.remote-videos-container .vertical-filmstrip-view.game {
+    .dealer-button {
+        display: none;
+    }
+    .poker-table {
+        display: none;
+    }
+
+}
 .remote-videos-container .tile-view {
     .info {
         display: initial;

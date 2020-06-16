@@ -71,7 +71,7 @@ class Poker extends Component<Props, State> {
                     </div>
 
                     {this.props._dealer
-                    && <span className = 'dealer'><span>Dealer</span></span>}
+                    && <span className = 'dealer-button'><span>Dealer</span></span>}
                 </div>
                 {this.props._cards.map((card, i) => (<Card
                     card = { card }
