@@ -368,12 +368,6 @@
         "raiseHand": "Raise or lower your hand",
         "showSpeakerStats": "Show speaker stats",
         "toggleChat": "Open or close the chat",
-        "poker": {
-            "JOIN_GAME" : "Join Game",
-            "TAKE_OVER" : "Take Over Seat for {{player}}",
-            "START_GAME" : "Start Game",
-            "STOP_GAME" : "Stop current Game"
-        },
         "toggleFilmstrip": "Show or hide video thumbnails",
         "toggleScreensharing": "Switch between camera and screen sharing",
         "toggleShortcuts": "Show or hide keyboard shortcuts",
@@ -636,12 +630,6 @@
             "callQuality": "Manage video quality",
             "cc": "Toggle subtitles",
             "chat": "Toggle chat window",
-            "poker": {
-                "JOIN_GAME" : "Join Game",
-                "TAKE_OVER" : "Take Over Seat for {{player}}",
-                "START_GAME" : "Start Game",
-                "STOP_GAME" : "Stop current Game"
-            },
             "document": "Toggle shared document",
             "download": "Download our apps",
             "e2ee": "End-to-End Encryption",
@@ -684,12 +672,6 @@
         "authenticate": "Authenticate",
         "callQuality": "Manage video quality",
         "chat": "Open / Close chat",
-        "poker": {
-            "JOIN_GAME" : "Join Game",
-            "TAKE_OVER" : "Take Over Seat for {{player}}",
-            "START_GAME" : "Start Game",
-            "STOP_GAME" : "Stop current Game"
-        },
         "closeChat": "Close chat",
         "documentClose": "Close shared document",
         "documentOpen": "Open shared document",
@@ -851,7 +833,11 @@
             "CHECK": "Check",
             "CALL": "Call",
             "RAISE": "Raise",
-            "FOLD": "Fold"
+            "FOLD": "Fold",
+            "JOIN_GAME" : "Join Game",
+            "TAKE_OVER" : "Take Over Seat for {{player}}",
+            "START_GAME" : "Start Game",
+            "STOP_GAME" : "Stop current Game"
         },
         "stack": "Stack",
         "bet": "Bet",

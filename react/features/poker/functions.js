@@ -1,6 +1,6 @@
 // @flow
 
-import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE } from './actionTypes';
+import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE, START_GAME, TAKE_OVER } from './actionTypes';
 import { joinGame, startGame, stopGame, takeOver } from './actions';
 import type { Card, PlayerState, PokerState } from './types';
 import {
@@ -13,7 +13,7 @@ import { activePlayers, isNotInSeatControl } from './logic/helpers';
 import { getCurrentConference } from '../base/conference';
 import { getCurrentLayout, LAYOUTS } from '../video-layout';
 
-const POKER_ACTIONS = [ GIVE_CARDS, CHECK, CALL, RAISE, FOLD ];
+const POKER_ACTIONS = [ GIVE_CARDS, CHECK, CALL, RAISE, FOLD, TAKE_OVER, JOIN_GAME, START_GAME ];
 
 export function toolboxAction(state: Object) {
     const nick = getNick(state);
@@ -32,10 +32,10 @@ export function toolboxAction(state: Object) {
 export function pokerActionTypes(state: Object, nick: string): Array<string> {
     const localNick = getParticipantDisplayName(state, getLocalParticipant(state).id);
     const pokerState = state['features/poker'];
-    const player = pokerState.common.players[nick] || { actions: [] };
+    const player = pokerState.common.players[nick] || { actions: [ JOIN_GAME ] };
 
     if (isNotInSeatControl(pokerState, localNick)) {
-        return [];
+        return [ TAKE_OVER ];
     }
 
     return POKER_ACTIONS.filter(action => player.actions.includes(action));

@@ -1,12 +1,13 @@
 // @flow
 
 import React, { Component } from 'react';
-import { CALL, CHECK, FOLD, GIVE_CARDS, RAISE } from '../../actionTypes';
-import { call, check, fold, giveCards, raise } from '../../actions';
+import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE, START_GAME, TAKE_OVER } from '../../actionTypes';
+import { call, check, fold, giveCards, joinGame, raise, startGame, takeOver } from '../../actions';
 import { translate } from '../../../base/i18n';
 import { connect } from '../../../base/redux';
 
 export type Props = {
+    nick: string,
     action: string,
     dispatch: Function,
     t: Function,
@@ -55,6 +56,15 @@ class GenericAction extends Component<Props> {
             break;
         case FOLD:
             this.props.dispatch(fold());
+            break;
+        case TAKE_OVER:
+            this.props.dispatch(takeOver(this.props.nick));
+            break;
+        case JOIN_GAME:
+            this.props.dispatch(joinGame(this.props.nick));
+            break;
+        case START_GAME:
+            this.props.dispatch(startGame());
             break;
         default:
             console.log('unknown action');

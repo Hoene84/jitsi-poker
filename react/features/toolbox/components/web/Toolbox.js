@@ -286,7 +286,7 @@ class Toolbox extends Component<Props, State> {
             {
                 character: 'P',
                 exec: this._onShortcutPoker,
-                helpDescription: `keyboardShortcuts.poker.${this.props._pokerAction.type}`
+                helpDescription: `poker.action.${this.props._pokerAction.type}`
             },
             this._shouldShowButton('desktop') && {
                 character: 'D',
@@ -1141,7 +1141,7 @@ class Toolbox extends Component<Props, State> {
             case 'poker':
                 return (<OverflowMenuItem
                     accessibilityLabel =
-                        { t(`toolbar.accessibilityLabel.poker.${this.props._pokerAction.type}`,
+                        { t(`poker.action.${this.props._pokerAction.type}`,
                             { player: this.props._nameToDisplay }) }
                     icon = { IconPoker }
                     key = 'poker'
@@ -1326,11 +1326,11 @@ class Toolbox extends Component<Props, State> {
                             className = { `toolbox-button ${this.props._pokerAction.type}` }
                             icon = { IconPoker }
                             onClick = { this._onToolbarPoker }
-                            tooltip = { t(`toolbar.poker.${this.props._pokerAction.type}`) } />
+                            tooltip = { t(`poker.action.${this.props._pokerAction.type}`) } />
                     }
 
                     <div className = { `toolbox-button ${this.props._pokerAction.type}` }>
-                        { t(`toolbar.poker.${this.props._pokerAction.type}`, { player: this.props._nameToDisplay }) }
+                        { t(`poker.action.${this.props._pokerAction.type}`, { player: this.props._nameToDisplay }) }
                     </div>
                 </div>
                 <div className = 'button-group-center'>

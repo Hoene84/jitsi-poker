@@ -113,7 +113,8 @@ class ControlPanel extends Component<Props, State> {
 
         return (<GenericAction
             action = { action }
-            key = { action } />);
+            key = { action }
+            nick = { this.props._nick } />);
     }
 }
 
