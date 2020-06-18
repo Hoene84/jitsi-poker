@@ -589,12 +589,6 @@
             "callQuality": "Qualitätseinstellungen",
             "cc": "Untertitel ein-/ausschalten",
             "chat": "Chatfenster ein-/ausblenden",
-            "poker": {
-                "JOIN_GAME" : "Spiel beitreten",
-                "TAKE_OVER" : "Platz von {{player}} übernahmen",
-                "START_GAME" : "Spiel starten",
-                "STOP_GAME" : "Aktuelles Spiel stoppen"
-            },
             "document": "Geteiltes Dokument schließen",
             "download": "Unsere Apps herunterladen",
             "feedback": "Feedback hinterlassen",
@@ -635,12 +629,6 @@
         "authenticate": "Anmelden",
         "callQuality": "Qualitätseinstellungen",
         "chat": "Chat öffnen / schließen",
-        "poker": {
-            "JOIN_GAME" : "Spiel beitreten",
-            "TAKE_OVER" : "Platz von {{player}} übernahmen",
-            "START_GAME" : "Spiel starten",
-            "STOP_GAME" : "Aktuelles Spiel stoppen"
-        },
         "closeChat": "Chat schließen",
         "documentClose": "Geteiltes Dokument schließen",
         "documentOpen": "Geteiltes Dokument öffnen",
@@ -793,6 +781,10 @@
     },
     "poker": {
         "action": {
+            "JOIN_GAME" : "Spiel beitreten",
+            "TAKE_OVER" : "Platz von {{player}} übernahmen",
+            "START_GAME" : "Spiel starten",
+            "STOP_GAME" : "Aktuelles Spiel stoppen",
             "GIVE_CARDS": "Karten austeilen"
         },
         "state": {
