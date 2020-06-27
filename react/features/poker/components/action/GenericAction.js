@@ -3,11 +3,11 @@
 import React, { Component } from 'react';
 import {
     CALL,
-    CHECK, COLLECT,
+    CHECK,
+    COLLECT,
     FOLD,
     GIVE_CARDS,
     JOIN_GAME,
-    RAISE,
     SHOW_CARDS,
     START_GAME,
     TAKE_OVER,
@@ -15,11 +15,11 @@ import {
 } from '../../actionTypes';
 import {
     call,
-    check, collect,
+    check,
+    collect,
     fold,
     giveCards,
     joinGame,
-    raise,
     showCards,
     startGame,
     takeOver,
@@ -72,9 +72,6 @@ class GenericAction extends Component<Props> {
             break;
         case CALL:
             this.props.dispatch(call());
-            break;
-        case RAISE:
-            this.props.dispatch(raise(100));
             break;
         case FOLD:
             this.props.dispatch(fold());
