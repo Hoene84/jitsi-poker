@@ -2,7 +2,17 @@
 // @flow
 
 import { ReducerRegistry } from '../base/redux';
-import { checkSeatControl, chooseDealer, giveCards, newRound, nextPlayer, toBet, update } from './logic/gameModifiers';
+import {
+    betToPot,
+    checkSeatControl,
+    chooseDealer,
+    collect,
+    giveCards,
+    newRound,
+    nextPlayer, showCards, throwAwayCards,
+    toBet,
+    update
+} from './logic/gameModifiers';
 import {
     addStagePerformance,
     addToPlayers,
@@ -18,16 +28,16 @@ import {
 
 import {
     CALL,
-    CHECK,
+    CHECK, COLLECT,
     FOLD,
     GIVE_CARDS,
     JOIN_GAME,
     NEW_STATE_RECEIVED,
     RAISE,
-    SEND_GAME_STATE,
+    SEND_GAME_STATE, SHOW_CARDS,
     START_GAME,
     STOP_GAME,
-    TAKE_OVER
+    TAKE_OVER, THROW_AWAY_CARDS
 } from './actionTypes';
 
 import { DEFAULT_STATE } from './constants';
@@ -103,15 +113,31 @@ ReducerRegistry.register('features/poker', (initialState = DEFAULT_STATE, action
     }
     case FOLD: {
         return chain(initialState)
-        .then(state => assignToRound(state, game => ({
-            pot: game.pot + currentPlayer(state)?.bet
-        })))
+        .then(state => betToPot(state, state.common.game.round.currentPlayer || ''))
         .then(state => assignToCurrentPlayer(state, () => {
             return {
                 fold: true
             };
         }))
         .then(state => nextPlayer(state))
+        .then(state => update(state));
+    }
+    case SHOW_CARDS: {
+        return chain(initialState)
+        .then(state => showCards(state, state.nick))
+        .then(state => addStagePerformance(state, state.nick))
+        .then(state => update(state));
+    }
+    case THROW_AWAY_CARDS: {
+        return chain(initialState)
+        .then(state => throwAwayCards(state, action.nick))
+        .then(state => addStagePerformance(state, action.nick))
+        .then(state => update(state));
+    }
+    case COLLECT: {
+        return chain(initialState)
+        .then(state => collect(state, action.nick))
+        .then(state => addStagePerformance(state, action.nick))
         .then(state => update(state));
     }
     case NEW_STATE_RECEIVED: {

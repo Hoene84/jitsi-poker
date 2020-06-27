@@ -785,7 +785,10 @@
             "TAKE_OVER" : "Platz von {{player}} übernahmen",
             "START_GAME" : "Spiel starten",
             "STOP_GAME" : "Aktuelles Spiel stoppen",
-            "GIVE_CARDS": "Karten austeilen"
+            "GIVE_CARDS": "Karten austeilen",
+            "SHOW_CARDS": "Zeigen",
+            "THROW_AWAY_CARDS": "Wegwerfen",
+            "COLLECT": "Pot einsammeln"
         },
         "state": {
             "current": "Am Zug",

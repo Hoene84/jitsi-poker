@@ -1,19 +1,43 @@
 // @flow
 
-import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE, START_GAME, TAKE_OVER } from './actionTypes';
+import {
+    CALL,
+    CHECK,
+    COLLECT,
+    FOLD,
+    GIVE_CARDS,
+    JOIN_GAME,
+    RAISE,
+    SHOW_CARDS,
+    START_GAME,
+    TAKE_OVER,
+    THROW_AWAY_CARDS
+} from './actionTypes';
 import { joinGame, startGame, stopGame, takeOver } from './actions';
 import type { Card, PlayerState, PokerState } from './types';
 import {
     dominantSpeakerChanged,
-    getLocalParticipant, getParticipantCount,
+    getLocalParticipant,
+    getParticipantCount,
     getParticipantDisplayName,
     getParticipants
 } from '../base/participants';
-import { activePlayers, isNotInSeatControl } from './logic/helpers';
+import { activePlayers, cardSlotsOf, isNotInSeatControl } from './logic/helpers';
 import { getCurrentConference } from '../base/conference';
 import { getCurrentLayout, LAYOUTS } from '../video-layout';
 
-const POKER_ACTIONS = [ GIVE_CARDS, CHECK, CALL, RAISE, FOLD, TAKE_OVER, JOIN_GAME, START_GAME ];
+const POKER_ACTIONS = [
+    GIVE_CARDS,
+    CHECK,
+    CALL,
+    RAISE,
+    FOLD,
+    SHOW_CARDS,
+    THROW_AWAY_CARDS,
+    COLLECT,
+    TAKE_OVER,
+    JOIN_GAME,
+    START_GAME ];
 
 export function toolboxAction(state: Object) {
     const nick = getNick(state);
@@ -43,16 +67,9 @@ export function pokerActionTypes(state: Object, nick: string): Array<string> {
 
 export function cards(state: Object, nick: string, flippedOnly: boolean = false): Array<Card> {
     const pokerState: PokerState = state['features/poker'];
-    const deck = pokerState.common.game.round.deck;
+    const nicksCards = cardSlotsOf(pokerState, nick).filter(cardSlot => !flippedOnly || cardSlot.flipped);
 
-    if (!deck) {
-        return [];
-    }
-
-    // eslint-disable-next-line arrow-body-style
-    return deck.cards.filter(cardSlot => {
-        return cardSlot.owner === nick && (!flippedOnly || cardSlot.flipped);
-    }).map(cardSlot => cardSlot.card);
+    return nicksCards.map(cardSlot => cardSlot.card);
 }
 
 export function setDominantSpeaker(state: Object): ?Array<string> {

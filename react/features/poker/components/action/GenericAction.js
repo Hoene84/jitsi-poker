@@ -1,8 +1,30 @@
 // @flow
 
 import React, { Component } from 'react';
-import { CALL, CHECK, FOLD, GIVE_CARDS, JOIN_GAME, RAISE, START_GAME, TAKE_OVER } from '../../actionTypes';
-import { call, check, fold, giveCards, joinGame, raise, startGame, takeOver } from '../../actions';
+import {
+    CALL,
+    CHECK, COLLECT,
+    FOLD,
+    GIVE_CARDS,
+    JOIN_GAME,
+    RAISE,
+    SHOW_CARDS,
+    START_GAME,
+    TAKE_OVER,
+    THROW_AWAY_CARDS
+} from '../../actionTypes';
+import {
+    call,
+    check, collect,
+    fold,
+    giveCards,
+    joinGame,
+    raise,
+    showCards,
+    startGame,
+    takeOver,
+    throwAwayCards
+} from '../../actions';
 import { translate } from '../../../base/i18n';
 import { connect } from '../../../base/redux';
 
@@ -56,6 +78,15 @@ class GenericAction extends Component<Props> {
             break;
         case FOLD:
             this.props.dispatch(fold());
+            break;
+        case SHOW_CARDS:
+            this.props.dispatch(showCards());
+            break;
+        case THROW_AWAY_CARDS:
+            this.props.dispatch(throwAwayCards(this.props.nick));
+            break;
+        case COLLECT:
+            this.props.dispatch(collect(this.props.nick));
             break;
         case TAKE_OVER:
             this.props.dispatch(takeOver(this.props.nick));

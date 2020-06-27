@@ -6,7 +6,7 @@ import {
     START_GAME,
     STOP_GAME,
     GIVE_CARDS,
-    NEW_STATE_RECEIVED, CHECK, RAISE, FOLD, CALL, SEND_GAME_STATE
+    NEW_STATE_RECEIVED, CHECK, RAISE, FOLD, CALL, SEND_GAME_STATE, SHOW_CARDS, THROW_AWAY_CARDS, COLLECT
 } from './actionTypes';
 
 export function joinGame(nick: string) {
@@ -63,6 +63,26 @@ export function raise(amount: number) {
 export function fold() {
     return {
         type: FOLD
+    };
+}
+
+export function showCards() {
+    return {
+        type: SHOW_CARDS
+    };
+}
+
+export function throwAwayCards(nick: string) {
+    return {
+        type: THROW_AWAY_CARDS,
+        nick
+    };
+}
+
+export function collect(nick: string) {
+    return {
+        type: COLLECT,
+        nick
     };
 }
 

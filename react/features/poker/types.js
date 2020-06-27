@@ -4,7 +4,7 @@ import * as actions from './actionTypes';
 
 import { SUITS, SYMBOLS } from './constants';
 
-type GameState = "none" | "running";
+type GameState = "none" | "running" | "showdown";
 type BettingRoundState = "preflop" | "flop" | "turn" | "river";
 export type PlayerState = "folded" | "raiser" | "current" | "waiting" | "spectator" | "joined";
 export type Suit = $Keys<typeof SUITS>;
@@ -43,6 +43,8 @@ export type Round = {|
     pot: number,
     bet: number,
     raiseAmount: number,
+    winners: Array<string>,
+    win: { [string]: number },
     bettingRound: BettingRound
 |}
 

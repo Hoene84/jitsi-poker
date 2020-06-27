@@ -14,7 +14,7 @@ export const CARD_TURN_SOUND_ID = 'CARD_TURN_SOUND';
 export const GAME_STATE_CHANGED_EVENT = 'poker-state-changed';
 export const REQUEST_GAME_STATE_EVENT = 'request-game-state-event';
 
-export const OWNER_TABLE = '_table';
+export const OWNER_TABLE = 'table';
 
 export const SUITS = Object.freeze({
     club: 'club',
@@ -58,6 +58,8 @@ export const DEFAULT_STATE: PokerState = {
                 pot: 0,
                 bet: 0,
                 raiseAmount: 0,
+                winners: [],
+                win: {},
                 bettingRound: {
                     raisePlayer: null
                 }

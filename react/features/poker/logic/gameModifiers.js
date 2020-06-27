@@ -4,24 +4,38 @@
 import type { APokerState, ChainablePokerState, Deck, Player, Suit, Symbol } from '../types';
 
 import { JOIN_GAME, START_GAME, STOP_GAME } from '../actionTypes';
-import { SUITS, SYMBOLS, DEFAULT_STATE } from '../constants';
+import { DEFAULT_STATE, SUITS, SYMBOLS } from '../constants';
 import {
-    activePlayers, addStagePerformance,
-    assignToAllPlayer, assignToBettingRound,
+    activePlayers,
+    addStagePerformance,
+    assignToAllPlayer,
+    assignToBettingRound,
+    assignToCardSlotsOf,
     assignToCommon,
     assignToCurrentPlayer,
     assignToGame,
     assignToPlayer,
-    assignToPlayers, assignToRound,
+    assignToRound,
     assignToState,
+    cardSlots,
     chain,
     chainableAssign,
     countCards,
     logState,
     nextPlayerAfter,
+    getPlayer,
     players
 } from './helpers';
-import { canCall, canCheck, canFold, canGiveCards, canRaise } from './canDo';
+import {
+    canCall,
+    canCheck,
+    canCollect,
+    canFold,
+    canGiveCards,
+    canRaise,
+    canShowCards,
+    canThrowAwayCards
+} from './canDo';
 import { winners } from './ranking';
 
 export function getDeck(): Deck {
@@ -52,10 +66,14 @@ export function update(initialState: APokerState) {
     .then(state => logState(state));
 }
 
-export function updateGame(state: APokerState): ChainablePokerState {
-    return assignToRound(state, () => ({
+export function updateGame(initialState: APokerState): ChainablePokerState {
+    return chain(initialState)
+    .then(state => assignToRound(state, () => ({
         bet: Math.max(...players(state).map((player: Player) => player.bet))
-    }));
+    })))
+    .then(state => assignToRound(state, () => ({
+        winners: winners(state)
+    })));
 }
 
 export function updateActions(state: APokerState): ChainablePokerState {
@@ -76,6 +94,18 @@ export function updateActions(state: APokerState): ChainablePokerState {
                     canCall(state, nick),
                     canRaise(state, nick),
                     canFold(state, nick)
+                ].filter(Boolean)
+            };
+        });
+    }
+    case 'showdown': {
+        return assignToAllPlayer(state, nick => {
+            return {
+                actions: [
+                    STOP_GAME,
+                    canShowCards(state, nick),
+                    canThrowAwayCards(state, nick),
+                    canCollect(state, nick)
                 ].filter(Boolean)
             };
         });
@@ -108,8 +138,8 @@ export function nextBettingRound(initialState: APokerState) {
     }
     case 'river': {
         return chain(initialState)
-        .then(state => collect(state))
-        .then(state => newRound(state));
+        .then(state => showdown(state))
+        .then(state => assignToRound(state, () => ({ currentPlayer: null })));
     }
     }
 
@@ -122,7 +152,8 @@ export function newRound(initialState: APokerState) {
         return { fold: false };
     }))
     .then(state => assignToGame(state, game => ({
-        dealer: nextPlayerAfter(state, game.dealer)
+        dealer: nextPlayerAfter(state, game.dealer),
+        state: 'running'
     })))
     .then(state => assignToRound(state, () => DEFAULT_STATE.common.game.round))
     .then(state => payBlinds(state))
@@ -150,7 +181,15 @@ export function tryFinishBettingRound(initialState: APokerState) {
     });
 
     if (activePlayers(initialState).length < 2) {
-        return collect(initialState).then(state => newRound(state));
+        return chain(initialState)
+        .then(state => betToPot(state, activePlayers(state)[0]))
+        .then(state => assignToRound(state, () => ({
+            winners: [ activePlayers(state)[0] ]
+        })))
+        .then(state => assignToGame(state, () => ({
+            state: 'showdown'
+        })))
+        .then(state => calculatePot(state));
     }
 
     if (nextIsRaisePlayer || (isDealer && allCalled)) {
@@ -166,20 +205,45 @@ export function tryFinishBettingRound(initialState: APokerState) {
     }));
 }
 
-export function collect(initialState: APokerState) {
-    const allWinners = winners(initialState);
-    const potForEach = players(initialState).reduce((amount, player) => {
-        return amount + player.bet;
-    }, 0) / allWinners.length;
+export function showdown(initialState: APokerState) {
 
     return chain(initialState)
-    .then(state => assignToPlayers(state, allWinners, (_, player) => ({
-        amount: player.amount + potForEach
+    .then(state => assignToGame(state, () => ({
+        state: 'showdown'
+    })))
+    .then(state => assignToRound(state, () => ({
+        pot: players(state).map(player => player.bet)
+.reduce((a, b) => a + b)
     })))
     .then(state => assignToAllPlayer(state, () => ({
         bet: 0
+    })));
+}
+
+export function collect(initialState: APokerState, nick: string) {
+    const potForEach = initialState.common.game.round.pot / initialState.common.game.round.winners.length;
+
+    return chain(initialState)
+    .then(state => assignToPlayer(state, nick, player => {
+        const amount = player.amount + state.common.game.round.win[nick];
+
+        delete state.common.game.round.win[nick];
+
+        return { amount };
+    }))
+    .then(state => assignToRound(state, round => ({
+        pot: round.pot - potForEach
     })))
-    .then(state => addStagePerformance(state, allWinners[allWinners.length - 1]));
+    .then(state => tryFinishRound(state))
+    .then(state => addStagePerformance(state, nick));
+}
+
+export function tryFinishRound(initialState: APokerState) {
+    if (initialState.common.game.round.pot === 0) {
+        return newRound(initialState);
+    }
+
+    return chain(initialState);
 }
 
 export function giveCards(initialState: APokerState) {
@@ -201,6 +265,9 @@ export function giveCardsTo(state: APokerState, owner: string, n: number) {
     if (deck) {
         for (let i = 0; i < n; i++) {
             deck.cards[deck.nextIndex].owner = owner;
+            if (owner === 'table') {
+                deck.cards[deck.nextIndex].flipped = true;
+            }
             deck.nextIndex = deck.nextIndex + 1;
         }
     }
@@ -217,12 +284,52 @@ export function chooseDealer(state: APokerState) {
 }
 
 export function toBet(state: APokerState, amount: number) {
-    return assignToCurrentPlayer(state, (nick, player) => ({
+    return assignToCurrentPlayer(state, player => ({
         amount: player.amount - amount,
         bet: player.bet + amount
     }));
 }
 
+export function betToPot(initialState: APokerState, nick: string) {
+    return chain(initialState)
+    .then(state => assignToRound(state, round => ({
+        pot: round.pot + getPlayer(state, nick).bet
+    })))
+    .then(state => assignToPlayer(state, nick, () => ({
+        bet: 0
+    })));
+}
+
+export function showCards(initialState: APokerState, nick: ?string): ChainablePokerState {
+    return assignToCardSlotsOf(initialState, nick, () => {
+        return { flipped: true };
+    })
+    .then(state => tryFinishShowdown(state));
+}
+
+export function throwAwayCards(initialState: APokerState, nick: ?string): ChainablePokerState {
+    return assignToCardSlotsOf(initialState, nick, () => {
+        return { owner: null };
+    })
+    .then(state => tryFinishShowdown(state));
+}
+
+export function tryFinishShowdown(initialState: APokerState) {
+    if (new Set(cardSlots(initialState).filter(slot => slot.owner && !slot.flipped)
+.map(cardSlot => cardSlot.owner)).size <= 1) {
+        return calculatePot(initialState);
+    }
+
+    return chain(initialState);
+}
+
+export function calculatePot(initialState: APokerState) {
+    const potForEach = initialState.common.game.round.pot / initialState.common.game.round.winners.length;
+
+    return assignToRound(initialState, () => ({
+        win: Object.fromEntries(initialState.common.game.round.winners.map(winner => [ winner, potForEach ]))
+    }));
+}
 
 export function payBlinds(initialState: APokerState) {
     const small = nextPlayerAfter(initialState, initialState.common.game.dealer);
@@ -249,7 +356,7 @@ export function checkSeatControl(initialState: APokerState) {
 }
 
 function _payBlind(state: APokerState, nick: string, amount: number) {
-    return assignToPlayer(state, nick, (_, player) => {
+    return assignToPlayer(state, nick, player => {
         const amountToPay = Math.max(0, amount - player.bet);
 
         return {
