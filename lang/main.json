@@ -826,5 +826,32 @@
     },
     "helpView": {
         "header": "Help center"
+    },
+    "poker": {
+        "action": {
+            "GIVE_CARDS": "Give Cards",
+            "CHECK": "Check",
+            "CALL": "Call",
+            "RAISE": "Raise",
+            "FOLD": "Fold",
+            "SHOW_CARDS": "Show",
+            "THROW_AWAY_CARDS": "Throw Away",
+            "COLLECT": "Get Pot",
+            "JOIN_GAME" : "Join Game",
+            "TAKE_OVER" : "Take Over Seat for {{player}}",
+            "START_GAME" : "Start Game",
+            "STOP_GAME" : "Stop current Game"
+        },
+        "stack": "Stack",
+        "bet": "Bet",
+        "state": {
+            "folded": "Folded",
+            "raiser": "Raiser",
+            "current": "Current",
+            "waiting": "Wait ({{cue}})",
+            "joined": "Joined",
+            "spectator": "Spectator"
+        }
+
     }
 }

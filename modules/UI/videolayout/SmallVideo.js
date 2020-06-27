@@ -28,6 +28,7 @@ import {
     setTileView,
     shouldDisplayTileView
 } from '../../../react/features/video-layout';
+import { Poker } from '../../../react/features/poker/components';
 /* eslint-enable no-unused-vars */
 
 const logger = require('jitsi-meet-logger').getLogger(__filename);
@@ -348,6 +349,10 @@ export default class SmallVideo {
      */
     $avatar() {
         return this.$container.find('.avatar-container');
+    }
+
+    $poker() {
+        return this.$container.find('.poker-container');
     }
 
     /**
@@ -734,11 +739,23 @@ export default class SmallVideo {
                                     iconSize = { iconSize }
                                     tooltipPosition = { tooltipPosition } />
                                 : null }
+                            {/* <Poker participantId = { this.id }></Poker>*/}
                         </AtlasKitThemeProvider>
                     </div>
                 </I18nextProvider>
             </Provider>,
             indicatorToolbar
+        );
+
+        const poker = this.$poker().get(0);
+
+        ReactDOM.render(
+            <Provider store = { APP.store }>
+                <I18nextProvider i18n = { i18next }>
+                    <Poker participantId={ this.id }/>
+                </I18nextProvider>
+            </Provider>,
+            poker
         );
     }
 

@@ -211,6 +211,7 @@
 #largeVideoContainer {
     height: 100%;
     width: 100%;
+    z-index: 0;
 }
 
 #largeVideoWrapper {
@@ -533,6 +534,382 @@
         left: 0px;
         position: absolute;
     }
+}
+
+.poker-table-container {
+    position: absolute;
+    width: 400px;
+    height: 97px;
+    left: 20px;
+    bottom: 40px;
+}
+
+.dealer-button {
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    width: 2.5vw;
+    height: 2.5vw;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    font-size: 0.5vw;
+    border: black solid 2px;
+    box-shadow: 0 0 0 3px #e78267;
+    margin: 10px;
+}
+
+.game {
+    position: absolute;
+    display: flex;
+    flex-flow: column;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: scroll;
+
+    .gameTable {
+        position: relative;
+        height: 100%;
+    }
+
+    .player-list {
+        .table-cell {
+            &.nick {
+                text-align: left;
+            }
+
+            &.dealer {
+                max-height: 0;
+                display: flex;
+            }
+        }
+    }
+}
+
+.state {
+    &.current
+    {
+        color: green;
+    }
+}
+
+.state {
+    &.folded,
+    &.spectator,
+    &.joined,
+    {
+        color: darkgray;
+    }
+}
+
+.largePokerContainer {
+    font-size: 3vw;
+    .game {
+        padding: 100px;
+
+        .poker-table {
+            margin: 100px;
+        }
+
+        .player-list {
+            margin-left: 100px;
+            margin-right: 100px;
+        }
+    }
+    .info {
+        display: initial;
+    }
+    .vertical-filmstrip-view {
+        .info {
+            margin-right: 0;
+        }
+    }
+}
+
+.vertical-filmstrip-view {
+    .info {
+        margin-right: -100px;
+        display: initial;
+    }
+}
+
+.remote-videos-container .vertical-filmstrip-view.game {
+    .dealer-button {
+        display: none;
+    }
+    .poker-table {
+        display: none;
+    }
+
+}
+.remote-videos-container .tile-view {
+    .info {
+        display: initial;
+    }
+}
+
+.tile-view .remote-videos-container {
+    font-size: 2.5vw;
+    .info {
+        margin-right: 0;
+        right: 20px !important;
+    }
+
+    .poker-table {
+        margin-top: 20px;
+    }
+}
+
+.poker-table {
+    position: absolute;
+    background-color: #4aad4a;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 30px;
+    border: 15px solid #a95555;
+    z-index: 10;
+    box-sizing: border-box;
+    min-height: 97px;
+}
+
+.filmstripPokerContainer {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    pointer-events: none;
+    z-index: 11;
+}
+
+.table-row {
+    display: table-row;
+}
+
+.table-cell {
+    display: table-cell;
+}
+
+.table {
+    display: table;
+}
+
+.vertical-filmstrip .filmstrip div#filmstripRemoteVideos {
+    padding-left: 400px;
+    margin-left: -400px;
+}
+
+.poker-container,
+.poker-control-panel,
+.game,
+.poker-buttons button{
+    font-variant: small-caps;
+    font-weight: bold;
+    color: white;
+}
+
+.poker-control-panel {
+    font-size: 3vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .info {
+        left: 50px;
+        bottom: 240px;
+    }
+
+    .poker-buttons {
+
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        bottom: 160px;
+        z-index: 12;
+        left: 40px;
+
+
+        .poker-button {
+            pointer-events: auto;
+            margin: 10px;
+            box-shadow: inset 0px 68px 0px -30px #b54b3a;
+            font-size: 30px;
+            border:2px solid #241d13;
+            background-color: #a73f2d;
+            color: white;
+            padding: 10px 20px;
+            text-shadow:0px -2px 0px #7a2a1d;
+
+            &:hover {
+                background:linear-gradient(to bottom, #b34332 5%, #a73f2d 100%);
+                background-color:#b34332;
+            }
+            &:active {
+                top:1px;
+            }
+
+            &.raise {
+                display: flex;
+            }
+
+            input {
+                margin-right: 20px;
+            }
+        }
+    }
+
+    .poker-hand {
+        img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .card {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            width: 152px;
+            height: 186px;
+        }
+
+        .card-one {
+            right: 218px;
+            bottom: 147px;
+            transform: rotate(12deg);
+        }
+        .card-two {
+            right: 99px;
+            bottom: 162px;
+            transform: rotate(24deg);
+        }
+
+        .symbol {
+            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+            font-size: 100px;
+            color: black;
+            font-weight: 900;
+            width: 120px;
+            height: 124px;
+            letter-spacing: -10px;
+            margin-left: -6px;
+            margin-top: 6px;
+
+            &.red {
+                color: #e94440;
+                @supports (-webkit-text-stroke: 2px #c53632) {
+                    -webkit-text-stroke: 2px #c53632
+                }
+                @supports not (-webkit-text-stroke: 2px #c53632) {
+                    text-shadow: 2px 2px 2px #c53632
+                }
+            }
+            &.black {
+                background-image: linear-gradient(0deg, rgba(18,18,18,1) 0%, rgba(114,114,114,1) 100%);;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                @supports (-webkit-text-stroke: 2px rgba(46, 46, 46, 0.01)) {
+                    -webkit-text-stroke: 2px rgba(46, 46, 46, 0.01)
+                }
+                @supports not (-webkit-text-stroke: 2px rgba(46, 46, 46, 0.01)) {
+                    text-shadow: 1px 1px 1px rgba(46, 46, 46, 0.5);
+                }
+            }
+        }
+
+        .suite {
+            font-size: 46px;
+            font-family: apple color emoji,segoe ui emoji,noto color emoji,android emoji,emojisymbols,emojione mozilla,twemoji mozilla,segoe ui symbol;
+            width: 120px;
+            height: 100px;
+            margin-left: -6px;
+        }
+    }
+}
+
+.info {
+    width: fit-content;
+    position: absolute;
+    display: none;
+}
+
+.poker-container {
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    pointer-events: none;
+
+    .poker-button {
+        pointer-events: auto
+    }
+
+    > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .player {
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        &.current {
+            border: 10px dashed green;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        &.folded {
+            opacity: .5;
+            background: grey;
+        }
+    }
+}
+
+.poker-card {
+
+    background-color: white;
+    width: 40px;
+    height: 56px;
+    color: black;
+    position: relative;
+    border-radius: 5px;
+    margin: 5px;
+    display: inline-block;
+
+    .symbol {
+        position: absolute;
+        font-size: 22px;
+        font-weight: 900;
+        left: 4px;
+    }
+
+    .suite {
+        position: absolute;
+        font-size: 24px;
+        left: 8px;
+        top: 16px;
+        font-family: apple color emoji,segoe ui emoji,noto color emoji,android emoji,emojisymbols,emojione mozilla,twemoji mozilla,segoe ui symbol;
+    }
+
 }
 
 #videoNotAvailableScreen {

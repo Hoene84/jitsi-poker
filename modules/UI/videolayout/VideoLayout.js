@@ -1,4 +1,6 @@
 /* global APP, $, interfaceConfig  */
+import PokerTableThumb from '../../../react/features/poker/layout/PokerTableThumb';
+
 const logger = require('jitsi-meet-logger').getLogger(__filename);
 
 import { MEDIA_TYPE, VIDEO_TYPE } from '../../../react/features/base/media';
@@ -224,6 +226,10 @@ const VideoLayout = {
         const participant = getParticipantById(state, id);
 
         if (participant?.isFakeParticipant) {
+            if (participant?.id === 'table') {
+                return VIDEO_TYPE.CAMERA;
+            }
+
             return SHARED_VIDEO_CONTAINER_TYPE;
         }
 
@@ -282,6 +288,11 @@ const VideoLayout = {
         if (!participant || participant.local) {
             return;
         } else if (participant.isFakeParticipant) {
+            if (participant.id === 'table') {
+                this.addRemoteVideoContainer(participant.id, new PokerTableThumb(VideoLayout));
+
+                return;
+            }
             const sharedVideoThumb = new SharedVideoThumb(
                 participant,
                 SHARED_VIDEO_CONTAINER_TYPE,

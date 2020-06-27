@@ -20,6 +20,8 @@ import { shouldRemoteVideosBeVisible } from '../../functions';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
 
 import Toolbar from './Toolbar';
+import ControlPanel from '../../../poker/components/ControlPanel';
+import { getLocalParticipant } from '../../../base/participants';
 
 declare var APP: Object;
 declare var interfaceConfig: Object;
@@ -84,6 +86,8 @@ type Props = {
      * Whether or not the filmstrip videos should currently be displayed.
      */
     _visible: boolean,
+
+    _localParticipantId: string,
 
     /**
      * The redux {@code dispatch} function.
@@ -217,6 +221,9 @@ class Filmstrip extends Component <Props> {
                 className = { `filmstrip ${this.props._className}` }
                 style = { filmstripStyle }>
                 { toolbar }
+                <div className = 'filmstripPokerContainer'>
+                    <ControlPanel participantId = { this.props._localParticipantId } />
+                </div>
                 <div
                     className = { this.props._videosClassName }
                     id = 'remoteVideos'>
@@ -391,7 +398,8 @@ function _mapStateToProps(state) {
         _hovered: hovered,
         _rows: gridDimensions.rows,
         _videosClassName: videosClassName,
-        _visible: visible
+        _visible: visible,
+        _localParticipantId: getLocalParticipant(state).id
     };
 }
 

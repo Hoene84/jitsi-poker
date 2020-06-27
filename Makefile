@@ -21,7 +21,7 @@ compile:
 clean:
 	rm -fr $(BUILD_DIR)
 
-deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac deploy-css deploy-local
+deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac deploy-css deploy-local deploy-gh-pages
 
 deploy-init:
 	rm -fr $(DEPLOY_DIR)
@@ -78,6 +78,9 @@ deploy-css:
 
 deploy-local:
 	([ ! -x deploy-local.sh ] || ./deploy-local.sh)
+
+deploy-gh-pages:
+	([ ! -x deploy-gh-pages.sh ] || ./deploy-gh-pages.sh)
 
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac
 	$(WEBPACK_DEV_SERVER)

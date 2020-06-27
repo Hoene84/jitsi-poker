@@ -62,6 +62,7 @@ export { default as IconPresentation } from './presentation.svg';
 export { default as IconRaisedHand } from './raised-hand.svg';
 export { default as IconRec } from './rec.svg';
 export { default as IconRemoteControlStart } from './play.svg';
+export { default as IconPoker } from './poker.svg';
 export { default as IconRemoteControlStop } from './stop.svg';
 export { default as IconReply } from './reply.svg';
 export { default as IconRestore } from './restore.svg';
