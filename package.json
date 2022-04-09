@@ -60,7 +60,7 @@
     "lib-jitsi-meet": "github:Hoene84/lib-jitsi-meet#0fced6fbd29dd2d2a668e2bfbe4d584b46e4913f",
     "libflacjs": "github:mmig/libflac.js#93d37e7f811f01cf7d8b6a603e38bd3c3810907d",
     "lodash": "4.17.13",
-    "moment": "2.19.4",
+    "moment": "2.29.2",
     "moment-duration-format": "2.2.2",
     "pixelmatch": "5.1.0",
     "pokersolver": "^2.1.3",
